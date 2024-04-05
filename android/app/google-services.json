@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "791160331503",
+    "project_id": "rooster-d6a91",
+    "storage_bucket": "rooster-d6a91.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:791160331503:android:8bc5124c1f5a7f60d3cf1a",
+        "android_client_info": {
+          "package_name": "com.applogics.rooster"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOW_6GYdth5m7YT_F2M7IrKTljcJfi7uc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:791160331503:android:a850da3a64aeffabd3cf1a",
+        "android_client_info": {
+          "package_name": "com.example.rooster"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOW_6GYdth5m7YT_F2M7IrKTljcJfi7uc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
