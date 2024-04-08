@@ -1,67 +1,69 @@
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-class UserEntity extends Equatable{
-  final String userId;
+import 'converters/server_timestamp_converter.dart';
 
+part 'user_entity.g.dart';
+
+@JsonSerializable()
+@ServerTimestampConverter()
+class UserEntity extends Equatable {
   final String email;
-  bool get isValidEmail => email.length > 3;
-
   final String name;
-
+  final String platform;
+  final String deviceInfoRef;
   final bool isOnCall;
+  final DateTime? createdAt;
+  final DateTime? modifiedAt;
 
-  const UserEntity({
-    required this.userId,
-    required this.email,
-    required this.name,
-    required this.isOnCall
-  });
-
-  Map<String, Object?> toJson() {
-    return {
-      'userId' : userId,
-      'email' : email,
-      'name' : name,
-      'isOnCall' : isOnCall
-    };
-  }
+  const UserEntity(
+      {required this.email,
+      required this.name,
+      required this.platform,
+      required this.deviceInfoRef,
+      required this.isOnCall,
+      required this.createdAt,
+      required this.modifiedAt});
 
   bool isEmptyInstance() {
     return this == emptyInstance;
   }
 
-  UserEntity copyWith({
-    String? userId,
-    String? email,
-    String? name,
-    bool? isOnCall
-  }) {
+  UserEntity copyWith(
+      {String? userId,
+      String? email,
+      String? name,
+      String? platform,
+      String? deviceInfoRef,
+      bool? isOnCall,
+      DateTime? createdAt,
+      DateTime? modifiedAt}) {
     return UserEntity(
-        userId: userId ?? this.userId,
         email: email ?? this.email,
         name: name ?? this.name,
-        isOnCall: isOnCall ?? this.isOnCall
-    );
+        platform: platform ?? this.platform,
+        deviceInfoRef: deviceInfoRef ?? this.deviceInfoRef,
+        isOnCall: isOnCall ?? this.isOnCall,
+        createdAt: createdAt ?? this.createdAt,
+        modifiedAt: modifiedAt ?? this.modifiedAt);
   }
 
-  static UserEntity fromJson(Map<String, dynamic> doc) {
-    if(doc.isEmpty) return emptyInstance;
-    return UserEntity(
-        userId: doc['userId'],
-        email: doc['email'],
-        name: doc['name'],
-        isOnCall: doc['isOnCall']
-    );
-  }
+  factory UserEntity.fromJson(Map<String, dynamic> json) =>
+      _$UserEntityFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserEntityToJson(this);
 
   static const emptyInstance = UserEntity(
-      userId: '',
-      email: '',
-      name: '',
-      isOnCall: false
+    email: '',
+    name: '',
+    platform: '',
+    deviceInfoRef: '',
+    isOnCall: false,
+    createdAt: null,
+    modifiedAt: null,
   );
 
   @override
-  List<Object?> get props => [userId, email, name, isOnCall];
-
+  List<Object?> get props =>
+      [email, name, platform, deviceInfoRef, isOnCall, createdAt, modifiedAt];
 }

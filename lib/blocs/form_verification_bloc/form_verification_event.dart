@@ -2,19 +2,22 @@ part of 'form_verification_bloc.dart';
 
 @immutable
 sealed class FormVerificationEvent extends Equatable {}
-class UserEmailChangedEvent extends FormVerificationEvent {
-  final String email;
 
-  UserEmailChangedEvent({required this.email});
-
+class FormInitEvent extends FormVerificationEvent {
   @override
-  List<Object?> get props => [email];
+  List<Object?> get props => [];
 }
 
-class UserEmailSubmittedEvent extends FormVerificationEvent {
-  UserEmailSubmittedEvent({required this.user});
-  final UserEntity user;
+class UserEmailChangedEvent extends FormVerificationEvent {
+  final BlocFormItem emailFormItem;
+
+  UserEmailChangedEvent({required this.emailFormItem});
 
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [emailFormItem];
+}
+
+class FormSubmitEvent extends FormVerificationEvent {
+  @override
+  List<Object?> get props => [];
 }
