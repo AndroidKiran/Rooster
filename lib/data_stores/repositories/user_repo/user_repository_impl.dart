@@ -45,7 +45,7 @@ class UserRepositoryImplementation implements UserRepository {
   @override
   Future<UserEntity> getUserFromPreference() async {
     try {
-      final userJson = await _preferences
+      final userJson = _preferences
           .getString(PREFERENCE_USER, defaultValue: '')
           .getValue();
       var map = <String, dynamic>{};

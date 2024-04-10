@@ -32,7 +32,7 @@ class FcmRepositoryImplementation implements FcmRepository {
 
   @override
   Future<bool> isRefreshTokenSyncCompleted() async {
-    return await _preferences
+    return _preferences
         .getBool(REFRESH_TOKEN_COMPLETED, defaultValue: false)
         .getValue();
   }

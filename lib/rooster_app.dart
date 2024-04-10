@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:go_router/go_router.dart';
 import 'package:rooster/blocs/firebase_messaging_bloc/firebase_messaging_bloc.dart';
 import 'package:rooster/blocs/form_verification_bloc/form_verification_bloc.dart';
 import 'package:rooster/blocs/user_verification_bloc/user_verification_state.dart';

@@ -10,7 +10,7 @@ class CrashVelocityRepositoryImplementation implements CrashVelocityRepository {
 
   @override
   Future<String> getCrashId() async {
-    return await _preferences
+    return _preferences
         .getString(CRASH_VELOCITY_ID, defaultValue: '')
         .getValue();
   }
