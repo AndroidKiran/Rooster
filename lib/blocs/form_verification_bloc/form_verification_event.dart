@@ -17,6 +17,15 @@ class UserEmailChangedEvent extends FormVerificationEvent {
   List<Object?> get props => [emailFormItem];
 }
 
+class PlatformChangedEvent extends FormVerificationEvent {
+  final BlocFormItem platformItem;
+
+  PlatformChangedEvent({required this.platformItem});
+
+  @override
+  List<Object?> get props => [platformItem];
+}
+
 class FormSubmitEvent extends FormVerificationEvent {
   @override
   List<Object?> get props => [];

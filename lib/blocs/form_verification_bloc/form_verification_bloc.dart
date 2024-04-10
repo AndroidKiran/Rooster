@@ -29,17 +29,12 @@ class FormVerificationBloc
       : _userRepository = userRepository,
         _deviceInfoRepository = deviceInfoRepository,
         _fcmRepository = fcmRepository,
-        super(const FormVerificationState._()) {
-    on<FormInitEvent>(_initState);
+        super(const FormVerificationState._(
+          formStatus: FormStatus.init,
+        )) {
     on<UserEmailChangedEvent>(_onEmailChangedState);
+    on<PlatformChangedEvent>(_onPlatformChangeState);
     on<FormSubmitEvent>(_onFormSubmitState);
-  }
-
-  final formKey = GlobalKey<FormState>();
-
-  Future<void> _initState(
-      FormInitEvent event, Emitter<FormVerificationState> emit) async {
-    emit(state.copyWith(formStatus: FormStatus.init, formKey: formKey));
   }
 
   Future<void> _onEmailChangedState(
@@ -47,9 +42,20 @@ class FormVerificationBloc
     emit(state.copyWith(
       emailFormItem: BlocFormItem(
           value: event.emailFormItem.value,
-          error: event.emailFormItem.value.isValidEmail
+          error: event.emailFormItem.value!.isValidEmail
               ? null
               : 'Please enter valid email'),
+    ));
+  }
+
+  Future<void> _onPlatformChangeState(
+      PlatformChangedEvent event, Emitter<FormVerificationState> emit) async {
+    emit(state.copyWith(
+      platformFormItem: BlocFormItem(
+          value: event.platformItem.value,
+          error: event.platformItem.value != null
+              ? null
+              : 'Please choose the platform'),
     ));
   }
 
@@ -57,14 +63,20 @@ class FormVerificationBloc
       FormSubmitEvent event, Emitter<FormVerificationState> emit) async {
     try {
       emit(state.copyWith(formStatus: FormStatus.formSubmitting));
-      final token = await _fcmRepository.getFcmToken();
-      if (token == null || token.isEmpty) {
+      final email = state.emailFormItem.value!;
+      final platform = state.platformFormItem.value;
+      if (!email.isValidEmail || platform == null) {
         return emit(state.copyWith(formStatus: FormStatus.submitFailure));
       }
 
-      final user = await _userRepository.getFireStoreUser(
-          state.emailFormItem.value, state.platformFormItem.value);
+      final UserEntity? user =
+          await _userRepository.getFireStoreUser(email, platform);
       if (user == null || user.isEmptyInstance()) {
+        return emit(state.copyWith(formStatus: FormStatus.submitFailure));
+      }
+
+      final token = await _fcmRepository.getFcmToken();
+      if (token == null || token.isEmpty) {
         return emit(state.copyWith(formStatus: FormStatus.submitFailure));
       }
 

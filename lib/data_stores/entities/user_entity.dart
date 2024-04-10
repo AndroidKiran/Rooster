@@ -1,20 +1,19 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-import 'converters/server_timestamp_converter.dart';
+import 'package:rooster/data_stores/entities/converters/server_timestamp_to_miliisecond_converter.dart';
 
 part 'user_entity.g.dart';
 
 @JsonSerializable()
-@ServerTimestampConverter()
+@ServerTimestampToMilliSecondConverter()
 class UserEntity extends Equatable {
   final String email;
   final String name;
   final String platform;
   final String deviceInfoRef;
   final bool isOnCall;
-  final DateTime? createdAt;
-  final DateTime? modifiedAt;
+  final int? createdAt;
+  final int? modifiedAt;
 
   const UserEntity(
       {required this.email,
@@ -30,14 +29,13 @@ class UserEntity extends Equatable {
   }
 
   UserEntity copyWith(
-      {String? userId,
-      String? email,
+      {String? email,
       String? name,
       String? platform,
       String? deviceInfoRef,
       bool? isOnCall,
-      DateTime? createdAt,
-      DateTime? modifiedAt}) {
+      int? createdAt,
+      int? modifiedAt}) {
     return UserEntity(
         email: email ?? this.email,
         name: name ?? this.name,
@@ -52,6 +50,29 @@ class UserEntity extends Equatable {
       _$UserEntityFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserEntityToJson(this);
+
+  Map<String, dynamic> toPreferenceJson() => {
+        'email': email,
+        'name': name,
+        'platform': platform,
+        'deviceInfoRef': deviceInfoRef,
+        'isOnCall': isOnCall,
+        'createdAt': createdAt,
+        'modifiedAt': modifiedAt
+      };
+
+  static UserEntity fromPreferenceJson(Map<String, dynamic> doc) {
+    if (doc.isEmpty) return emptyInstance;
+    return UserEntity(
+      email: doc['email'],
+      name: doc['name'],
+      platform: doc['platform'],
+      deviceInfoRef: doc['deviceInfoRef'],
+      isOnCall: doc['isOnCall'],
+      createdAt: doc['createdAt'],
+      modifiedAt: doc['modifiedAt'],
+    );
+  }
 
   static const emptyInstance = UserEntity(
     email: '',

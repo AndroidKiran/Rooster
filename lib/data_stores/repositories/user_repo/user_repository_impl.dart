@@ -23,14 +23,19 @@ class UserRepositoryImplementation implements UserRepository {
       if (value.isNotEmpty) {
         map = jsonDecode(value);
       }
-      return UserEntity.fromJson(map);
+      if (map.isEmpty) {
+        return UserEntity.emptyInstance;
+      } else {
+        return UserEntity.fromJson(map);
+      }
     });
   }
 
   @override
   Future<void> saveUserToPreference(UserEntity user) async {
     try {
-      await _preferences.setString(PREFERENCE_USER, jsonEncode(user.toJson()));
+      await _preferences.setString(
+          PREFERENCE_USER, jsonEncode(user.toPreferenceJson()));
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -47,7 +52,7 @@ class UserRepositoryImplementation implements UserRepository {
       if (userJson.isNotEmpty) {
         map = jsonDecode(userJson);
       }
-      return UserEntity.fromJson(map);
+      return UserEntity.fromPreferenceJson(map);
     } catch (e) {
       log(e.toString());
       rethrow;

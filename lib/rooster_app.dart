@@ -13,7 +13,6 @@ import 'package:rooster/data_stores/repositories/device_info_repo/device_info_re
 import 'package:rooster/data_stores/repositories/fcm_repo/fcm_repository.dart';
 import 'package:rooster/data_stores/repositories/user_repo/user_repository.dart';
 import 'package:rooster/screens/routes/rooster_router.dart';
-import 'package:rooster/screens/routes/rooster_screen_path.dart';
 import 'package:rooster/services/call_kit_service.dart';
 import 'package:rooster/services/firebase_service.dart';
 import 'package:uuid/uuid.dart';
@@ -91,6 +90,7 @@ class _RoosterApp extends State<RoosterApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     FlutterNativeSplash.remove();
+    throw Exception();
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<FirebaseMessagingBloc>(

@@ -1,5 +1,9 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -16,38 +20,61 @@ import 'package:rooster/rooster_app.dart';
 import 'package:rooster/services/call_kit_service.dart';
 import 'package:rooster/services/firebase_service.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:uuid/uuid.dart';
 import 'firebase_options.dart';
 
-@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  if (!FirebaseService.isVelocityAlertNotification(message)) return;
-
-  final preference = await StreamingSharedPreferences.instance;
-  final userRepository = UserRepositoryImplementation(
-      preferences: preference); // FirebaseUserRepository
-  final user = await userRepository.getUserFromPreference();
-  if (user.isEmptyInstance()) return;
-
-  final String? crashId = message.data['crash_id'];
-  if (crashId == null || crashId.isEmpty) return;
-  final crashVelocityRepository =
-      CrashVelocityRepositoryImplementation(preferences: preference);
-  crashVelocityRepository.saveCrashId(crashId);
-
-  CallKitService.showCallkitIncoming(const Uuid().v4());
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    if (!FirebaseService.isVelocityAlertNotification(message)) return;
+    final preference = await StreamingSharedPreferences.instance;
+    final String? crashId = message.data['crash_id'];
+    log('_firebaseMessagingBackgroundHandler passed crash id');
+    if (crashId == null || crashId.isEmpty) return;
+    final crashVelocityRepository =
+        CrashVelocityRepositoryImplementation(preferences: preference);
+    crashVelocityRepository.saveCrashId(crashId);
+    log('_firebaseMessagingBackgroundHandler passed save crash id');
+    final userRepository = UserRepositoryImplementation(
+        preferences: preference); // FirebaseUserRepository
+    final user = await userRepository.getUserFromPreference();
+    log('_firebaseMessagingBackgroundHandler passed create user repo');
+    if (user.isEmptyInstance()) return;
+    log('_firebaseMessagingBackgroundHandler passed create user verification');
+    CallKitService.showCallkitIncoming(const Uuid().v4());
+  } catch (e) {
+    log(e.toString());
+  }
 }
 
-void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+Future<void> main() async {
+  runZonedGuarded(() async {
+    WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+    await _initFirebase();
+    FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+    Bloc.observer = RoosterBlocObserver();
+    runApp(await _roosterApp());
+  }, (error, stack) async {
+    await FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+  });
+}
+
+Future<void> _initFirebase() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+}
+
+Future<RoosterApp> _roosterApp() async {
   final StreamingSharedPreferences preferences =
       await StreamingSharedPreferences.instance;
   final UserRepository userRepository =
@@ -58,7 +85,6 @@ void main() async {
       DeviceInfoRepositoryImplementation();
   final CrashVelocityRepository crashVelocityRepository =
       CrashVelocityRepositoryImplementation(preferences: preferences);
-  Bloc.observer = RoosterBlocObserver();
-  runApp(RoosterApp(userRepository, fcmRepository, deviceInfoRepository,
-      crashVelocityRepository));
+  return RoosterApp(userRepository, fcmRepository, deviceInfoRepository,
+      crashVelocityRepository);
 }

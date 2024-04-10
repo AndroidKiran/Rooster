@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class BlocFormItem extends Equatable {
   final String? error;
-  final String value;
+  final String? value;
 
   const BlocFormItem({this.error, this.value = ''});
 

@@ -12,14 +12,20 @@ class DeviceInfoRepositoryImplementation extends DeviceInfoRepository {
   Future<void> updateFirebaseDeviceInfo(
       DeviceInfo deviceInfo, String docRef) async {
     try {
-      final informationSnapShot = await _deviceInfoCollection.doc(docRef).get();
+      final List<String> pathList = docRef.split("/");
+      if (pathList.isEmpty || pathList.length < 2) {
+        throw const FormatException('Invalid reference format');
+      }
+
+      final String docId = pathList[1];
+      final informationSnapShot = await _deviceInfoCollection.doc(docId).get();
 
       if (informationSnapShot.exists) {
-        _deviceInfoCollection
-            .doc(docRef)
+        return await _deviceInfoCollection
+            .doc(docId)
             .update({"fcmToken": deviceInfo.fcmToken, "os": deviceInfo.os});
       } else {
-        _deviceInfoCollection.doc(docRef).set(deviceInfo.toJson());
+        return await _deviceInfoCollection.doc(docId).set(deviceInfo.toJson());
       }
     } catch (e) {
       log(e.toString());
@@ -27,5 +33,5 @@ class DeviceInfoRepositoryImplementation extends DeviceInfoRepository {
     }
   }
 
-  static const String DEVICE_INFO_COLLECTION = "device_information_collection";
+  static const String DEVICE_INFO_COLLECTION = "deviceInfo";
 }

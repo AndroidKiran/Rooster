@@ -12,8 +12,10 @@ UserEntity _$UserEntityFromJson(Map<String, dynamic> json) => UserEntity(
       platform: json['platform'] as String,
       deviceInfoRef: json['deviceInfoRef'] as String,
       isOnCall: json['isOnCall'] as bool,
-      createdAt: const ServerTimestampConverter().fromJson(json['createdAt']),
-      modifiedAt: const ServerTimestampConverter().fromJson(json['modifiedAt']),
+      createdAt: const ServerTimestampToMilliSecondConverter()
+          .fromJson(json['createdAt']),
+      modifiedAt: const ServerTimestampToMilliSecondConverter()
+          .fromJson(json['modifiedAt']),
     );
 
 Map<String, dynamic> _$UserEntityToJson(UserEntity instance) =>
@@ -23,7 +25,8 @@ Map<String, dynamic> _$UserEntityToJson(UserEntity instance) =>
       'platform': instance.platform,
       'deviceInfoRef': instance.deviceInfoRef,
       'isOnCall': instance.isOnCall,
-      'createdAt': const ServerTimestampConverter().toJson(instance.createdAt),
-      'modifiedAt':
-          const ServerTimestampConverter().toJson(instance.modifiedAt),
+      'createdAt': const ServerTimestampToMilliSecondConverter()
+          .toJson(instance.createdAt),
+      'modifiedAt': const ServerTimestampToMilliSecondConverter()
+          .toJson(instance.modifiedAt),
     };

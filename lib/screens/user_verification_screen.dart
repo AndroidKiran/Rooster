@@ -5,7 +5,9 @@ import 'package:rooster/blocs/form_verification_bloc/form_verification_bloc.dart
 import 'package:rooster/screens/models/block_form_item.dart';
 
 class UserVerificationScreen extends StatelessWidget {
-  const UserVerificationScreen({super.key});
+  UserVerificationScreen({super.key});
+
+  final _verificationFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,8 @@ class UserVerificationScreen extends StatelessWidget {
         centerTitle: true,
         title: _headerText(),
       ),
-      body: _verificationForm(),
+      body: SingleChildScrollView(
+          scrollDirection: Axis.vertical, child: _verificationForm()),
     );
   }
 
@@ -25,25 +28,23 @@ class UserVerificationScreen extends StatelessWidget {
           _showSnackBar(context, "User verification Failed");
         }
       },
-      child: BlocBuilder<FormVerificationBloc, FormVerificationState>(
-        builder: (context, state) {
-          return Form(
-            key: state.formKey,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _iconHolder(),
-                  _emailField(),
-                  const SizedBox(height: 28),
-                  _submitButton(),
-                  const SizedBox(height: 20),
-                ],
-              ),
-            ),
-          );
-        },
+      child: Form(
+        key: _verificationFormKey,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 30),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _iconHolder(),
+              _emailField(),
+              const SizedBox(height: 20),
+              _platformDropdown(),
+              const SizedBox(height: 40),
+              _submitButton(),
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -72,9 +73,13 @@ class UserVerificationScreen extends StatelessWidget {
         builder: (context, state) {
           return TextFormField(
             decoration: InputDecoration(
-                border: const OutlineInputBorder(),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                ),
                 prefixIcon: Icon(
-                  CupertinoIcons.envelope_circle,
+                  CupertinoIcons.mail,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 labelText: "Employee Email",
@@ -88,21 +93,55 @@ class UserVerificationScreen extends StatelessWidget {
         },
       );
 
+  Widget _platformDropdown() =>
+      BlocBuilder<FormVerificationBloc, FormVerificationState>(
+        builder: (context, state) {
+          return DropdownButtonFormField<String>(
+            value: state.platformFormItem.value,
+            decoration: const InputDecoration(
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+              prefixIcon: Icon(
+                CupertinoIcons.bag,
+                color: Colors.deepPurple,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
+              labelText: 'Platform',
+            ),
+            validator: (value) => state.platformFormItem.error,
+            onChanged: (value) => context.read<FormVerificationBloc>().add(
+                PlatformChangedEvent(
+                    platformItem: BlocFormItem(value: value!))),
+            items: const [
+              DropdownMenuItem(
+                value: 'android',
+                child: Text('Android'),
+              ),
+              DropdownMenuItem(
+                value: 'ios',
+                child: Text('Ios'),
+              ),
+              DropdownMenuItem(
+                value: 'web',
+                child: Text('Web'),
+              ),
+            ],
+          );
+        },
+      );
+
   Widget _submitButton() =>
       BlocBuilder<FormVerificationBloc, FormVerificationState>(
         builder: (context, state) {
           return ElevatedButton(
             style: ElevatedButton.styleFrom(
-                disabledBackgroundColor:
-                    Theme.of(context).colorScheme.background,
-                fixedSize: const Size(200.0, 50.0),
-                shape: RoundedRectangleBorder(
-                  side:
-                      BorderSide(color: Theme.of(context).colorScheme.primary),
-                  borderRadius: BorderRadius.circular(50),
-                )),
+              disabledBackgroundColor: Theme.of(context).colorScheme.background,
+              fixedSize: const Size(220.0, 50.0),
+            ),
             onPressed: () {
-              if (state.formKey!.currentState!.validate()) {
+              if (_verificationFormKey.currentState!.validate()) {
                 context.read<FormVerificationBloc>().add(FormSubmitEvent());
               }
             },

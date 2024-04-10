@@ -8,33 +8,28 @@ enum FormStatus {
 }
 
 class FormVerificationState extends Equatable {
-  final GlobalKey<FormState>? formKey;
   final BlocFormItem emailFormItem;
   final BlocFormItem platformFormItem;
   final FormStatus formStatus;
 
   const FormVerificationState._(
-      {this.formKey,
-      this.emailFormItem =
+      {this.emailFormItem =
           const BlocFormItem(error: 'Please enter valid email'),
       this.platformFormItem =
-          const BlocFormItem(error: 'Please choose the platform'),
+          const BlocFormItem(error: 'Please choose the platform', value: null),
       this.formStatus = FormStatus.init});
 
   FormVerificationState copyWith(
-      {GlobalKey<FormState>? formKey,
-      BlocFormItem? emailFormItem,
+      {BlocFormItem? emailFormItem,
       BlocFormItem? platformFormItem,
       FormStatus? formStatus,
       UserEntity? user}) {
     return FormVerificationState._(
-        formKey: formKey ?? this.formKey,
         emailFormItem: emailFormItem ?? this.emailFormItem,
         platformFormItem: platformFormItem ?? this.platformFormItem,
         formStatus: formStatus ?? this.formStatus);
   }
 
   @override
-  List<Object?> get props =>
-      [formKey, emailFormItem, platformFormItem, formStatus];
+  List<Object?> get props => [emailFormItem, platformFormItem, formStatus];
 }
