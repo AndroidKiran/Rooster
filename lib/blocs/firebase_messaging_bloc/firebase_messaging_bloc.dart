@@ -61,10 +61,11 @@ class FirebaseMessagingBloc
     try {
       final message = event.message;
       log('Message title: ${message.notification?.title}, body: ${message.notification?.body}, data: ${message.data}');
-      if (!FirebaseService.isVelocityAlertNotification(message)) return;
+      if (!FirebaseService.isVelocityAlertNotification(message) ||
+          !FirebaseService.hasValidIssueId(message)) return;
       final user = await _userRepository.getUserFromPreference();
       if (user.isEmptyInstance()) return;
-      final String? crashId = message.data['crash_id'];
+      final String? crashId = message.data[FirebaseService.KEY_ISSUE_ID];
       if (crashId == null || crashId.isEmpty) return;
       _crashVelocityRepository.saveCrashId(crashId);
       return emit(VelocityCrashFcmMessageState(message: event.message));

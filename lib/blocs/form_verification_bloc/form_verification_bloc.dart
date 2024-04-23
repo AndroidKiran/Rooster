@@ -69,7 +69,7 @@ class FormVerificationBloc
       }
 
       var user = await _userRepository.getFireStoreUser(email, platform);
-      if (user == null || user.isEmptyInstance()) {
+      if (user.isEmptyInstance()) {
         return emit(state.copyWith(formStatus: FormStatus.submitFailure));
       }
 

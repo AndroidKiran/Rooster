@@ -1,9 +1,13 @@
 
-import {CollectionReference, DocumentReference, DocumentSnapshot, Firestore, Query, QuerySnapshot, getFirestore} from "firebase-admin/firestore";
+import {CollectionReference, DocumentReference, DocumentSnapshot, Firestore, Query, QuerySnapshot, WriteResult, getFirestore} from "firebase-admin/firestore";
 import {BatchResponse, Message, Messaging, getMessaging} from "firebase-admin/messaging";
 import {logger} from "firebase-functions";
 import {COLLECTION_USER, DEVICE_INFO, VELOCITY_CRASH_ALERT} from "../constants";
 import {isEmptyString} from "../utils";
+import {FirestoreEvent, QueryDocumentSnapshot} from "firebase-functions/v2/firestore";
+import {ParamsOf} from "firebase-functions/v2";
+import {CrashlyticsEvent, VelocityAlertPayload, NewFatalIssuePayload} from "firebase-functions/v2/alerts/crashlytics";
+
 
 const firestore: Firestore = getFirestore();
 const messaging: Messaging = getMessaging();
@@ -15,22 +19,33 @@ const errrCodeRegTokenNotRegistered = "messaging/registration-token-not-register
 const errorCodeInvalidArgument = "messaging/invalid-argument";
 const errorFcmMessage = "The registration token is not a valid FCM registration token";
 
+const IOS_APP_ID = "ios";
+const ANDROID_APP_ID = "android";
+
 /**
  * function write the event into velcoity alert db
- * @param {string} appid - is to identify velocity crash on app
- * @param {any} event - is for event
- * @return {Promise} promise
+ * @param {CrashlyticsEvent<VelocityAlertPayload>} event - is for event
+ * @return {Promise<WriteResult>}
  */
-export async function writeToVelocityCrashDb(appid:string, event: any) {
+export async function writeToVelocityCrashDb(event: CrashlyticsEvent<VelocityAlertPayload>): Promise<WriteResult> {
   logger.log("onVelocityAlertPublished executing");
-  logger.log("app_id==", appid);
+  logger.log("app_id==", event.appId);
   logger.log("event_data==", event.data.payload);
 
   const {crashCount, crashPercentage, createTime, firstVersion} = event.data.payload;
   const {id, title, subtitle, appVersion} = event.data.payload.issue;
 
+  let platform = "";
+  if (event.appId.includes(IOS_APP_ID)) {
+    platform = IOS_APP_ID;
+  }
+
+  if (event.appId.includes(ANDROID_APP_ID)) {
+    platform = ANDROID_APP_ID;
+  }
+
   const crashlyticsData = {
-    "appId": appid,
+    "appId": event.appId,
     "issueId": id,
     "issueTitle": title,
     "issueSubtitle": subtitle,
@@ -39,6 +54,7 @@ export async function writeToVelocityCrashDb(appid:string, event: any) {
     "crashPercentage": crashPercentage,
     "createdAt": createTime,
     "firstVersion": firstVersion,
+    "platform": platform,
   };
 
   // Write the event data on db
@@ -47,29 +63,49 @@ export async function writeToVelocityCrashDb(appid:string, event: any) {
 }
 
 /**
- * function send velocity alert notification to on call user
- * @param {any} event - is for event
- * @return {Promise}
+ * function write the event into velcoity alert db
+ * @param {CrashlyticsEvent<NewFatalIssuePayload>} event - is for event
+ * @return {Promise} promise
  */
-export async function sendVelocityNotification(event: any) {
+export async function writeToFatalCrashDb(event: CrashlyticsEvent<NewFatalIssuePayload>) {
+  logger.log("onVelocityAlertPublished executing");
+  logger.log("app_id==", event.appId);
+  logger.log("event_data==", event.data.payload);
+
+  return;
+}
+
+/**
+ * function send velocity alert notification to on call user
+ * @param {FirestoreEvent<QueryDocumentSnapshot | undefined, ParamsOf<string>>} event - is for event
+ * @return {Promise<FirebaseFirestore.WriteResult[]>}
+ */
+export async function sendVelocityNotification(event: FirestoreEvent<QueryDocumentSnapshot | undefined, ParamsOf<string>>): Promise<FirebaseFirestore.WriteResult[]> {
   logger.log("onDocumentCreated executing");
   const snapshot = event.data;
   if (!snapshot) {
     logger.log("No data associated with the event");
-    return;
-  }
-  const appId = snapshot.appId;
-  if (isEmptyString(appId)) {
-    logger.log("app id is empty");
-    return;
+    return Promise.resolve([]);
   }
 
-  const deviceInfoDocumentSnapshots: DocumentSnapshot<FirebaseFirestore.DocumentData>[] = await getAllUserDeviceInfo(appId);
+  const data = snapshot.data();
+  if (!data) {
+    logger.log("Invalid issue data");
+    return Promise.resolve([]);
+  }
+
+  const platform = data.platform;
+  if (isEmptyString(platform)) {
+    logger.log("app id is empty");
+    return Promise.resolve([]);
+  }
+
+  const deviceInfoDocumentSnapshots: DocumentSnapshot<FirebaseFirestore.DocumentData>[] = await getAllUserDeviceInfo(platform);
   const deviceInfoDocumentSnapshotExists = deviceInfoDocumentSnapshots.length > 0;
 
   if (!deviceInfoDocumentSnapshotExists) {
     logger.log("device info list is empty");
-    return;
+    return Promise.resolve([]);
   }
 
   const tokens: string[] = deviceInfoDocumentSnapshots.map((doc) => {
@@ -84,12 +120,12 @@ export async function sendVelocityNotification(event: any) {
     messages.push({
       token: fcmToken,
       notification: {
-        title: snapshot.issueTitle,
-        body: snapshot.issueSubTitle,
+        title: data.issueTitle,
+        body: data.issueSubTitle,
       },
       data: {
         type: "CrashVelocityNotificationType",
-        issueId: snapshot.issueId,
+        issueId: data.issueId,
       },
     });
   });
@@ -99,54 +135,43 @@ export async function sendVelocityNotification(event: any) {
     const batchResponse: BatchResponse = await messaging.sendEach(messages);
     if (batchResponse.failureCount < 1) {
       logger.log("${batchResponse.failureCount} message sent.", batchResponse);
-      return;
+      return Promise.resolve([]);
     }
     logger.log("${batchResponse.failureCount} messages failed to sent", batchResponse);
     return await cleanUpTokens(batchResponse, deviceInfoDocumentSnapshots);
   } else {
     logger.log("notifcation message is empty");
-    return Promise.resolve();
+    return Promise.resolve([]);
   }
 }
 
 /**
  * function get device information of on call users
- * @param {string} appId - is for querying the db
- * @return {Promise}
+ * @param {string} platform - is for querying the db
+ * @return {Promise<DocumentSnapshot[]>}
  */
-async function getAllUserDeviceInfo(appId: string): Promise<DocumentSnapshot[]> {
-  const userQuerySnapShot: QuerySnapshot = await getOnCallUsers(appId);
+async function getAllUserDeviceInfo(platform: string): Promise<DocumentSnapshot[]> {
+  const deviceInfoDocumentSnapshots: DocumentSnapshot[] = [];
+  const userQuerySnapShot: QuerySnapshot = await getOnCallUsers(platform);
   const usersExists: boolean = userQuerySnapShot.docs.length > 0;
+  logger.log("on call user list == ${usersExists} with platform = ${platform}");
   if (usersExists) {
     const deviceInfos: string[] = userQuerySnapShot.docs.map((doc) => doc.data().deviceInfo);
-    const deviceInfoDocumentSnapshots: DocumentSnapshot[] = [];
+    logger.log("on call user list == ${deviceInfos} with platform = ${platform}");
     deviceInfos.forEach(async (deviceInfo) => {
       const deviceInfoDocSnapShot: DocumentSnapshot = await firestore.doc(deviceInfo).get();
       deviceInfoDocumentSnapshots.push(deviceInfoDocSnapShot);
     });
-    return deviceInfoDocumentSnapshots;
-  } else {
-    logger.log("on call user list is empty");
-    return [];
   }
+  return deviceInfoDocumentSnapshots;
 }
 
 /**
  * function get device information of on call users
- * @param {string} appId - is for querying the db
- * @return {Promise}
+ * @param {string} platform - is for querying the db
+ * @return {Promise<QuerySnapshot>}
  */
-async function getOnCallUsers(appId: string): Promise<QuerySnapshot> {
-  let platform = "";
-
-  if (appId == "IOS") {
-    platform = "ios";
-  }
-
-  if (appId == "android") {
-    platform = "android";
-  }
-
+async function getOnCallUsers(platform: string): Promise<QuerySnapshot> {
   const userQuery: Query = userCollection.where("isOnCall", "==", true).where("platform", "==", platform);
   return await userQuery.get();
 }
@@ -155,7 +180,7 @@ async function getOnCallUsers(appId: string): Promise<QuerySnapshot> {
  * function cleanup the invalid tokens saved on db
  * @param {BatchResponse} batchResponse - is bacth response of notifcations sent
  * @param {DocumentSnapshot<FirebaseFirestore.DocumentData>[]} deviceInfoDocumentSnapshots - is list of device info snapshot
- * @return {Promise}
+ * @return {Promise<FirebaseFirestore.WriteResult[]>}
  */
 async function cleanUpTokens(
   batchResponse: BatchResponse,

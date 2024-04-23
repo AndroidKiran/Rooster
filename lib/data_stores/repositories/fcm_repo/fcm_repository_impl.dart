@@ -5,7 +5,7 @@ import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 class FcmRepositoryImplementation implements FcmRepository {
   final StreamingSharedPreferences _preferences;
-  final _firebaseMessaging = FirebaseService.roosterFirebaseMessaging();
+  final _firebaseMessaging = FirebaseService().firebaseMessaging;
 
   FcmRepositoryImplementation({required StreamingSharedPreferences preferences})
       : _preferences = preferences;
