@@ -76,13 +76,14 @@ class FirebaseMessagingBloc
   Future<void> _onTokenRefreshEvent(
       RefreshFcmTokenEvent event, Emitter<FirebaseMessagingState> emit) async {
     try {
-      await _fcmRepository.setRefreshTokenSyncState(false);
       final user = await _userRepository.getUserFromPreference();
       if (user.isEmptyInstance()) return;
       final deviceInfo = DeviceInfo.newTokenDeviceInfo(event.refreshToken);
-      await _deviceInfoRepository.updateFirebaseDeviceInfo(
-          deviceInfo, user.deviceInfoRef);
-      await _fcmRepository.setRefreshTokenSyncState(true);
+      final String deviceInfoDocPath = await _deviceInfoRepository
+          .updateFirebaseDeviceInfo(deviceInfo, user.deviceInfoRef);
+      if (user.deviceInfoRef != deviceInfoDocPath) {
+        await _userRepository.updateUserDeviceInfoPath(user, deviceInfoDocPath);
+      }
       return emit(RefreshFcmTokenState());
     } catch (e) {
       log(e.toString());

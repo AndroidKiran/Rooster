@@ -7,7 +7,7 @@ abstract class UserRepository {
 
   Future<UserEntity> getUserFromPreference();
 
-  Future<UserEntity?> getFireStoreUser(String email, String platform);
+  Future<UserEntity> getFireStoreUser(String email, String platform);
 
-  Future<void> setUserData(UserEntity user);
+  Future<void> updateUserDeviceInfoPath(UserEntity user, String deviceInfoPath);
 }

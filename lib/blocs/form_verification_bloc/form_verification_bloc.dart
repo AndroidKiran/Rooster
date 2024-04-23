@@ -68,21 +68,24 @@ class FormVerificationBloc
         return emit(state.copyWith(formStatus: FormStatus.submitFailure));
       }
 
-      final UserEntity? user =
-          await _userRepository.getFireStoreUser(email, platform);
+      var user = await _userRepository.getFireStoreUser(email, platform);
       if (user == null || user.isEmptyInstance()) {
         return emit(state.copyWith(formStatus: FormStatus.submitFailure));
       }
 
-      final token = await _fcmRepository.getFcmToken();
-      if (token == null || token.isEmpty) {
-        return emit(state.copyWith(formStatus: FormStatus.submitFailure));
+      final token = await _fcmRepository.getFcmToken() ?? '';
+      final DeviceInfo deviceInfo =
+          await _deviceInfoRepository.getFirebaseDeviceInfo(user.deviceInfoRef);
+      if (token != deviceInfo.fcmToken) {
+        final deviceInfo = DeviceInfo.newTokenDeviceInfo(token);
+        final String docInfoRef =
+            await _deviceInfoRepository.updateFirebaseDeviceInfo(
+          deviceInfo,
+          user.deviceInfoRef,
+        );
+        await _userRepository.updateUserDeviceInfoPath(user, docInfoRef);
+        user = await _userRepository.getUserFromPreference();
       }
-
-      await _deviceInfoRepository.updateFirebaseDeviceInfo(
-          DeviceInfo.newTokenDeviceInfo(token), user.deviceInfoRef);
-
-      await _userRepository.saveUserToPreference(user);
       return emit(
           state.copyWith(formStatus: FormStatus.submitSuccess, user: user));
     } catch (e) {

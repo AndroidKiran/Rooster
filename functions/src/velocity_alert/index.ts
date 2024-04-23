@@ -131,6 +131,11 @@ async function getAllUserDeviceInfo(appId: string): Promise<DocumentSnapshot[]> 
   }
 }
 
+/**
+ * function get device information of on call users
+ * @param {string} appId - is for querying the db
+ * @return {Promise}
+ */
 async function getOnCallUsers(appId: string): Promise<QuerySnapshot> {
   let platform = "";
 

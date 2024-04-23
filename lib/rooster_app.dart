@@ -89,7 +89,6 @@ class _RoosterApp extends State<RoosterApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     FlutterNativeSplash.remove();
-    throw Exception();
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<FirebaseMessagingBloc>(

@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_callkit_incoming/entities/call_event.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
@@ -29,9 +30,11 @@ class _HomeScreen extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.cyanAccent,
-    );
+    return ElevatedButton(
+        onPressed: () {
+          FirebaseCrashlytics.instance.crash();
+        },
+        child: const Text("Crash me"));
   }
 
   void _onEvent(CallEvent event) {

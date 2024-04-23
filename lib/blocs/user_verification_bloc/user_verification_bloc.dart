@@ -34,28 +34,36 @@ class UserVerificationBloc
 
   Future<void> _onAppInitEvent(
       VerifyUserExistsEvent event, Emitter<UserVerificationState> emit) async {
+    var currentEvent = const UserVerificationState.failure();
+    var user = event.user;
     try {
-      if (event.user == UserEntity.emptyInstance) {
-        return emit(const UserVerificationState.failure());
-      } else {
-        final isRefreshTokenSyncCompleted =
-            await _fcmRepository.isRefreshTokenSyncCompleted();
-        if (!isRefreshTokenSyncCompleted) {
-          final token = await _fcmRepository.getFcmToken();
-          if (token != null) {
-            final deviceInfo = DeviceInfo.newTokenDeviceInfo(token);
-            _deviceInfoRepository.updateFirebaseDeviceInfo(
-              deviceInfo,
-              event.user.deviceInfoRef,
-            );
-            await _fcmRepository.setRefreshTokenSyncState(true);
-          }
+      if (user != UserEntity.emptyInstance) {
+        user = await _userRepository.getFireStoreUser(
+            event.user.email, event.user.platform);
+        if (user == UserEntity.emptyInstance) {
+          return emit(currentEvent);
         }
-        return emit(UserVerificationState.success(event.user));
+        final String token = await _fcmRepository.getFcmToken() ?? '';
+        final DeviceInfo deviceInfo = await _deviceInfoRepository
+            .getFirebaseDeviceInfo(user.deviceInfoRef);
+        if (token.isEmpty ||
+            deviceInfo.fcmToken.isEmpty ||
+            token != deviceInfo.fcmToken) {
+          final deviceInfo = DeviceInfo.newTokenDeviceInfo(token);
+          final String docInfoRef =
+              await _deviceInfoRepository.updateFirebaseDeviceInfo(
+            deviceInfo,
+            user.deviceInfoRef,
+          );
+          await _userRepository.updateUserDeviceInfoPath(user, docInfoRef);
+          user = await _userRepository.getUserFromPreference();
+        }
+        currentEvent = UserVerificationState.success(user);
       }
+      return emit(currentEvent);
     } catch (e) {
       log(e.toString());
-      return emit(const UserVerificationState.failure());
+      return emit(currentEvent);
     }
   }
 

@@ -9,15 +9,18 @@ part of 'device_info.dart';
 DeviceInfo _$DeviceInfoFromJson(Map<String, dynamic> json) => DeviceInfo(
       fcmToken: json['fcmToken'] as String,
       os: json['os'] as String,
-      createdAt: const ServerTimestampConverter().fromJson(json['createdAt']),
-      modifiedAt: const ServerTimestampConverter().fromJson(json['modifiedAt']),
+      createdAt: const ServerTimestampToMilliSecondConverter()
+          .fromJson(json['createdAt']),
+      modifiedAt: const ServerTimestampToMilliSecondConverter()
+          .fromJson(json['modifiedAt']),
     );
 
 Map<String, dynamic> _$DeviceInfoToJson(DeviceInfo instance) =>
     <String, dynamic>{
       'fcmToken': instance.fcmToken,
       'os': instance.os,
-      'createdAt': const ServerTimestampConverter().toJson(instance.createdAt),
-      'modifiedAt':
-          const ServerTimestampConverter().toJson(instance.modifiedAt),
+      'createdAt': const ServerTimestampToMilliSecondConverter()
+          .toJson(instance.createdAt),
+      'modifiedAt': const ServerTimestampToMilliSecondConverter()
+          .toJson(instance.modifiedAt),
     };

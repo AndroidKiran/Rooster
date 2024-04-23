@@ -9,7 +9,7 @@ abstract class FcmRepository {
 
   Future<String?> getFcmToken();
 
-  Future<bool> isRefreshTokenSyncCompleted();
-
-  Future<void> setRefreshTokenSyncState(bool completed);
+// Future<bool> isRefreshTokenSyncRequired();
+//
+// Future<void> setRefreshTokenSyncState(bool completed);
 }
