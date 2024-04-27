@@ -25,9 +25,8 @@ const ANDROID_APP_ID = "android";
 /**
  * function write the event into velcoity alert db
  * @param {CrashlyticsEvent<VelocityAlertPayload>} event - is for event
- * @return {Promise<WriteResult>}
  */
-export async function writeToVelocityCrashDb(event: CrashlyticsEvent<VelocityAlertPayload>): Promise<WriteResult> {
+export async function writeToVelocityCrashDb(event: CrashlyticsEvent<VelocityAlertPayload>) {
   logger.log("onVelocityAlertPublished executing");
   logger.log("app_id==", event.appId);
   logger.log("event_data==", event.data.payload);
@@ -38,10 +37,14 @@ export async function writeToVelocityCrashDb(event: CrashlyticsEvent<VelocityAle
   let platform = "";
   if (event.appId.includes(IOS_APP_ID)) {
     platform = IOS_APP_ID;
-  }
-
+  } 
+  
   if (event.appId.includes(ANDROID_APP_ID)) {
     platform = ANDROID_APP_ID;
+  } 
+  
+  if(isEmptyString(platform)) {
+    return;
   }
 
   const crashlyticsData = {
@@ -59,45 +62,42 @@ export async function writeToVelocityCrashDb(event: CrashlyticsEvent<VelocityAle
 
   // Write the event data on db
   const docRef: DocumentReference = velocityCrashAlertsCollection.doc(id);
-  return await docRef.set(crashlyticsData);
+  await docRef.set(crashlyticsData);
 }
 
 /**
  * function write the event into velcoity alert db
  * @param {CrashlyticsEvent<NewFatalIssuePayload>} event - is for event
- * @return {Promise} promise
  */
 export async function writeToFatalCrashDb(event: CrashlyticsEvent<NewFatalIssuePayload>) {
   logger.log("onVelocityAlertPublished executing");
   logger.log("app_id==", event.appId);
   logger.log("event_data==", event.data.payload);
-
   return;
 }
 
 /**
  * function send velocity alert notification to on call user
  * @param {FirestoreEvent<QueryDocumentSnapshot | undefined, ParamsOf<string>>} event - is for event
- * @return {Promise<FirebaseFirestore.WriteResult[]>}
  */
-export async function sendVelocityNotification(event: FirestoreEvent<QueryDocumentSnapshot | undefined, ParamsOf<string>>): Promise<FirebaseFirestore.WriteResult[]> {
+export async function sendVelocityNotification(event: FirestoreEvent<QueryDocumentSnapshot | undefined, ParamsOf<string>>) {
   logger.log("onDocumentCreated executing");
   const snapshot = event.data;
   if (!snapshot) {
     logger.log("No data associated with the event");
-    return Promise.resolve([]);
+    return;
   }
 
   const data = snapshot.data();
   if (!data) {
     logger.log("Invalid issue data");
-    return Promise.resolve([]);
+    return;
   }
 
   const platform = data.platform;
   if (isEmptyString(platform)) {
-    logger.log("app id is empty");
-    return Promise.resolve([]);
+    logger.log("platform is empty");
+    return;
   }
 
   const deviceInfoDocumentSnapshots: DocumentSnapshot<FirebaseFirestore.DocumentData>[] = await getAllUserDeviceInfo(platform);
@@ -105,7 +105,7 @@ export async function sendVelocityNotification(event: FirestoreEvent<QueryDocume
 
   if (!deviceInfoDocumentSnapshotExists) {
     logger.log("device info list is empty");
-    return Promise.resolve([]);
+    return;
   }
 
   const tokens: string[] = deviceInfoDocumentSnapshots.map((doc) => {
@@ -114,6 +114,8 @@ export async function sendVelocityNotification(event: FirestoreEvent<QueryDocume
       return snapshot.fcmToken;
     }
   });
+
+  logger.log("token list ==> "+tokens);
 
   const messages: Message[] = [];
   tokens.forEach((fcmToken) => {
@@ -131,17 +133,17 @@ export async function sendVelocityNotification(event: FirestoreEvent<QueryDocume
   });
 
   const messageExists = messages.length > 0;
+  logger.log("message list ==> "+messages);
   if (messageExists) {
     const batchResponse: BatchResponse = await messaging.sendEach(messages);
     if (batchResponse.failureCount < 1) {
-      logger.log("${batchResponse.failureCount} message sent.", batchResponse);
-      return Promise.resolve([]);
+      logger.log("message sent count:===> " + batchResponse.successCount);
+    } else {
+      logger.log("messages failed to sent:==> " + batchResponse.failureCount);
+      await cleanUpTokens(batchResponse, deviceInfoDocumentSnapshots);
     }
-    logger.log("${batchResponse.failureCount} messages failed to sent", batchResponse);
-    return await cleanUpTokens(batchResponse, deviceInfoDocumentSnapshots);
   } else {
-    logger.log("notifcation message is empty");
-    return Promise.resolve([]);
+    logger.log("message list is empty ==> "+messages.length);
   }
 }
 
@@ -151,29 +153,37 @@ export async function sendVelocityNotification(event: FirestoreEvent<QueryDocume
  * @return {Promise<DocumentSnapshot[]>}
  */
 async function getAllUserDeviceInfo(platform: string): Promise<DocumentSnapshot[]> {
-  const deviceInfoDocumentSnapshots: DocumentSnapshot[] = [];
-  const userQuerySnapShot: QuerySnapshot = await getOnCallUsers(platform);
+  const deviceInfoDocumentSnapshots:Promise<DocumentSnapshot>[] = [];
+  const userQuery: Query = userCollection.where("isOnCall", "==", true).where("platform", "==", platform);
+  const userQuerySnapShot: QuerySnapshot = await userQuery.get();
   const usersExists: boolean = userQuerySnapShot.docs.length > 0;
-  logger.log("on call user list == ${usersExists} with platform = ${platform}");
+  logger.log("on call user list == " + usersExists + " with platform = "+platform);
   if (usersExists) {
-    const deviceInfos: string[] = userQuerySnapShot.docs.map((doc) => doc.data().deviceInfo);
-    logger.log("on call user list == ${deviceInfos} with platform = ${platform}");
-    deviceInfos.forEach(async (deviceInfo) => {
-      const deviceInfoDocSnapShot: DocumentSnapshot = await firestore.doc(deviceInfo).get();
+    const deviceInfo: string[] = userQuerySnapShot.docs.map((doc) => {
+      const data = doc.data();
+      if (data) {
+        return data.deviceInfoRef;
+      }
+    });
+
+    const isDeviceInfoExists = deviceInfo.length > 0;
+
+    if (deviceInfo.length > 0) {
+      logger.log(" with platform = " +platform + " device info ==  " +deviceInfo[0]);
+    }
+
+    if (!isDeviceInfoExists) {
+      logger.log(" with platform = " +platform + " device info length ==  " +deviceInfo.length);
+      return Promise.resolve([]);
+    }
+
+    deviceInfo.forEach((path) => {
+      logger.log("deviceinfo path ==  " +path);
+      const deviceInfoDocSnapShot = firestore.doc(path).get();
       deviceInfoDocumentSnapshots.push(deviceInfoDocSnapShot);
     });
   }
-  return deviceInfoDocumentSnapshots;
-}
-
-/**
- * function get device information of on call users
- * @param {string} platform - is for querying the db
- * @return {Promise<QuerySnapshot>}
- */
-async function getOnCallUsers(platform: string): Promise<QuerySnapshot> {
-  const userQuery: Query = userCollection.where("isOnCall", "==", true).where("platform", "==", platform);
-  return await userQuery.get();
+  return Promise.all(deviceInfoDocumentSnapshots);
 }
 
 /**

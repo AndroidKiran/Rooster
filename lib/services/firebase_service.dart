@@ -3,20 +3,16 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 
 class FirebaseService {
-  static final _instance = FirebaseService._internal();
+  late FirebaseFirestore fireStore = _roosterFireStore();
+  late FirebaseMessaging firebaseMessaging = _roosterFirebaseMessaging();
 
-  late FirebaseFirestore firestore;
-  late FirebaseMessaging firebaseMessaging;
+  static final FirebaseService _singleton = FirebaseService._();
 
-  factory FirebaseService() {
-    _instance.firestore = _roosterFireStore();
-    _instance.firebaseMessaging = _roosterFirebaseMessaging();
-    return _instance;
-  }
+  factory FirebaseService() => _singleton;
 
-  FirebaseService._internal();
+  FirebaseService._();
 
-  static Future<void> setupFirebase() async {
+  Future<void> setupFirebase() async {
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,
@@ -25,7 +21,7 @@ class FirebaseService {
     );
   }
 
-  static FirebaseFirestore _roosterFireStore() {
+  FirebaseFirestore _roosterFireStore() {
     FirebaseFirestore firebaseFireStore = FirebaseFirestore.instance;
     if (kDebugMode) {
       try {
@@ -41,17 +37,17 @@ class FirebaseService {
     return firebaseFireStore;
   }
 
-  static FirebaseMessaging _roosterFirebaseMessaging() {
+  FirebaseMessaging _roosterFirebaseMessaging() {
     return FirebaseMessaging.instance;
   }
 
-  static bool isVelocityAlertNotification(RemoteMessage message) {
+  bool isVelocityAlertNotification(RemoteMessage message) {
     return message.data.containsKey(KEY_CRASH_VELOCITY_NOTIFICATION_TYPE) &&
         message.data[KEY_CRASH_VELOCITY_NOTIFICATION_TYPE] ==
             VALUE_CRASH_VELOCITY_NOTIFICATION_TYPE;
   }
 
-  static bool hasValidIssueId(RemoteMessage message) {
+  bool hasValidIssueId(RemoteMessage message) {
     return message.data.containsKey(KEY_ISSUE_ID) &&
         message.data[KEY_ISSUE_ID] != null;
   }

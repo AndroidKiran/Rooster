@@ -6,7 +6,7 @@ import 'package:rooster/services/firebase_service.dart';
 
 class DeviceInfoRepositoryImplementation extends DeviceInfoRepository {
   final _deviceInfoCollection =
-      FirebaseService().firestore.collection(DEVICE_INFO_COLLECTION);
+      FirebaseService().fireStore.collection(DEVICE_INFO_COLLECTION);
 
   @override
   Future<String> updateFirebaseDeviceInfo(

@@ -44,7 +44,7 @@ class _RoosterApp extends State<RoosterApp> with WidgetsBindingObserver {
     _deviceInfoRepository = widget.deviceInfoRepository;
     _crashVelocityRepository = widget.crashVelocityRepository;
 
-    FirebaseService.setupFirebase();
+    FirebaseService().setupFirebase();
     // Register your State class as a binding observer
     WidgetsBinding.instance.addObserver(this);
   }
@@ -115,7 +115,7 @@ class _RoosterApp extends State<RoosterApp> with WidgetsBindingObserver {
             listener: (context, state) {
               switch (state) {
                 case VelocityCrashFcmMessageState():
-                  CallKitService.showCallkitIncoming(const Uuid().v4());
+                  CallKitService().showCallkitIncoming(const Uuid().v4());
                   break;
 
                 case RefreshFcmTokenState():

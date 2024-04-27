@@ -31,23 +31,26 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    if (!FirebaseService.isVelocityAlertNotification(message) ||
-        !FirebaseService.hasValidIssueId(message)) return;
+    FirebaseService firebaseService = FirebaseService();
+    if (!firebaseService.isVelocityAlertNotification(message) ||
+        !firebaseService.hasValidIssueId(message)) return;
+
     final preference = await StreamingSharedPreferences.instance;
-    final String? crashId = message.data[FirebaseService.KEY_ISSUE_ID];
-    log('_firebaseMessagingBackgroundHandler passed crash id');
-    if (crashId == null || crashId.isEmpty) return;
-    final crashVelocityRepository =
-        CrashVelocityRepositoryImplementation(preferences: preference);
-    crashVelocityRepository.saveCrashId(crashId);
-    log('_firebaseMessagingBackgroundHandler passed save crash id');
     final userRepository = UserRepositoryImplementation(
         preferences: preference); // FirebaseUserRepository
     final user = await userRepository.getUserFromPreference();
     log('_firebaseMessagingBackgroundHandler passed create user repo');
     if (user.isEmptyInstance()) return;
-    log('_firebaseMessagingBackgroundHandler passed create user verification');
-    CallKitService.showCallkitIncoming(const Uuid().v4());
+
+    final String? crashId = message.data[FirebaseService.KEY_ISSUE_ID];
+    log('_firebaseMessagingBackgroundHandler received crash id ==> ${crashId ?? ""}');
+    if (crashId == null || crashId.isEmpty) return;
+    final crashVelocityRepository =
+        CrashVelocityRepositoryImplementation(preferences: preference);
+    crashVelocityRepository.saveCrashId(crashId);
+    log('_firebaseMessagingBackgroundHandler saved crash id ==> ${crashId ?? ""}');
+
+    CallKitService().showCallkitIncoming(const Uuid().v4());
   } catch (e) {
     log(e.toString());
   }
@@ -90,4 +93,8 @@ Future<RoosterApp> _roosterApp() async {
       CrashVelocityRepositoryImplementation(preferences: preferences);
   return RoosterApp(userRepository, fcmRepository, deviceInfoRepository,
       crashVelocityRepository);
+}
+
+Future<void> getDevicePushTokenVoIP() async {
+  await CallKitService().getDevicePushTokenVoIP();
 }

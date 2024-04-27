@@ -60,14 +60,20 @@ class FirebaseMessagingBloc
       ForegroundFcmEvent event, Emitter<FirebaseMessagingState> emit) async {
     try {
       final message = event.message;
-      log('Message title: ${message.notification?.title}, body: ${message.notification?.body}, data: ${message.data}');
-      if (!FirebaseService.isVelocityAlertNotification(message) ||
-          !FirebaseService.hasValidIssueId(message)) return;
+      FirebaseService firebaseService = FirebaseService();
+      if (!firebaseService.isVelocityAlertNotification(message) ||
+          !firebaseService.hasValidIssueId(message)) return;
+
       final user = await _userRepository.getUserFromPreference();
       if (user.isEmptyInstance()) return;
+
       final String? crashId = message.data[FirebaseService.KEY_ISSUE_ID];
+      log('__onNotificationReceivedEvent received crash id ==> ${crashId ?? ""}');
       if (crashId == null || crashId.isEmpty) return;
+
       _crashVelocityRepository.saveCrashId(crashId);
+      log('_onNotificationReceivedEvent saved crash id ==> ${crashId ?? ""}');
+
       return emit(VelocityCrashFcmMessageState(message: event.message));
     } catch (e) {
       log(e.toString());

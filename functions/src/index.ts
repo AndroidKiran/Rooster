@@ -11,13 +11,13 @@ import {onDocumentCreated, FirestoreEvent, QueryDocumentSnapshot} from "firebase
 const velocityCrashAlertPath = "/velocityCrashAlerts/{documentId}";
 
 exports.sendOnVelocityAlert = onNewFatalIssuePublished(async (event: CrashlyticsEvent<NewFatalIssuePayload>) => {
-  return await writeToFatalCrashDb(event);
+  await writeToFatalCrashDb(event);
 });
 
 exports.sendOnVelocityAlert = onVelocityAlertPublished(async (event: CrashlyticsEvent<VelocityAlertPayload>) => {
-  return await writeToVelocityCrashDb(event);
+  await writeToVelocityCrashDb(event);
 });
 
 exports.sendNoftifcationToOncallUser = onDocumentCreated(velocityCrashAlertPath, async (event: FirestoreEvent<QueryDocumentSnapshot | undefined, ParamsOf<string>>) => {
-  return await sendVelocityNotification(event);
+   await sendVelocityNotification(event);
 });

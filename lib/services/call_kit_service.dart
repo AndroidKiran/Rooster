@@ -11,10 +11,16 @@ import 'package:go_router/go_router.dart';
 import 'package:rooster/screens/routes/rooster_screen_path.dart';
 
 class CallKitService {
-  static Future<void> showCallkitIncoming(String uuid) async {
+  static final CallKitService _singleton = CallKitService._();
+
+  factory CallKitService() => _singleton;
+
+  CallKitService._();
+
+  Future<void> showCallkitIncoming(String uuid) async {
     final params = CallKitParams(
       id: uuid,
-      nameCaller: 'Rooster',
+      nameCaller: 'Rooster Alert',
       appName: 'Rooster',
       avatar: 'assets/icons/icon_rooster.png',
       handle: '9009900990',
@@ -59,12 +65,12 @@ class CallKitService {
     await FlutterCallkitIncoming.showCallkitIncoming(params);
   }
 
-  static Future<void> getDevicePushTokenVoIP() async {
+  Future<void> getDevicePushTokenVoIP() async {
     var devicePushTokenVoIP =
         await FlutterCallkitIncoming.getDevicePushTokenVoIP();
   }
 
-  static Future<void> listenerEvent(
+  Future<void> listenerEvent(
       BuildContext context, void Function(CallEvent) callback) async {
     try {
       FlutterCallkitIncoming.onEvent.listen((event) async {
@@ -82,7 +88,41 @@ class CallKitService {
         callback(event);
       });
     } on Exception catch (e) {
-      print(e);
+      log(e.toString());
     }
+  }
+
+  Future<dynamic> initCurrentCall() async {
+    //check current call from pushkit if possible
+    var calls = await FlutterCallkitIncoming.activeCalls();
+    if (calls is List) {
+      if (calls.isNotEmpty) {
+        // _currentUuid = calls[0]['id'];
+        return calls[0];
+      }
+    }
+    return null;
+  }
+
+  Future<dynamic> endCurrentCall(String currentUuid) async {
+    return await FlutterCallkitIncoming.endCall(currentUuid);
+  }
+
+  Future<dynamic> endAllCalls() async {
+    await FlutterCallkitIncoming.endAllCalls();
+  }
+
+  Future<void> requestNotificationPermission() async {
+    await FlutterCallkitIncoming.requestNotificationPermission({
+      "rationaleMessagePermission":
+          "Notification permission is required, to show notification.",
+      "postNotificationMessageRequired":
+          "Notification permission is required, Please allow notification permission from setting."
+    });
+  }
+
+  Future<dynamic> hideCallNotification(String currentUuid) async {
+    CallKitParams params = CallKitParams(id: currentUuid);
+    return await FlutterCallkitIncoming.hideCallkitIncoming(params);
   }
 }
