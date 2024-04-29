@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class VelocityCrashesScreen extends StatelessWidget {
-  const VelocityCrashesScreen({super.key});
+class AddNewUserScreen extends StatelessWidget {
+  const AddNewUserScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.deepPurple,
         appBar: AppBar(
           centerTitle: true,
           title: _headerText(),
@@ -14,7 +14,7 @@ class VelocityCrashesScreen extends StatelessWidget {
   }
 
   Widget _headerText() => Text(
-        'Velocity Crashes',
+        'New User',
         maxLines: 3,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(

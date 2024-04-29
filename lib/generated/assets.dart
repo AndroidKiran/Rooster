@@ -2,6 +2,5 @@
 class Assets {
   Assets._();
 
-  static const String iconsIconRooster = 'assets/icons/icon_rooster.png';
-
+  static const String pngIconRooster = 'assets/png/icon_rooster.png';
 }

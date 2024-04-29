@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:rooster/blocs/firebase_messaging_bloc/firebase_messaging_bloc.dart';
 import 'package:rooster/blocs/form_verification_bloc/form_verification_bloc.dart';
+import 'package:rooster/blocs/home_bloc/home_bloc.dart';
 import 'package:rooster/blocs/user_verification_bloc/user_verification_state.dart';
 import 'package:rooster/blocs/user_verification_bloc/user_verification_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,6 +32,7 @@ class RoosterApp extends StatefulWidget {
 }
 
 class _RoosterApp extends State<RoosterApp> with WidgetsBindingObserver {
+  final router = RoosterRouter().router;
   late final UserRepository _userRepository;
   late final FcmRepository _fcmRepository;
   late final DeviceInfoRepository _deviceInfoRepository;
@@ -102,11 +104,14 @@ class _RoosterApp extends State<RoosterApp> with WidgetsBindingObserver {
                 userRepository: _userRepository,
                 fcmRepository: _fcmRepository,
                 deviceInfoRepository: _deviceInfoRepository)),
-        RepositoryProvider(
+        RepositoryProvider<FormVerificationBloc>(
           create: (context) => FormVerificationBloc(
               userRepository: _userRepository,
               deviceInfoRepository: _deviceInfoRepository,
               fcmRepository: _fcmRepository),
+        ),
+        RepositoryProvider<HomeBloc>(
+          create: (context) => HomeBloc(userRepository: _userRepository),
         ),
       ],
       child: MultiBlocListener(
@@ -129,16 +134,16 @@ class _RoosterApp extends State<RoosterApp> with WidgetsBindingObserver {
           ),
           BlocListener<UserVerificationBloc, UserVerificationState>(
             listener: (context, state) {
-              RoosterRouter.router.refresh();
+              router.refresh();
             },
           ),
         ],
         child: MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          routeInformationParser: RoosterRouter.router.routeInformationParser,
-          routerDelegate: RoosterRouter.router.routerDelegate,
-          routeInformationProvider:
-              RoosterRouter.router.routeInformationProvider,
+          debugShowCheckedModeBanner: true,
+          routeInformationParser: router.routeInformationParser,
+          routeInformationProvider: router.routeInformationProvider,
+          routerDelegate: router.routerDelegate,
+          backButtonDispatcher: RootBackButtonDispatcher(),
         ),
       ),
     );

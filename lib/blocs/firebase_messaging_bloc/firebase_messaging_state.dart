@@ -14,6 +14,7 @@ final class FirebaseMessagingInitState extends FirebaseMessagingState {
   List<Object?> get props => [];
 }
 
+@immutable
 final class VelocityCrashFcmMessageState extends FirebaseMessagingState {
   final RemoteMessage message;
 
@@ -23,6 +24,7 @@ final class VelocityCrashFcmMessageState extends FirebaseMessagingState {
   List<Object?> get props => [message];
 }
 
+@immutable
 final class RefreshFcmTokenState extends FirebaseMessagingState {
   @override
   List<Object?> get props => [];

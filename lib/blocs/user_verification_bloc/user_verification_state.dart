@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:rooster/data_stores/entities/user_entity.dart';
 
 enum VerificationStatus {
@@ -7,39 +8,32 @@ enum VerificationStatus {
   failure;
 }
 
-class UserVerificationState extends Equatable {
+@immutable
+final class UserVerificationState extends Equatable {
   final VerificationStatus status;
   final UserEntity user;
 
-  const UserVerificationState._({
-    this.status = VerificationStatus.init,
-    this.user = UserEntity.emptyInstance
-  });
+  const UserVerificationState._(
+      {this.status = VerificationStatus.init,
+      this.user = UserEntity.emptyInstance});
 
   const UserVerificationState.init() : this._();
 
-  const UserVerificationState.success(UserEntity user) : this._(
-      status: VerificationStatus.success,
-      user: user
-  );
+  const UserVerificationState.success(UserEntity user)
+      : this._(status: VerificationStatus.success, user: user);
 
-  const UserVerificationState.failure() : this._(
-      status: VerificationStatus.failure,
-      user: UserEntity.emptyInstance
-  );
+  const UserVerificationState.failure()
+      : this._(
+            status: VerificationStatus.failure, user: UserEntity.emptyInstance);
 
-  UserVerificationState copyWith({
-    VerificationStatus? status,
-    UserEntity? user
-  }) {
+  UserVerificationState copyWith(
+      {VerificationStatus? status, UserEntity? user}) {
     return UserVerificationState._(
-      status: status ?? this.status,
-      user: user ?? this.user
-    );
+        status: status ?? this.status, user: user ?? this.user);
   }
 
   static UserVerificationState fromFireBaseValue(UserEntity? user) {
-    if(user == null || user.isEmptyInstance()) {
+    if (user == null || user.isEmptyInstance()) {
       return const UserVerificationState.failure();
     } else {
       return UserVerificationState.success(user);
@@ -48,5 +42,4 @@ class UserVerificationState extends Equatable {
 
   @override
   List<Object?> get props => [status, user];
-
 }

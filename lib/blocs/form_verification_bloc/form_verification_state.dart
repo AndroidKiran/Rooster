@@ -7,7 +7,8 @@ enum FormStatus {
   submitFailure;
 }
 
-class FormVerificationState extends Equatable {
+@immutable
+final class FormVerificationState extends Equatable {
   final BlocFormItem emailFormItem;
   final BlocFormItem platformFormItem;
   final FormStatus formStatus;

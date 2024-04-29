@@ -3,6 +3,7 @@ part of 'firebase_messaging_bloc.dart';
 @immutable
 sealed class FirebaseMessagingEvent extends Equatable {}
 
+@immutable
 final class ForegroundFcmEvent extends FirebaseMessagingEvent {
   final RemoteMessage message;
 
@@ -12,6 +13,7 @@ final class ForegroundFcmEvent extends FirebaseMessagingEvent {
   List<Object?> get props => [message];
 }
 
+@immutable
 final class RefreshFcmTokenEvent extends FirebaseMessagingEvent {
   final String refreshToken;
 

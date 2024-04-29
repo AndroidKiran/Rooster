@@ -5,9 +5,9 @@ import 'package:rooster/blocs/form_verification_bloc/form_verification_bloc.dart
 import 'package:rooster/screens/models/block_form_item.dart';
 
 class UserVerificationScreen extends StatelessWidget {
-  UserVerificationScreen({super.key});
-
   final _verificationFormKey = GlobalKey<FormState>();
+
+  UserVerificationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +35,8 @@ class UserVerificationScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _iconHolder(),
               _emailField(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 28),
               _platformDropdown(),
               const SizedBox(height: 40),
               _submitButton(),
@@ -59,13 +58,6 @@ class UserVerificationScreen extends StatelessWidget {
             fontStyle: FontStyle.normal,
             fontFamily: 'Open Sans',
             fontSize: 32),
-      );
-
-  Widget _iconHolder() => Image.asset(
-        "assets/icons/icon_rooster.png",
-        width: 100,
-        height: 100,
-        fit: BoxFit.cover,
       );
 
   Widget _emailField() =>

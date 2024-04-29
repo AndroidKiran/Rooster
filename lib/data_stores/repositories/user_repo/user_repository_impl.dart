@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,9 +28,31 @@ class UserRepositoryImplementation implements UserRepository {
       if (map.isEmpty) {
         return UserEntity.emptyInstance;
       } else {
-        return UserEntity.fromJson(map);
+        return UserEntity.fromPreferenceJson(map);
       }
     });
+  }
+
+  @override
+  Stream<UserEntity> get firebaseUser async* {
+    UserEntity userEntity = await getUserFromPreference();
+    if (userEntity.isEmptyInstance()) {
+      yield userEntity;
+    } else {
+      yield* _userCollection
+          .where('email', isEqualTo: userEntity.email)
+          .where('platform', isEqualTo: userEntity.platform)
+          .orderBy('platform')
+          .limit(1)
+          .snapshots()
+          .map((documentSnapshots) {
+        if (documentSnapshots.size > 0) {
+          return UserEntity.fromJson(documentSnapshots.docs[0].data());
+        } else {
+          return userEntity;
+        }
+      });
+    }
   }
 
   @override
