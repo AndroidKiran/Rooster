@@ -3,7 +3,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:rooster/data_stores/entities/converters/server_timestamp_to_miliisecond_converter.dart';
 import 'package:rooster/utils/rooster_platform.dart';
 
-
 part 'device_info.g.dart';
 
 @JsonSerializable()

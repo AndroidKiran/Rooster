@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rooster/blocs/user_verification_bloc/user_verification_event.dart';
 import 'package:rooster/blocs/user_verification_bloc/user_verification_state.dart';
 import 'package:rooster/data_stores/entities/device_info.dart';
@@ -38,33 +39,39 @@ class UserVerificationBloc
     var user = event.user;
     try {
       if (user != UserEntity.emptyInstance) {
-        user = await _userRepository.getFireStoreUser(
-            event.user.email, event.user.platform);
-        if (user == UserEntity.emptyInstance) {
-          return emit(currentEvent);
-        }
-        final String token = await _fcmRepository.getFcmToken() ?? '';
-        final DeviceInfo deviceInfo = await _deviceInfoRepository
-            .getFirebaseDeviceInfo(user.deviceInfoRef);
-        if (token.isEmpty ||
-            deviceInfo.fcmToken.isEmpty ||
-            token != deviceInfo.fcmToken) {
-          final deviceInfo = DeviceInfo.newTokenDeviceInfo(token);
-          final String docInfoRef =
-              await _deviceInfoRepository.updateFirebaseDeviceInfo(
-            deviceInfo,
-            user.deviceInfoRef,
-          );
-          await _userRepository.updateUserDeviceInfoPath(user, docInfoRef);
-          user = await _userRepository.getUserFromPreference();
-        }
-        currentEvent = UserVerificationState.success(user);
+        currentEvent = await _executeTransaction(user.email, user.platform);
       }
       return emit(currentEvent);
     } catch (e) {
       log(e.toString());
       return emit(currentEvent);
     }
+  }
+
+  Future<UserVerificationState> _executeTransaction(
+      String email, String platform) {
+    return FirebaseFirestore.instance.runTransaction((transaction) async {
+      UserEntity user = await _userRepository.getFireStoreUser(email, platform);
+      if (user == UserEntity.emptyInstance) {
+        return const UserVerificationState.failure();
+      }
+      final String token = await _fcmRepository.getFcmToken() ?? '';
+      final DeviceInfo deviceInfo =
+          await _deviceInfoRepository.getFirebaseDeviceInfo(user.deviceInfoRef);
+      if (token.isEmpty ||
+          deviceInfo.fcmToken.isEmpty ||
+          token != deviceInfo.fcmToken) {
+        final deviceInfo = DeviceInfo.newTokenDeviceInfo(token);
+        final String docInfoRef =
+            await _deviceInfoRepository.updateFirebaseDeviceInfo(
+          deviceInfo,
+          user.deviceInfoRef,
+        );
+        await _userRepository.updateUserDeviceInfoPath(user, docInfoRef);
+        user = await _userRepository.getUserFromPreference();
+      }
+      return UserVerificationState.success(user);
+    });
   }
 
   @override

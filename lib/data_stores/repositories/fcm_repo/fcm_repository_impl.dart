@@ -29,16 +29,4 @@ class FcmRepositoryImplementation implements FcmRepository {
 
   @override
   Future<String?> getFcmToken() => _firebaseMessaging.getToken();
-
-// @override
-// Future<bool> isRefreshTokenSyncRequired() async {
-//   return _preferences
-//       .getBool(REFRESH_TOKEN_COMPLETED, defaultValue: false)
-//       .getValue();
-// }
-//
-// @override
-// Future<void> setRefreshTokenSyncState(bool completed) async {
-//   await _preferences.setBool(REFRESH_TOKEN_COMPLETED, completed);
-// }
 }

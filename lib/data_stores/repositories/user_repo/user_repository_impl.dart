@@ -9,8 +9,12 @@ import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 class UserRepositoryImplementation implements UserRepository {
   final StreamingSharedPreferences _preferences;
-  final _userCollection =
-      FirebaseService().fireStore.collection(USER_COLLECTION);
+  final _userCollection = FirebaseService()
+      .fireStore
+      .collection(USER_COLLECTION)
+      .withConverter(
+          fromFirestore: (snapshot, _) => UserEntity.fromJson(snapshot.data()!),
+          toFirestore: (userEntity, _) => userEntity.toJson());
 
   UserRepositoryImplementation(
       {required StreamingSharedPreferences preferences})
@@ -47,7 +51,7 @@ class UserRepositoryImplementation implements UserRepository {
           .snapshots()
           .map((documentSnapshots) {
         if (documentSnapshots.size > 0) {
-          return UserEntity.fromJson(documentSnapshots.docs[0].data());
+          return documentSnapshots.docs[0].data();
         } else {
           return userEntity;
         }
@@ -86,14 +90,10 @@ class UserRepositoryImplementation implements UserRepository {
   Future<UserEntity> getFireStoreUser(String email, String platform) async {
     var currentUser = UserEntity.emptyInstance;
     try {
-      final users = await _userCollection
-          .where("email", isEqualTo: email)
-          .where("platform", isEqualTo: platform)
-          .get();
-      final QueryDocumentSnapshot<Map<String, dynamic>>? documentSnapshot =
-          users.docs.firstOrNull;
-      if (documentSnapshot != null && documentSnapshot.exists) {
-        currentUser = UserEntity.fromJson(documentSnapshot.data());
+      final QuerySnapshot<UserEntity> querySnapshot =
+          await getCurrentFirebaseUser(email, platform);
+      if (querySnapshot.size > 0) {
+        currentUser = querySnapshot.docs[0].data();
       }
       return currentUser;
     } catch (e) {
@@ -106,12 +106,10 @@ class UserRepositoryImplementation implements UserRepository {
   Future<void> updateUserDeviceInfoPath(
       UserEntity user, String deviceInfoPath) async {
     try {
-      final users = await _userCollection
-          .where("email", isEqualTo: user.email)
-          .where("platform", isEqualTo: user.platform)
-          .get();
-      final QueryDocumentSnapshot<Map<String, dynamic>>? documentSnapshot =
-          users.docs.firstOrNull;
+      final QuerySnapshot<UserEntity> querySnapshot =
+          await getCurrentFirebaseUser(user.email, user.platform);
+      final QueryDocumentSnapshot<UserEntity>? documentSnapshot =
+          querySnapshot.docs.firstOrNull;
       if (documentSnapshot != null && documentSnapshot.exists) {
         await _userCollection
             .doc(documentSnapshot.id)
@@ -123,6 +121,16 @@ class UserRepositoryImplementation implements UserRepository {
       log(e.toString());
       rethrow;
     }
+  }
+
+  Future<QuerySnapshot<UserEntity>> getCurrentFirebaseUser(
+      String email, String platform) async {
+    return await _userCollection
+        .where('email', isEqualTo: email)
+        .where('platform', isEqualTo: platform)
+        .orderBy('platform')
+        .limit(1)
+        .get();
   }
 
   static const String USER_COLLECTION = "users";

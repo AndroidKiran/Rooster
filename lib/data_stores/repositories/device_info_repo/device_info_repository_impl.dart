@@ -5,8 +5,12 @@ import 'package:rooster/data_stores/repositories/device_info_repo/device_info_re
 import 'package:rooster/services/firebase_service.dart';
 
 class DeviceInfoRepositoryImplementation extends DeviceInfoRepository {
-  final _deviceInfoCollection =
-      FirebaseService().fireStore.collection(DEVICE_INFO_COLLECTION);
+  final _deviceInfoCollection = FirebaseService()
+      .fireStore
+      .collection(DEVICE_INFO_COLLECTION)
+      .withConverter(
+          fromFirestore: (snapshot, _) => DeviceInfo.fromJson(snapshot.data()!),
+          toFirestore: (deviceInfo, _) => deviceInfo.toJson());
 
   @override
   Future<String> updateFirebaseDeviceInfo(
@@ -15,7 +19,7 @@ class DeviceInfoRepositoryImplementation extends DeviceInfoRepository {
       var path = '';
       final String docId = await getFirebaseDocId(docRef);
       if (docId.isEmpty) {
-        final result = await _deviceInfoCollection.add(deviceInfo.toJson());
+        final result = await _deviceInfoCollection.add(deviceInfo);
         path = "$DEVICE_INFO_COLLECTION/${result.id}";
       } else {
         await _deviceInfoCollection
@@ -37,10 +41,8 @@ class DeviceInfoRepositoryImplementation extends DeviceInfoRepository {
       final String docId = await getFirebaseDocId(docRef);
       final informationSnapShot = await _deviceInfoCollection.doc(docId).get();
       if (informationSnapShot.exists) {
-        final snapShotData = informationSnapShot.data();
-        if (snapShotData != null) {
-          currentDeviceInfo = DeviceInfo.fromJson(snapShotData);
-        }
+        currentDeviceInfo =
+            informationSnapShot.data() ?? DeviceInfo.emptyInstance;
       }
       return currentDeviceInfo;
     } catch (e) {
