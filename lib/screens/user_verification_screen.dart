@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rooster/blocs/form_verification_bloc/form_verification_bloc.dart';
 import 'package:rooster/screens/models/block_form_item.dart';
+import 'package:rooster/widgets/rooster_text_widget.dart';
 
 class UserVerificationScreen extends StatelessWidget {
   final _verificationFormKey = GlobalKey<FormState>();
@@ -14,7 +15,11 @@ class UserVerificationScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: _headerText(),
+        title: RoosterTextWidget(
+            text: 'Verify Employee',
+            textSize: 32,
+            textColor: Colors.grey[800],
+            maxLines: 1),
       ),
       body: SingleChildScrollView(
           scrollDirection: Axis.vertical, child: _verificationForm()),
@@ -47,18 +52,6 @@ class UserVerificationScreen extends StatelessWidget {
       ),
     );
   }
-
-  Widget _headerText() => Text(
-        'Verify Employee',
-        maxLines: 3,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-            color: Colors.grey[800],
-            fontWeight: FontWeight.w900,
-            fontStyle: FontStyle.normal,
-            fontFamily: 'Open Sans',
-            fontSize: 32),
-      );
 
   Widget _emailField() =>
       BlocBuilder<FormVerificationBloc, FormVerificationState>(

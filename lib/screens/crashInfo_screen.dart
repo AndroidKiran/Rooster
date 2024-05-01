@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
-class AddNewUserScreen extends StatelessWidget {
-  const AddNewUserScreen({super.key});
+class CrashInfoScreen extends StatelessWidget {
+  const CrashInfoScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.blueGrey,
         appBar: AppBar(
           centerTitle: true,
           title: RoosterTextWidget(
-              text: 'New User',
+              text: 'Crash Info',
               textSize: 32,
               textColor: Colors.grey[800],
-              maxLines: 3),
+              maxLines: 1),
         ));
   }
 }

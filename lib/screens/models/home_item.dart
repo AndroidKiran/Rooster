@@ -23,9 +23,9 @@ class HomeItem extends Equatable {
           itemName: "Users",
           nextActionScreen: RoosterScreenPath.allUsersScreen.name),
       HomeItem(
-          iconData: CupertinoIcons.bandage_fill,
-          itemName: "VelocityCrashes",
-          nextActionScreen: RoosterScreenPath.velocityCrashesScreen.name)
+          iconData: CupertinoIcons.bell_circle_fill,
+          itemName: "Crashes",
+          nextActionScreen: RoosterScreenPath.crashesScreen.name)
     ];
   }
 }

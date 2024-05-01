@@ -8,6 +8,7 @@ import 'package:rooster/data_stores/entities/user_entity.dart';
 import 'package:rooster/screens/models/home_item.dart';
 import 'package:rooster/screens/routes/rooster_screen_path.dart';
 import 'package:rooster/services/call_kit_service.dart';
+import 'package:rooster/widgets/rooster_text_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -39,7 +40,11 @@ class _HomeScreen extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: _headerText(),
+        title: RoosterTextWidget(
+            text: 'Home',
+            textSize: 32,
+            textColor: Colors.grey[800],
+            maxLines: 1),
       ),
       body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -77,19 +82,6 @@ class _HomeScreen extends State<HomeScreen> {
     }
   }
 
-// widgets
-  Widget _headerText() => Text(
-        'Home',
-        maxLines: 3,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-            color: Colors.grey[800],
-            fontWeight: FontWeight.w900,
-            fontStyle: FontStyle.normal,
-            fontFamily: 'Open Sans',
-            fontSize: 32),
-      );
-
   Widget _onCallCard() => BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           UserEntity user = UserEntity.emptyInstance;
@@ -97,9 +89,9 @@ class _HomeScreen extends State<HomeScreen> {
             user = state.onCallUser;
           }
           bool areYouOnCall = user.isOnCall;
-          Color cardColor = Colors.green;
+          Color cardColor = Colors.white70;
           if (areYouOnCall) {
-            cardColor = Colors.redAccent;
+            cardColor = Colors.green;
           }
 
           String message = 'Relax you are off duty';
@@ -136,14 +128,12 @@ class _HomeScreen extends State<HomeScreen> {
                     const SizedBox(
                       width: 14,
                     ),
-                    Text(
-                      message,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.onInverseSurface,
-                          fontWeight: FontWeight.w900,
-                          fontStyle: FontStyle.normal,
-                          fontFamily: 'Open Sans',
-                          fontSize: 16),
+                    RoosterTextWidget(
+                      text: message,
+                      textSize: 16,
+                      textColor: Theme.of(context).colorScheme.onInverseSurface,
+                      maxLines: 1,
+                      fontWeight: FontWeight.w600,
                     ),
                     const SizedBox(
                       width: 16,
@@ -172,45 +162,43 @@ class _HomeScreen extends State<HomeScreen> {
         mainAxisSpacing: 10,
       ),
       itemBuilder: (context, index) {
-        return Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          child: InkWell(
-            hoverColor: Colors.red[200],
-            borderRadius: BorderRadius.circular(16),
-            onTap: () => context.pushNamed(homeItems[index].nextActionScreen),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    size: 80,
-                    homeItems[index].iconData,
-                    color: Theme.of(context).colorScheme.primary,
+        return _homeItem(homeItems[index]);
+      });
+
+  Widget _homeItem(HomeItem homeItem) => Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        child: InkWell(
+          hoverColor: Colors.red[200],
+          borderRadius: BorderRadius.circular(16.0),
+          onTap: () => context.pushNamed(homeItem.nextActionScreen),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  size: 90,
+                  homeItem.iconData,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: RoosterTextWidget(
+                    text: homeItem.itemName,
+                    textSize: 24.0,
+                    textColor: Colors.grey[800],
+                    maxLines: 1,
+                    fontWeight: FontWeight.w900,
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      homeItems[index].itemName,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          fontWeight: FontWeight.w900,
-                          fontStyle: FontStyle.normal,
-                          fontFamily: 'Open Sans',
-                          fontSize: 20),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        );
-      });
+        ),
+      );
 }

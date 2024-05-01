@@ -9,12 +9,7 @@ import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 class UserRepositoryImplementation implements UserRepository {
   final StreamingSharedPreferences _preferences;
-  final _userCollection = FirebaseService()
-      .fireStore
-      .collection(USER_COLLECTION)
-      .withConverter(
-          fromFirestore: (snapshot, _) => UserEntity.fromJson(snapshot.data()!),
-          toFirestore: (userEntity, _) => userEntity.toJson());
+  final _userCollection = FirebaseService().userDb;
 
   UserRepositoryImplementation(
       {required StreamingSharedPreferences preferences})
@@ -133,6 +128,5 @@ class UserRepositoryImplementation implements UserRepository {
         .get();
   }
 
-  static const String USER_COLLECTION = "users";
   static const String PREFERENCE_USER = "user";
 }

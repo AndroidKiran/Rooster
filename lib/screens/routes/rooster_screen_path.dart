@@ -3,8 +3,8 @@ enum RoosterScreenPath {
   onboardingScreen(route: '/onboardingScreen'),
   allUsersScreen(route: '/allUsersScreen'),
   addNewUserScreen(route: '/addNewUserScreen'),
-  velocityCrashesScreen(route: '/velocityCrashesScreen'),
-  velocityCrashInfoScreen(route: '/velocityCrashInfoScreen'),
+  crashesScreen(route: '/crashesScreen'),
+  crashInfoScreen(route: '/crashInfoScreen'),
   onCallPolicyScreen(route: '/onCallPolicyScreen'),
   routeErrorScreen(route: '/routeErrorScreen');
 

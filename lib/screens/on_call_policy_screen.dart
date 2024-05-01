@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rooster/widgets/rooster_text_widget.dart';
 
 class OnCallPolicyScreen extends StatelessWidget {
   const OnCallPolicyScreen({super.key});
@@ -9,19 +10,11 @@ class OnCallPolicyScreen extends StatelessWidget {
         backgroundColor: Colors.deepPurple,
         appBar: AppBar(
           centerTitle: true,
-          title: _headerText(),
+          title: RoosterTextWidget(
+              text: 'OnCall Policies',
+              textSize: 32,
+              textColor: Colors.grey[800],
+              maxLines: 1),
         ));
   }
-
-  Widget _headerText() => Text(
-        'OnCall Policies',
-        maxLines: 3,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-            color: Colors.grey[800],
-            fontWeight: FontWeight.w900,
-            fontStyle: FontStyle.normal,
-            fontFamily: 'Open Sans',
-            fontSize: 32),
-      );
 }

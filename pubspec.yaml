@@ -51,6 +51,7 @@ dependencies:
   json_annotation: ^4.8.1
   asset_manager_cli: ^0.1.0-dev.0+2
   marquee: ^2.2.3
+  firebase_ui_firestore: ^1.6.3
 
 dev_dependencies:
   flutter_test:

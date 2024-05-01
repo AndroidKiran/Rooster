@@ -1,5 +1,5 @@
 
-import {CollectionReference, DocumentReference, DocumentSnapshot, Firestore, Query, QuerySnapshot, WriteResult, getFirestore} from "firebase-admin/firestore";
+import {CollectionReference, DocumentReference, DocumentSnapshot, Firestore, Query, QuerySnapshot, getFirestore} from "firebase-admin/firestore";
 import {BatchResponse, Message, Messaging, getMessaging} from "firebase-admin/messaging";
 import {logger} from "firebase-functions";
 import {COLLECTION_USER, DEVICE_INFO, VELOCITY_CRASH_ALERT} from "../constants";
@@ -37,13 +37,13 @@ export async function writeToVelocityCrashDb(event: CrashlyticsEvent<VelocityAle
   let platform = "";
   if (event.appId.includes(IOS_APP_ID)) {
     platform = IOS_APP_ID;
-  } 
-  
+  }
+
   if (event.appId.includes(ANDROID_APP_ID)) {
     platform = ANDROID_APP_ID;
-  } 
-  
-  if(isEmptyString(platform)) {
+  }
+
+  if (isEmptyString(platform)) {
     return;
   }
 

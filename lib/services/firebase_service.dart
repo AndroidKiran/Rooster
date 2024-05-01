@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:rooster/data_stores/entities/crash_info.dart';
+import 'package:rooster/data_stores/entities/user_entity.dart';
 
 class FirebaseService {
   late FirebaseFirestore fireStore = _roosterFireStore();
   late FirebaseMessaging firebaseMessaging = _roosterFirebaseMessaging();
+  late CollectionReference<UserEntity> userDb = _userFireStoreCollection();
+  late CollectionReference<CrashInfo> crashDb = _crashFireStoreCollection();
 
   static final FirebaseService _singleton = FirebaseService._();
 
@@ -52,8 +56,20 @@ class FirebaseService {
         message.data[KEY_ISSUE_ID] != null;
   }
 
+  CollectionReference<UserEntity> _userFireStoreCollection() =>
+      fireStore.collection(USER_COLLECTION).withConverter(
+          fromFirestore: (snapshot, _) => UserEntity.fromJson(snapshot.data()!),
+          toFirestore: (userEntity, _) => userEntity.toJson());
+
+  CollectionReference<CrashInfo> _crashFireStoreCollection() =>
+      fireStore.collection(CRASH_COLLECTION).withConverter(
+          fromFirestore: (snapshot, _) => CrashInfo.fromJson(snapshot.data()!),
+          toFirestore: (crashInfo, _) => crashInfo.toJson());
+
   static const String VALUE_CRASH_VELOCITY_NOTIFICATION_TYPE =
       "CrashVelocityNotificationType";
   static const String KEY_CRASH_VELOCITY_NOTIFICATION_TYPE = "type";
   static const String KEY_ISSUE_ID = "issueId";
+  static const String USER_COLLECTION = "users";
+  static const String CRASH_COLLECTION = "crashes";
 }

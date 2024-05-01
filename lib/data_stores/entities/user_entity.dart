@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:rooster/data_stores/entities/converters/server_timestamp_to_miliisecond_converter.dart';
+import 'package:rooster/utils/string_extensions.dart';
 
 part 'user_entity.g.dart';
 
@@ -60,6 +61,39 @@ class UserEntity extends Equatable {
         'createdAt': createdAt,
         'modifiedAt': modifiedAt
       };
+
+  String getLetterFromUserName() {
+    var userName = '';
+    if (name.length >= 2) {
+      userName = name.substring(0, 2);
+    }
+
+    if (userName.isEmpty && email.length >= 2) {
+      userName = email.substring(0, 2);
+    }
+    return userName.toUpperCase();
+  }
+
+  String getUserName() {
+    var userName = '';
+    if (name.isNotEmpty) {
+      userName = name;
+    }
+    if (userName.isEmpty && email.contains('@')) {
+      userName = email.split('@').first;
+    }
+    return userName.toCapitalized();
+  }
+
+  String getAccountTag() {
+    var accTagName = "";
+    if (deviceInfoRef.isNotEmpty) {
+      accTagName = 'Active Account';
+    } else {
+      accTagName = 'Inactive Account';
+    }
+    return accTagName;
+  }
 
   static UserEntity fromPreferenceJson(Map<String, dynamic> doc) {
     if (doc.isEmpty) return emptyInstance;

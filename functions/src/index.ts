@@ -19,5 +19,5 @@ exports.sendOnVelocityAlert = onVelocityAlertPublished(async (event: Crashlytics
 });
 
 exports.sendNoftifcationToOncallUser = onDocumentCreated(velocityCrashAlertPath, async (event: FirestoreEvent<QueryDocumentSnapshot | undefined, ParamsOf<string>>) => {
-   await sendVelocityNotification(event);
+  await sendVelocityNotification(event);
 });
