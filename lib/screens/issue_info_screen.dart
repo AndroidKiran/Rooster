@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
-class CrashInfoScreen extends StatelessWidget {
-  const CrashInfoScreen({super.key});
+class IssueInfoScreen extends StatelessWidget {
+  const IssueInfoScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

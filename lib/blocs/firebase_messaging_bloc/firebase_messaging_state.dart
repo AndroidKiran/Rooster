@@ -15,10 +15,10 @@ final class FirebaseMessagingInitState extends FirebaseMessagingState {
 }
 
 @immutable
-final class VelocityCrashFcmMessageState extends FirebaseMessagingState {
+final class PerformVoipCallState extends FirebaseMessagingState {
   final RemoteMessage message;
 
-  VelocityCrashFcmMessageState({required this.message});
+  PerformVoipCallState({required this.message});
 
   @override
   List<Object?> get props => [message];

@@ -8,7 +8,7 @@ import 'package:rooster/blocs/home_bloc/home_bloc.dart';
 import 'package:rooster/blocs/user_verification_bloc/user_verification_state.dart';
 import 'package:rooster/blocs/user_verification_bloc/user_verification_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rooster/data_stores/repositories/crash_velocity_repo/crash_velocity_repository.dart';
+import 'package:rooster/data_stores/repositories/crash_velocity_repo/issue_repository.dart';
 import 'package:rooster/data_stores/repositories/device_info_repo/device_info_repository.dart';
 import 'package:rooster/data_stores/repositories/fcm_repo/fcm_repository.dart';
 import 'package:rooster/data_stores/repositories/user_repo/user_repository.dart';
@@ -21,10 +21,10 @@ class RoosterApp extends StatefulWidget {
   final UserRepository userRepository;
   final FcmRepository fcmRepository;
   final DeviceInfoRepository deviceInfoRepository;
-  final CrashVelocityRepository crashVelocityRepository;
+  final IssueRepository issueRepository;
 
   const RoosterApp(this.userRepository, this.fcmRepository,
-      this.deviceInfoRepository, this.crashVelocityRepository,
+      this.deviceInfoRepository, this.issueRepository,
       {super.key});
 
   @override
@@ -36,7 +36,7 @@ class _RoosterApp extends State<RoosterApp> with WidgetsBindingObserver {
   late final UserRepository _userRepository;
   late final FcmRepository _fcmRepository;
   late final DeviceInfoRepository _deviceInfoRepository;
-  late final CrashVelocityRepository _crashVelocityRepository;
+  late final IssueRepository _issueRepository;
 
   @override
   void initState() {
@@ -44,7 +44,7 @@ class _RoosterApp extends State<RoosterApp> with WidgetsBindingObserver {
     _userRepository = widget.userRepository;
     _fcmRepository = widget.fcmRepository;
     _deviceInfoRepository = widget.deviceInfoRepository;
-    _crashVelocityRepository = widget.crashVelocityRepository;
+    _issueRepository = widget.issueRepository;
 
     FirebaseService().setupFirebase();
     // Register your State class as a binding observer
@@ -98,7 +98,7 @@ class _RoosterApp extends State<RoosterApp> with WidgetsBindingObserver {
                 fcmRepository: _fcmRepository,
                 deviceInfoRepository: _deviceInfoRepository,
                 userRepository: _userRepository,
-                crashVelocityRepository: _crashVelocityRepository)),
+                issueRepository: _issueRepository)),
         RepositoryProvider<UserVerificationBloc>(
             create: (context) => UserVerificationBloc(
                 userRepository: _userRepository,
@@ -119,7 +119,7 @@ class _RoosterApp extends State<RoosterApp> with WidgetsBindingObserver {
           BlocListener<FirebaseMessagingBloc, FirebaseMessagingState>(
             listener: (context, state) {
               switch (state) {
-                case VelocityCrashFcmMessageState():
+                case PerformVoipCallState():
                   CallKitService().showCallkitIncoming(const Uuid().v4());
                   break;
 

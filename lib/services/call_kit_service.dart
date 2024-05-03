@@ -77,10 +77,10 @@ class CallKitService {
         log('CallKitService: $event');
         switch (event!.event) {
           case Event.actionCallAccept:
-            context.goNamed(RoosterScreenPath.crashInfoScreen.name);
+            context.goNamed(RoosterScreenPath.issueInfoScreen.name);
             break;
           case Event.actionCallDecline:
-            context.goNamed(RoosterScreenPath.crashInfoScreen.name);
+            context.goNamed(RoosterScreenPath.issueInfoScreen.name);
             break;
           default:
             break;

@@ -47,7 +47,7 @@ class AllUsersScreen extends StatelessWidget {
 
   Widget _userTile(UserEntity userEntity, BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),

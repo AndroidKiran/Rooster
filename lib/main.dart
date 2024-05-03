@@ -7,8 +7,8 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:rooster/data_stores/repositories/crash_velocity_repo/crash_velocity_repository.dart';
-import 'package:rooster/data_stores/repositories/crash_velocity_repo/crash_velocity_repository_impl.dart';
+import 'package:rooster/data_stores/repositories/crash_velocity_repo/issue_repository.dart';
+import 'package:rooster/data_stores/repositories/crash_velocity_repo/issue_repository_impl.dart';
 import 'package:rooster/data_stores/repositories/device_info_repo/device_info_repository.dart';
 import 'package:rooster/data_stores/repositories/device_info_repo/device_info_repository_impl.dart';
 import 'package:rooster/data_stores/repositories/fcm_repo/fcm_repository.dart';
@@ -30,7 +30,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
     FirebaseService firebaseService = FirebaseService();
-    if (!firebaseService.isVelocityAlertNotification(message) ||
+    if (!firebaseService.isIssueNotification(message) ||
         !firebaseService.hasValidIssueId(message)) return;
 
     final preference = await StreamingSharedPreferences.instance;
@@ -43,9 +43,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     final String? crashId = message.data[FirebaseService.KEY_ISSUE_ID];
     log('_firebaseMessagingBackgroundHandler received crash id ==> ${crashId ?? ""}');
     if (crashId == null || crashId.isEmpty) return;
-    final crashVelocityRepository =
-        CrashVelocityRepositoryImplementation(preferences: preference);
-    crashVelocityRepository.saveCrashId(crashId);
+    final issueRepository =
+        IssueRepositoryImplementation(preferences: preference);
+    issueRepository.saveIssueId(crashId);
     log('_firebaseMessagingBackgroundHandler saved crash id ==> ${crashId ?? ""}');
 
     CallKitService().showCallkitIncoming(const Uuid().v4());
@@ -87,10 +87,10 @@ Future<RoosterApp> _roosterApp() async {
       FcmRepositoryImplementation(preferences: preferences);
   final DeviceInfoRepository deviceInfoRepository =
       DeviceInfoRepositoryImplementation();
-  final CrashVelocityRepository crashVelocityRepository =
-      CrashVelocityRepositoryImplementation(preferences: preferences);
-  return RoosterApp(userRepository, fcmRepository, deviceInfoRepository,
-      crashVelocityRepository);
+  final IssueRepository issueRepository =
+      IssueRepositoryImplementation(preferences: preferences);
+  return RoosterApp(
+      userRepository, fcmRepository, deviceInfoRepository, issueRepository);
 }
 
 Future<void> getDevicePushTokenVoIP() async {

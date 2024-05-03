@@ -5,12 +5,7 @@ import 'package:rooster/data_stores/repositories/device_info_repo/device_info_re
 import 'package:rooster/services/firebase_service.dart';
 
 class DeviceInfoRepositoryImplementation extends DeviceInfoRepository {
-  final _deviceInfoCollection = FirebaseService()
-      .fireStore
-      .collection(DEVICE_INFO_COLLECTION)
-      .withConverter(
-          fromFirestore: (snapshot, _) => DeviceInfo.fromJson(snapshot.data()!),
-          toFirestore: (deviceInfo, _) => deviceInfo.toJson());
+  final _deviceInfoDb = FirebaseService().deviceInfoDb;
 
   @override
   Future<String> updateFirebaseDeviceInfo(
@@ -19,13 +14,13 @@ class DeviceInfoRepositoryImplementation extends DeviceInfoRepository {
       var path = '';
       final String docId = await getFirebaseDocId(docRef);
       if (docId.isEmpty) {
-        final result = await _deviceInfoCollection.add(deviceInfo);
-        path = "$DEVICE_INFO_COLLECTION/${result.id}";
+        final result = await _deviceInfoDb.add(deviceInfo);
+        path = "${FirebaseService.DEVICE_INFO_COLLECTION}/${result.id}";
       } else {
-        await _deviceInfoCollection
+        await _deviceInfoDb
             .doc(docId)
             .update({"fcmToken": deviceInfo.fcmToken, "os": deviceInfo.os});
-        path = "$DEVICE_INFO_COLLECTION/$docId";
+        path = "${FirebaseService.DEVICE_INFO_COLLECTION}/$docId";
       }
       return path;
     } catch (e) {
@@ -39,7 +34,7 @@ class DeviceInfoRepositoryImplementation extends DeviceInfoRepository {
     var currentDeviceInfo = DeviceInfo.emptyInstance;
     try {
       final String docId = await getFirebaseDocId(docRef);
-      final informationSnapShot = await _deviceInfoCollection.doc(docId).get();
+      final informationSnapShot = await _deviceInfoDb.doc(docId).get();
       if (informationSnapShot.exists) {
         currentDeviceInfo =
             informationSnapShot.data() ?? DeviceInfo.emptyInstance;
@@ -65,6 +60,4 @@ class DeviceInfoRepositoryImplementation extends DeviceInfoRepository {
       return docId;
     }
   }
-
-  static const String DEVICE_INFO_COLLECTION = "deviceInfo";
 }

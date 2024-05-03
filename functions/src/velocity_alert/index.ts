@@ -2,7 +2,7 @@
 import {CollectionReference, DocumentReference, DocumentSnapshot, Firestore, Query, QuerySnapshot, getFirestore} from "firebase-admin/firestore";
 import {BatchResponse, Message, Messaging, getMessaging} from "firebase-admin/messaging";
 import {logger} from "firebase-functions";
-import {COLLECTION_USER, DEVICE_INFO, VELOCITY_CRASH_ALERT} from "../constants";
+import {COLLECTION_USER, COLLECTION_DEVICE_INFO, COLLECTION_ISSUE} from "../constants";
 import {isEmptyString} from "../utils";
 import {FirestoreEvent, QueryDocumentSnapshot} from "firebase-functions/v2/firestore";
 import {ParamsOf} from "firebase-functions/v2";
@@ -12,7 +12,7 @@ import {CrashlyticsEvent, VelocityAlertPayload, NewFatalIssuePayload} from "fire
 const firestore: Firestore = getFirestore();
 const messaging: Messaging = getMessaging();
 const userCollection: CollectionReference = firestore.collection(COLLECTION_USER);
-const velocityCrashAlertsCollection: CollectionReference = firestore.collection(VELOCITY_CRASH_ALERT);
+const velocityCrashAlertsCollection: CollectionReference = firestore.collection(COLLECTION_ISSUE);
 
 const errorCodeInvalidRegToken = "messaging/invalid-registration-token";
 const errrCodeRegTokenNotRegistered = "messaging/registration-token-not-registered";
@@ -207,7 +207,7 @@ async function cleanUpTokens(
       if ((error.code === errorCodeInvalidRegToken) ||
         (error.code === errrCodeRegTokenNotRegistered) ||
         (error.code === errorCodeInvalidArgument && error.message === errorFcmMessage)) {
-        const deleteTask: Promise<FirebaseFirestore.WriteResult> = firestore.collection(DEVICE_INFO).doc(deviceInfoIds[index]).delete();
+        const deleteTask: Promise<FirebaseFirestore.WriteResult> = firestore.collection(COLLECTION_DEVICE_INFO).doc(deviceInfoIds[index]).delete();
         tokensDelete.push(deleteTask);
       }
     }

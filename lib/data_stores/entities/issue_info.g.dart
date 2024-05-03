@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'crash_info.dart';
+part of 'issue_info.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-CrashInfo _$CrashInfoFromJson(Map<String, dynamic> json) => CrashInfo(
+IssueInfo _$IssueInfoFromJson(Map<String, dynamic> json) => IssueInfo(
       type: json['type'] as String,
       crashCount: json['crashCount'] as int,
       crashPercentage: json['crashPercentage'] as int,
@@ -21,7 +21,7 @@ CrashInfo _$CrashInfoFromJson(Map<String, dynamic> json) => CrashInfo(
       appId: json['appId'] as String,
     );
 
-Map<String, dynamic> _$CrashInfoToJson(CrashInfo instance) => <String, dynamic>{
+Map<String, dynamic> _$IssueInfoToJson(IssueInfo instance) => <String, dynamic>{
       'type': instance.type,
       'crashCount': instance.crashCount,
       'crashPercentage': instance.crashPercentage,

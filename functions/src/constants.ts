@@ -1,3 +1,3 @@
 export const COLLECTION_USER = "users";
-export const VELOCITY_CRASH_ALERT = "velocityCrashAlerts";
-export const DEVICE_INFO = "deviceInfo";
+export const COLLECTION_ISSUE = "issues";
+export const COLLECTION_DEVICE_INFO = "deviceInformations";

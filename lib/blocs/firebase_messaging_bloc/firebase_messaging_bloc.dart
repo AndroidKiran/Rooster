@@ -6,7 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rooster/data_stores/entities/device_info.dart';
-import 'package:rooster/data_stores/repositories/crash_velocity_repo/crash_velocity_repository.dart';
+import 'package:rooster/data_stores/repositories/crash_velocity_repo/issue_repository.dart';
 import 'package:rooster/data_stores/repositories/device_info_repo/device_info_repository.dart';
 import 'package:rooster/data_stores/repositories/fcm_repo/fcm_repository.dart';
 import 'package:rooster/data_stores/repositories/user_repo/user_repository.dart';
@@ -21,7 +21,7 @@ class FirebaseMessagingBloc
   final FcmRepository _fcmRepository;
   final DeviceInfoRepository _deviceInfoRepository;
   final UserRepository _userRepository;
-  final CrashVelocityRepository _crashVelocityRepository;
+  final IssueRepository _issueRepository;
 
   late final StreamSubscription<RemoteMessage> _messageForegroundSubscription;
   late final StreamSubscription<RemoteMessage> _messageBackgroundSubscription;
@@ -31,11 +31,11 @@ class FirebaseMessagingBloc
       {required FcmRepository fcmRepository,
       required DeviceInfoRepository deviceInfoRepository,
       required UserRepository userRepository,
-      required CrashVelocityRepository crashVelocityRepository})
+      required IssueRepository issueRepository})
       : _fcmRepository = fcmRepository,
         _deviceInfoRepository = deviceInfoRepository,
         _userRepository = userRepository,
-        _crashVelocityRepository = crashVelocityRepository,
+        _issueRepository = issueRepository,
         super(FirebaseMessagingInitState()) {
     _messageForegroundSubscription =
         _fcmRepository.messageForegroundState.listen((message) {
@@ -61,20 +61,20 @@ class FirebaseMessagingBloc
     try {
       final message = event.message;
       FirebaseService firebaseService = FirebaseService();
-      if (!firebaseService.isVelocityAlertNotification(message) ||
+      if (!firebaseService.isIssueNotification(message) ||
           !firebaseService.hasValidIssueId(message)) return;
 
       final user = await _userRepository.getUserFromPreference();
       if (user.isEmptyInstance()) return;
 
-      final String? crashId = message.data[FirebaseService.KEY_ISSUE_ID];
-      log('__onNotificationReceivedEvent received crash id ==> ${crashId ?? ""}');
-      if (crashId == null || crashId.isEmpty) return;
+      final String? issueId = message.data[FirebaseService.KEY_ISSUE_ID];
+      log('__onNotificationReceivedEvent received crash id ==> ${issueId ?? ""}');
+      if (issueId == null || issueId.isEmpty) return;
 
-      _crashVelocityRepository.saveCrashId(crashId);
-      log('_onNotificationReceivedEvent saved crash id ==> ${crashId ?? ""}');
+      _issueRepository.saveIssueId(issueId);
+      log('_onNotificationReceivedEvent saved crash id ==> $issueId');
 
-      return emit(VelocityCrashFcmMessageState(message: event.message));
+      return emit(PerformVoipCallState(message: event.message));
     } catch (e) {
       log(e.toString());
     }

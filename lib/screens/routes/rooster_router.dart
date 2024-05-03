@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rooster/blocs/user_verification_bloc/user_verification_bloc.dart';
 import 'package:rooster/screens/add_new_user_screen.dart';
+import 'package:rooster/screens/all_issues_screen.dart';
 import 'package:rooster/screens/all_users_screen.dart';
-import 'package:rooster/screens/crashInfo_screen.dart';
-import 'package:rooster/screens/crashes_screen.dart';
 import 'package:rooster/screens/home_screen.dart';
+import 'package:rooster/screens/issue_info_screen.dart';
 import 'package:rooster/screens/on_call_policy_screen.dart';
 import 'package:rooster/screens/routes/rooster_screen_path.dart';
 import 'package:rooster/screens/user_verification_screen.dart';
@@ -48,16 +48,16 @@ class RoosterRouter {
               child: const RouteNotFoundScreen(routeError: 'Route not found')),
         ),
         GoRoute(
-          path: RoosterScreenPath.crashesScreen.route,
-          name: RoosterScreenPath.crashesScreen.name,
+          path: RoosterScreenPath.allIssuesScreen.route,
+          name: RoosterScreenPath.allIssuesScreen.name,
           pageBuilder: (context, state) =>
-              MaterialPage(key: state.pageKey, child: const CrashesScreen()),
+              MaterialPage(key: state.pageKey, child: const AllIssuesScreen()),
         ),
         GoRoute(
-          path: RoosterScreenPath.crashInfoScreen.route,
-          name: RoosterScreenPath.crashInfoScreen.name,
+          path: RoosterScreenPath.issueInfoScreen.route,
+          name: RoosterScreenPath.issueInfoScreen.name,
           pageBuilder: (context, state) =>
-              MaterialPage(key: state.pageKey, child: const CrashInfoScreen()),
+              MaterialPage(key: state.pageKey, child: const IssueInfoScreen()),
         ),
         GoRoute(
           path: RoosterScreenPath.allUsersScreen.route,

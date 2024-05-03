@@ -25,7 +25,7 @@ class HomeItem extends Equatable {
       HomeItem(
           iconData: CupertinoIcons.bell_circle_fill,
           itemName: "Crashes",
-          nextActionScreen: RoosterScreenPath.crashesScreen.name)
+          nextActionScreen: RoosterScreenPath.allIssuesScreen.name)
     ];
   }
 }

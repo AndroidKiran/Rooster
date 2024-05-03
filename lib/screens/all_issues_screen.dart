@@ -2,13 +2,13 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rooster/data_stores/entities/crash_info.dart';
+import 'package:rooster/data_stores/entities/issue_info.dart';
 import 'package:rooster/services/firebase_service.dart';
 import 'package:rooster/widgets/rooster_tag_widget.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
-class CrashesScreen extends StatelessWidget {
-  const CrashesScreen({super.key});
+class AllIssuesScreen extends StatelessWidget {
+  const AllIssuesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +25,9 @@ class CrashesScreen extends StatelessWidget {
     );
   }
 
-  Widget _crashListView() => FirestoreListView<CrashInfo>(
+  Widget _crashListView() => FirestoreListView<IssueInfo>(
         shrinkWrap: true,
-        query: FirebaseService().crashDb,
+        query: FirebaseService().issueDb,
         pageSize: 20,
         emptyBuilder: (context) => RoosterTextWidget(
             text: 'No data available',
@@ -45,9 +45,9 @@ class CrashesScreen extends StatelessWidget {
         },
       );
 
-  Widget _crashInfoTile(CrashInfo crashInfo, BuildContext context) {
+  Widget _crashInfoTile(IssueInfo crashInfo, BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
@@ -79,7 +79,7 @@ class CrashesScreen extends StatelessWidget {
     );
   }
 
-  Widget _crashInfo(CrashInfo crashInfo) {
+  Widget _crashInfo(IssueInfo crashInfo) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

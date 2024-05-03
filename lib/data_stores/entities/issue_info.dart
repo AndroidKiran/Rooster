@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'crash_info.g.dart';
+part 'issue_info.g.dart';
 
 @JsonSerializable()
-class CrashInfo extends Equatable {
+class IssueInfo extends Equatable {
   final String type;
   final int crashCount;
   final int crashPercentage;
@@ -18,7 +18,7 @@ class CrashInfo extends Equatable {
   final String platform;
   final String appId;
 
-  const CrashInfo(
+  const IssueInfo(
       {required this.type,
       required this.crashCount,
       required this.crashPercentage,
@@ -32,15 +32,15 @@ class CrashInfo extends Equatable {
       required this.platform,
       required this.appId});
 
-  factory CrashInfo.fromJson(Map<String, dynamic> json) =>
-      _$CrashInfoFromJson(json);
+  factory IssueInfo.fromJson(Map<String, dynamic> json) =>
+      _$IssueInfoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CrashInfoToJson(this);
+  Map<String, dynamic> toJson() => _$IssueInfoToJson(this);
 
   String getCrashlyticsIssueUrl() =>
       'https://console.firebase.google.com/u/0/project/$projectName/crashlytics/app/$platform:$appId/issues/$issueId';
 
-  static const emptyInstance = CrashInfo(
+  static const emptyInstance = IssueInfo(
       type: '',
       crashCount: 0,
       crashPercentage: 0,
