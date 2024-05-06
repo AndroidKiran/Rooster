@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_issue_info.dart';
-import 'package:rooster/data_stores/entities/issue_info.dart';
 import 'package:rooster/data_stores/repositories/issue_repo/issue_repository.dart';
 import 'package:rooster/helpers/firebase_manager.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';

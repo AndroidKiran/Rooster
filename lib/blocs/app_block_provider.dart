@@ -28,13 +28,14 @@ class AppBlocProvider {
                 fcmRepository: fcmRepository,
                 deviceInfoRepository: deviceInfoRepository)),
         RepositoryProvider<FormVerificationBloc>(
-          create: (context) => FormVerificationBloc(
+          create: (context) =>
+              FormVerificationBloc(userRepository: userRepository),
+        ),
+        RepositoryProvider<HomeBloc>(
+          create: (context) => HomeBloc(
               userRepository: userRepository,
               deviceInfoRepository: deviceInfoRepository,
               fcmRepository: fcmRepository),
-        ),
-        RepositoryProvider<HomeBloc>(
-          create: (context) => HomeBloc(userRepository: userRepository),
         ),
         RepositoryProvider<IssueBloc>(
           create: (context) => IssueBloc(issueRepository: issueRepository),

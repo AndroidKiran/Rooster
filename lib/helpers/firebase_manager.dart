@@ -1,17 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:rooster/data_stores/entities/device_info.dart';
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_device_info.dart';
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_issue_info.dart';
-import 'package:rooster/data_stores/entities/firestore_entities/firestore_entity.dart';
-import 'package:rooster/data_stores/entities/issue_info.dart';
-import 'package:rooster/data_stores/entities/user_entity.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_info.dart';
 
 class FirebaseManager {
   late FirebaseFirestore fireStore = _roosterFireStore();
   late FirebaseMessaging firebaseMessaging = _roosterFirebaseMessaging();
-  late CollectionReference<UserEntity> userDb = _userFireStoreCollection();
+  late CollectionReference<FirestoreUserInfo> userDb =
+      _userFireStoreCollection();
   late CollectionReference<FirestoreIssueInfo> issueDb =
       _issuesFireStoreCollection();
   late CollectionReference<FirestoreDeviceInfo> deviceInfoDb =
@@ -62,15 +60,12 @@ class FirebaseManager {
         message.data[KEY_ISSUE_ID] != null;
   }
 
-  CollectionReference<UserEntity> _userFireStoreCollection() =>
-      fireStore.collection(USER_COLLECTION).withConverter(
-          fromFirestore: (snapshot, _) => UserEntity.fromJson(snapshot.data()!),
-          toFirestore: (userEntity, _) => userEntity.toJson());
-
-  // CollectionReference<DeviceInfo> _deviceFireStoreCollection() =>
-  //     fireStore.collection(DEVICE_INFO_COLLECTION).withConverter(
-  //         fromFirestore: (snapshot, _) => DeviceInfo.fromJson(snapshot.data()!),
-  //         toFirestore: (deviceInfo, _) => deviceInfo.toJson());
+  CollectionReference<FirestoreUserInfo> _userFireStoreCollection() =>
+      fireStore.collection(USER_COLLECTION).withConverter<FirestoreUserInfo>(
+          fromFirestore: (snapshot, _) =>
+              FirestoreUserInfo.fromDocument(snapshot),
+          toFirestore: (firestoreUserInfo, _) =>
+              firestoreUserInfo.toDocument(firestoreUserInfo.userEntity));
 
   CollectionReference<FirestoreDeviceInfo>
       _deviceFireStoreCollection() => fireStore

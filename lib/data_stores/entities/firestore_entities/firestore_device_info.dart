@@ -9,6 +9,7 @@ part 'firestore_device_info.g.dart';
 @JsonSerializable()
 class FirestoreDeviceInfo extends FireStoreEntity<DeviceInfo>
     implements DocumentConverter<FirestoreDeviceInfo, DeviceInfo> {
+  @override
   final String id;
   final DeviceInfo deviceInfo;
 

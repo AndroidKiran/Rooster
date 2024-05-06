@@ -1,16 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rooster/data_stores/entities/user_entity.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_info.dart';
+import 'package:rooster/data_stores/entities/user_info.dart';
 import 'package:rooster/helpers/firebase_manager.dart';
-import 'package:rooster/screens/routes/rooster_screen_path.dart';
 import 'package:rooster/widgets/rooster_tag_widget.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
-class AllUsersScreen extends StatelessWidget {
+class AllUsersScreen extends StatefulWidget {
   const AllUsersScreen({super.key});
 
+  @override
+  State<AllUsersScreen> createState() => _AllUsersScreenState();
+}
+
+class _AllUsersScreenState extends State<AllUsersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +31,7 @@ class AllUsersScreen extends StatelessWidget {
     );
   }
 
-  Widget _userListView() => FirestoreListView<UserEntity>(
+  Widget _userListView() => FirestoreListView<FirestoreUserInfo>(
         shrinkWrap: true,
         query: FirebaseManager().userDb,
         pageSize: 20,
@@ -42,11 +47,11 @@ class AllUsersScreen extends StatelessWidget {
             maxLines: 1),
         loadingBuilder: (context) => const CircularProgressIndicator(),
         itemBuilder: (context, doc) {
-          return _userTile(doc.data(), context);
+          return _userTile(doc.data());
         },
       );
 
-  Widget _userTile(UserEntity userEntity, BuildContext context) {
+  Widget _userTile(FirestoreUserInfo firestoreUserInfo) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
       shape: RoundedRectangleBorder(
@@ -63,7 +68,7 @@ class AllUsersScreen extends StatelessWidget {
               Badge(
                 alignment: AlignmentDirectional.topStart,
                 backgroundColor: Colors.amberAccent,
-                isLabelVisible: userEntity.isOnCall,
+                isLabelVisible: firestoreUserInfo.userEntity.isOnCall,
                 label: const RoosterTextWidget(
                     text: 'OnCall', textSize: 6.0, textColor: Colors.black87),
                 child: Icon(
@@ -73,7 +78,7 @@ class AllUsersScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8.0),
-              _userInfo(userEntity),
+              _userInfo(firestoreUserInfo),
               const SizedBox(width: 8.0),
               Icon(
                 size: 20,
@@ -87,9 +92,10 @@ class AllUsersScreen extends StatelessWidget {
     );
   }
 
-  Widget _userInfo(UserEntity userEntity) {
+  Widget _userInfo(FirestoreUserInfo firestoreUserInfo) {
+    final UserInfo userInfo = firestoreUserInfo.userEntity;
     Color tagBgColor = Colors.green;
-    if (userEntity.deviceInfoRef.isEmpty) {
+    if (userInfo.deviceInfoRef.isEmpty) {
       tagBgColor = Colors.redAccent;
     }
     return Expanded(
@@ -97,13 +103,13 @@ class AllUsersScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           RoosterTextWidget(
-              text: userEntity.getUserName(),
+              text: userInfo.getUserName(),
               textSize: 18,
               textColor: Colors.grey[800],
               maxLines: 1,
               fontWeight: FontWeight.w800),
           RoosterTagWidget(
-              text: userEntity.getAccountTag(),
+              text: userInfo.getAccountTag(),
               borderRadius: 12.0,
               shape: BoxShape.rectangle,
               backgroundColor: tagBgColor,

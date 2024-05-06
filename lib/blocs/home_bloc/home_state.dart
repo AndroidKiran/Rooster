@@ -1,24 +1,19 @@
 part of 'home_bloc.dart';
 
 @immutable
-sealed class HomeState extends Equatable {}
+final class HomeState extends Equatable {
+  final FirestoreUserInfo firestoreUserInfo;
 
-@immutable
-final class HomeInitState extends HomeState {
-  final UserEntity onCallUser;
+  const HomeState._({this.firestoreUserInfo = FirestoreUserInfo.emptyInstance});
 
-  HomeInitState({this.onCallUser = UserEntity.emptyInstance});
+  const HomeState.init() : this._();
 
-  @override
-  List<Object?> get props => [onCallUser];
-}
+  const HomeState.onCallUpdate(FirestoreUserInfo firestoreUserInfo)
+      : this._(firestoreUserInfo: firestoreUserInfo);
 
-@immutable
-final class OnCallState extends HomeState {
-  final UserEntity onCallUser;
-
-  OnCallState({required this.onCallUser});
+  const HomeState.onTokenUpdate(FirestoreUserInfo firestoreUserInfo)
+      : this._(firestoreUserInfo: firestoreUserInfo);
 
   @override
-  List<Object?> get props => [onCallUser];
+  List<Object?> get props => [firestoreUserInfo];
 }

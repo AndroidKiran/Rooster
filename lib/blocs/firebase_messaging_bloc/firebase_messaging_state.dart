@@ -14,7 +14,6 @@ final class FirebaseMessagingInitState extends FirebaseMessagingState {
   List<Object?> get props => [];
 }
 
-@immutable
 final class PerformVoipCallState extends FirebaseMessagingState {
   final RemoteMessage message;
 
@@ -24,7 +23,6 @@ final class PerformVoipCallState extends FirebaseMessagingState {
   List<Object?> get props => [message];
 }
 
-@immutable
 final class RefreshFcmTokenState extends FirebaseMessagingState {
   @override
   List<Object?> get props => [];

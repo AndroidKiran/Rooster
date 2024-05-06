@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_issue_info.dart';
-import 'package:rooster/data_stores/entities/issue_info.dart';
 import 'package:rooster/data_stores/repositories/issue_repo/issue_repository.dart';
 
 part 'issue_event.dart';

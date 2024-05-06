@@ -7,6 +7,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rooster/data_stores/entities/device_info.dart';
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_device_info.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_info.dart';
+import 'package:rooster/data_stores/entities/user_info.dart';
 import 'package:rooster/data_stores/repositories/device_info_repo/device_info_repository.dart';
 import 'package:rooster/data_stores/repositories/fcm_repo/fcm_repository.dart';
 import 'package:rooster/data_stores/repositories/issue_repo/issue_repository.dart';
@@ -84,15 +86,22 @@ class FirebaseMessagingBloc
   Future<void> _onTokenRefreshEvent(
       RefreshFcmTokenEvent event, Emitter<FirebaseMessagingState> emit) async {
     try {
-      final user = await _userRepository.getUserFromPreference();
-      if (user.isEmptyInstance()) return;
-      final deviceInfo = DeviceInfo.newTokenDeviceInfo(event.refreshToken);
-      final firestoreDeviceInfo = FirestoreDeviceInfo(
-          id: user.getDeviceInfoDocId(), deviceInfo: deviceInfo);
+      final FirestoreUserInfo firestoreUserInfo =
+          await _userRepository.getUserFromPreference();
+      if (firestoreUserInfo.isEmptyInstance()) return;
+      final UserInfo userInfo = firestoreUserInfo.userEntity;
+      final DeviceInfo deviceInfo =
+          DeviceInfo.newTokenDeviceInfo(event.refreshToken);
+      final FirestoreDeviceInfo firestoreDeviceInfo = FirestoreDeviceInfo(
+          id: userInfo.getDeviceInfoDocId(), deviceInfo: deviceInfo);
       final String deviceInfoDocPath = await _deviceInfoRepository
           .updateFirebaseDeviceInfo(firestoreDeviceInfo);
-      if (user.deviceInfoRef != deviceInfoDocPath) {
-        await _userRepository.updateUserDeviceInfoPath(user, deviceInfoDocPath);
+      if (userInfo.deviceInfoRef != deviceInfoDocPath) {
+        final UserInfo newUserInfo =
+            userInfo.copyWith(deviceInfoRef: deviceInfoDocPath);
+        final FirestoreUserInfo newFirestoreUserInfo = FirestoreUserInfo(
+            id: firestoreDeviceInfo.id, userEntity: newUserInfo);
+        await _userRepository.updateUserDeviceInfoPath(newFirestoreUserInfo);
       }
       return emit(RefreshFcmTokenState());
     } catch (e) {

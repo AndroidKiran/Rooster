@@ -15,7 +15,7 @@ final class FormVerificationState extends Equatable {
 
   const FormVerificationState._(
       {this.emailFormItem =
-          const BlocFormItem(error: 'Please enter valid email'),
+          const BlocFormItem(error: 'Please enter valid email', value: null),
       this.platformFormItem =
           const BlocFormItem(error: 'Please choose the platform', value: null),
       this.formStatus = FormStatus.init});
@@ -23,8 +23,7 @@ final class FormVerificationState extends Equatable {
   FormVerificationState copyWith(
       {BlocFormItem? emailFormItem,
       BlocFormItem? platformFormItem,
-      FormStatus? formStatus,
-      UserEntity? user}) {
+      FormStatus? formStatus}) {
     return FormVerificationState._(
         emailFormItem: emailFormItem ?? this.emailFormItem,
         platformFormItem: platformFormItem ?? this.platformFormItem,

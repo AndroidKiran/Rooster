@@ -1,15 +1,17 @@
-import 'package:rooster/data_stores/entities/user_entity.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_info.dart';
 
 abstract class UserRepository {
-  Stream<UserEntity> get user;
+  Stream<FirestoreUserInfo> get preferenceUser;
 
-  Stream<UserEntity> get firebaseUser;
+  Stream<FirestoreUserInfo> get firebaseUser;
 
-  Future<void> saveUserToPreference(UserEntity user);
+  Future<void> saveUserToPreference(FirestoreUserInfo user);
 
-  Future<UserEntity> getUserFromPreference();
+  Future<FirestoreUserInfo> getUserFromPreference();
 
-  Future<UserEntity> getFireStoreUser(String email, String platform);
+  Future<FirestoreUserInfo> getFireStoreUser(String email, String platform);
 
-  Future<void> updateUserDeviceInfoPath(UserEntity user, String deviceInfoPath);
+  Future<FirestoreUserInfo> getCurrentFireStoreUser(String docId);
+
+  Future<void> updateUserDeviceInfoPath(FirestoreUserInfo firestoreUserInfo);
 }

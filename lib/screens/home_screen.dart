@@ -1,10 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_callkit_incoming/entities/call_event.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rooster/blocs/home_bloc/home_bloc.dart';
-import 'package:rooster/data_stores/entities/user_entity.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_info.dart';
+import 'package:rooster/data_stores/entities/user_info.dart';
 import 'package:rooster/helpers/call_kit_manager.dart';
 import 'package:rooster/screens/models/home_item.dart';
 import 'package:rooster/screens/routes/rooster_screen_path.dart';
@@ -27,6 +30,7 @@ class _HomeScreen extends State<HomeScreen> {
     super.initState();
     _initApp();
     _callKitManager.listenerEvent(context, _onEvent);
+    _updateTokenEvent();
   }
 
   @override
@@ -82,14 +86,18 @@ class _HomeScreen extends State<HomeScreen> {
     }
   }
 
+  Future<void> _updateTokenEvent() async {
+    if (context.mounted) {
+      context.read<HomeBloc>().add(UpdateTokenEvent());
+    }
+  }
+
   Widget _onCallCard() => BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          UserEntity user = UserEntity.emptyInstance;
-          if (state is OnCallState) {
-            user = state.onCallUser;
-          }
-          bool areYouOnCall = user.isOnCall;
-          Color cardColor = Colors.white70;
+          FirestoreUserInfo firestoreUserInfo = state.firestoreUserInfo;
+          final UserInfo userInfo = firestoreUserInfo.userEntity;
+          bool areYouOnCall = userInfo.isOnCall;
+          Color cardColor = Colors.deepPurpleAccent;
           if (areYouOnCall) {
             cardColor = Colors.green;
           }

@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rooster/data_stores/entities/user_entity.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_info.dart';
+import 'package:rooster/data_stores/entities/user_info.dart';
 import 'package:rooster/data_stores/repositories/user_repo/user_repository.dart';
 import 'package:rooster/helpers/firebase_manager.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
@@ -16,7 +17,7 @@ class UserRepositoryImplementation implements UserRepository {
       : _preferences = preferences;
 
   @override
-  Stream<UserEntity> get user {
+  Stream<FirestoreUserInfo> get preferenceUser {
     return _preferences
         .getString(PREFERENCE_USER, defaultValue: '')
         .map((value) {
@@ -25,40 +26,37 @@ class UserRepositoryImplementation implements UserRepository {
         map = jsonDecode(value);
       }
       if (map.isEmpty) {
-        return UserEntity.emptyInstance;
+        return FirestoreUserInfo.emptyInstance;
       } else {
-        return UserEntity.fromPreferenceJson(map);
+        return FirestoreUserInfo.fromPreferenceJson(map);
       }
     });
   }
 
   @override
-  Stream<UserEntity> get firebaseUser async* {
-    UserEntity userEntity = await getUserFromPreference();
-    if (userEntity.isEmptyInstance()) {
-      yield userEntity;
-    } else {
-      yield* _userCollection
-          .where('email', isEqualTo: userEntity.email)
-          .where('platform', isEqualTo: userEntity.platform)
-          .orderBy('platform')
-          .limit(1)
-          .snapshots()
-          .map((documentSnapshots) {
-        if (documentSnapshots.size > 0) {
-          return documentSnapshots.docs[0].data();
-        } else {
-          return userEntity;
-        }
-      });
-    }
+  Stream<FirestoreUserInfo> get firebaseUser async* {
+    final FirestoreUserInfo firestoreUserInfo = await getUserFromPreference();
+    final UserInfo userInfo = firestoreUserInfo.userEntity;
+    yield* _userCollection
+        .where('email', isEqualTo: userInfo.email)
+        .where('platform', isEqualTo: userInfo.platform)
+        .orderBy('platform')
+        .limit(1)
+        .snapshots()
+        .map((documentSnapshots) {
+      if (documentSnapshots.size > 0) {
+        return documentSnapshots.docs[0].data();
+      } else {
+        return firestoreUserInfo;
+      }
+    });
   }
 
   @override
-  Future<void> saveUserToPreference(UserEntity user) async {
+  Future<void> saveUserToPreference(FirestoreUserInfo firestoreUserInfo) async {
     try {
       await _preferences.setString(
-          PREFERENCE_USER, jsonEncode(user.toPreferenceJson()));
+          PREFERENCE_USER, jsonEncode(firestoreUserInfo.toPreferenceJson()));
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -66,66 +64,60 @@ class UserRepositoryImplementation implements UserRepository {
   }
 
   @override
-  Future<UserEntity> getUserFromPreference() async {
-    var currentUser = UserEntity.emptyInstance;
+  Future<FirestoreUserInfo> getUserFromPreference() async {
+    var currentUser = FirestoreUserInfo.emptyInstance;
     try {
       final userJson =
           _preferences.getString(PREFERENCE_USER, defaultValue: '').getValue();
       if (userJson.isNotEmpty) {
-        currentUser = UserEntity.fromPreferenceJson(jsonDecode(userJson));
+        currentUser =
+            FirestoreUserInfo.fromPreferenceJson(jsonDecode(userJson));
       }
-      return currentUser;
     } catch (e) {
       log(e.toString());
-      return currentUser;
     }
-  }
-
-  @override
-  Future<UserEntity> getFireStoreUser(String email, String platform) async {
-    var currentUser = UserEntity.emptyInstance;
-    try {
-      final QuerySnapshot<UserEntity> querySnapshot =
-          await getCurrentFirebaseUser(email, platform);
-      if (querySnapshot.size > 0) {
-        currentUser = querySnapshot.docs[0].data();
-      }
-      return currentUser;
-    } catch (e) {
-      log(e.toString());
-      return currentUser;
-    }
+    return currentUser;
   }
 
   @override
   Future<void> updateUserDeviceInfoPath(
-      UserEntity user, String deviceInfoPath) async {
+      FirestoreUserInfo firestoreUserInfo) async {
     try {
-      final QuerySnapshot<UserEntity> querySnapshot =
-          await getCurrentFirebaseUser(user.email, user.platform);
-      final QueryDocumentSnapshot<UserEntity>? documentSnapshot =
-          querySnapshot.docs.firstOrNull;
-      if (documentSnapshot != null && documentSnapshot.exists) {
-        await _userCollection
-            .doc(documentSnapshot.id)
-            .update({"deviceInfoRef": deviceInfoPath});
-        await saveUserToPreference(
-            user.copyWith(deviceInfoRef: deviceInfoPath));
-      }
+      await _userCollection.doc(firestoreUserInfo.id).update(
+          {"deviceInfoRef": firestoreUserInfo.userEntity.deviceInfoRef});
+      await saveUserToPreference(firestoreUserInfo);
     } catch (e) {
       log(e.toString());
       rethrow;
     }
   }
 
-  Future<QuerySnapshot<UserEntity>> getCurrentFirebaseUser(
+  @override
+  Future<FirestoreUserInfo> getFireStoreUser(
       String email, String platform) async {
-    return await _userCollection
+    FirestoreUserInfo firestoreUserInfo = FirestoreUserInfo.emptyInstance;
+    final QuerySnapshot<FirestoreUserInfo> querySnapshot = await _userCollection
         .where('email', isEqualTo: email)
         .where('platform', isEqualTo: platform)
         .orderBy('platform')
         .limit(1)
         .get();
+    if (querySnapshot.size > 0) {
+      firestoreUserInfo = querySnapshot.docs[0].data();
+    }
+    return firestoreUserInfo;
+  }
+
+  @override
+  Future<FirestoreUserInfo> getCurrentFireStoreUser(String docId) async {
+    FirestoreUserInfo firestoreUserInfo = FirestoreUserInfo.emptyInstance;
+    final DocumentSnapshot<FirestoreUserInfo> documentSnapshot =
+        await _userCollection.doc(docId).get();
+    if (documentSnapshot.exists) {
+      firestoreUserInfo =
+          documentSnapshot.data() ?? FirestoreUserInfo.emptyInstance;
+    }
+    return firestoreUserInfo;
   }
 
   static const String PREFERENCE_USER = "user";

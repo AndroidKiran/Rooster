@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_entity.dart';
+part of 'user_info.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserEntity _$UserEntityFromJson(Map<String, dynamic> json) => UserEntity(
+UserInfo _$UserInfoFromJson(Map<String, dynamic> json) => UserInfo(
       email: json['email'] as String,
       name: json['name'] as String,
       platform: json['platform'] as String,
@@ -18,8 +18,7 @@ UserEntity _$UserEntityFromJson(Map<String, dynamic> json) => UserEntity(
           .fromJson(json['modifiedAt']),
     );
 
-Map<String, dynamic> _$UserEntityToJson(UserEntity instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$UserInfoToJson(UserInfo instance) => <String, dynamic>{
       'email': instance.email,
       'name': instance.name,
       'platform': instance.platform,

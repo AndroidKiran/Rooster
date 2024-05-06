@@ -5,11 +5,11 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:rooster/data_stores/entities/converters/server_timestamp_to_miliisecond_converter.dart';
 import 'package:rooster/utils/string_extensions.dart';
 
-part 'user_entity.g.dart';
+part 'user_info.g.dart';
 
 @JsonSerializable()
 @ServerTimestampToMilliSecondConverter()
-class UserEntity extends Equatable {
+class UserInfo extends Equatable {
   final String email;
   final String name;
   final String platform;
@@ -18,7 +18,7 @@ class UserEntity extends Equatable {
   final int? createdAt;
   final int? modifiedAt;
 
-  const UserEntity(
+  const UserInfo(
       {required this.email,
       required this.name,
       required this.platform,
@@ -31,7 +31,7 @@ class UserEntity extends Equatable {
     return this == emptyInstance;
   }
 
-  UserEntity copyWith(
+  UserInfo copyWith(
       {String? email,
       String? name,
       String? platform,
@@ -39,7 +39,7 @@ class UserEntity extends Equatable {
       bool? isOnCall,
       int? createdAt,
       int? modifiedAt}) {
-    return UserEntity(
+    return UserInfo(
         email: email ?? this.email,
         name: name ?? this.name,
         platform: platform ?? this.platform,
@@ -49,10 +49,10 @@ class UserEntity extends Equatable {
         modifiedAt: modifiedAt ?? this.modifiedAt);
   }
 
-  factory UserEntity.fromJson(Map<String, dynamic> json) =>
-      _$UserEntityFromJson(json);
+  factory UserInfo.fromJson(Map<String, dynamic> json) =>
+      _$UserInfoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$UserEntityToJson(this);
+  Map<String, dynamic> toJson() => _$UserInfoToJson(this);
 
   Map<String, dynamic> toPreferenceJson() => {
         'email': email,
@@ -110,9 +110,9 @@ class UserEntity extends Equatable {
     return docId;
   }
 
-  static UserEntity fromPreferenceJson(Map<String, dynamic> doc) {
+  static UserInfo fromPreferenceJson(Map<String, dynamic> doc) {
     if (doc.isEmpty) return emptyInstance;
-    return UserEntity(
+    return UserInfo(
       email: doc['email'],
       name: doc['name'],
       platform: doc['platform'],
@@ -123,7 +123,7 @@ class UserEntity extends Equatable {
     );
   }
 
-  static const emptyInstance = UserEntity(
+  static const emptyInstance = UserInfo(
     email: '',
     name: '',
     platform: '',

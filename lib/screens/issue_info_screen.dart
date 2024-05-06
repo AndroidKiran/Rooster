@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rooster/blocs/issue_info_bloc/issue_bloc.dart';
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_issue_info.dart';
-import 'package:rooster/data_stores/entities/issue_info.dart';
 import 'package:rooster/widgets/rooster_tag_widget.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
@@ -30,7 +28,7 @@ class _IssueInfoScreenState extends State<IssueInfoScreen> {
     super.dispose();
   }
 
-  Future<void> _triggerFetchIssueInfoEvent(String issueId) async {
+  void _triggerFetchIssueInfoEvent(String issueId) {
     if (context.mounted) {
       context.read<IssueBloc>().add(FetchIssueInfoEvent(issueId: issueId));
     }
