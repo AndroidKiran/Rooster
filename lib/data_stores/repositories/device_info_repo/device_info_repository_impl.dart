@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:rooster/data_stores/entities/device_info.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_device_info.dart';
+import 'package:rooster/data_stores/entities/user_entity.dart';
 import 'package:rooster/data_stores/repositories/device_info_repo/device_info_repository.dart';
 import 'package:rooster/helpers/firebase_manager.dart';
 
@@ -9,55 +11,41 @@ class DeviceInfoRepositoryImplementation extends DeviceInfoRepository {
 
   @override
   Future<String> updateFirebaseDeviceInfo(
-      DeviceInfo deviceInfo, String docRef) async {
+      FirestoreDeviceInfo firestoreDeviceInfo) async {
+    var path = '';
     try {
-      var path = '';
-      final String docId = await getFirebaseDocId(docRef);
+      final String docId = firestoreDeviceInfo.id;
       if (docId.isEmpty) {
-        final result = await _deviceInfoDb.add(deviceInfo);
-        path = "${FirebaseManager.DEVICE_INFO_COLLECTION}/${result.id}";
+        final result = await _deviceInfoDb.add(firestoreDeviceInfo);
+        path = '${FirebaseManager.DEVICE_INFO_COLLECTION}/${result.id}';
       } else {
+        final deviceInfo = firestoreDeviceInfo.deviceInfo;
         await _deviceInfoDb
             .doc(docId)
             .update({"fcmToken": deviceInfo.fcmToken, "os": deviceInfo.os});
-        path = "${FirebaseManager.DEVICE_INFO_COLLECTION}/$docId";
+        path = '${FirebaseManager.DEVICE_INFO_COLLECTION}/$docId';
       }
-      return path;
     } catch (e) {
       log(e.toString());
-      return '';
     }
+    return path;
   }
 
   @override
-  Future<DeviceInfo> getFirebaseDeviceInfo(String docRef) async {
-    var currentDeviceInfo = DeviceInfo.emptyInstance;
+  Future<FirestoreDeviceInfo> getFirebaseDeviceInfo(
+      UserEntity userEntity) async {
+    var currentDeviceInfo = FirestoreDeviceInfo.emptyInstance;
     try {
-      final String docId = await getFirebaseDocId(docRef);
+      final docId = userEntity.getDeviceInfoDocId();
       final informationSnapShot = await _deviceInfoDb.doc(docId).get();
       if (informationSnapShot.exists) {
         currentDeviceInfo =
-            informationSnapShot.data() ?? DeviceInfo.emptyInstance;
+            informationSnapShot.data() ?? FirestoreDeviceInfo.emptyInstance;
       }
       return currentDeviceInfo;
     } catch (e) {
       log(e.toString());
       return currentDeviceInfo;
-    }
-  }
-
-  @override
-  Future<String> getFirebaseDocId(String docRef) async {
-    var docId = '';
-    try {
-      final List<String> pathList = docRef.split("/");
-      if (pathList.isNotEmpty && pathList.length >= 2) {
-        docId = pathList[1];
-      }
-      return docId;
-    } catch (e) {
-      log(e.toString());
-      return docId;
     }
   }
 }

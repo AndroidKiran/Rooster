@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rooster/data_stores/entities/device_info.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_device_info.dart';
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_issue_info.dart';
-import 'package:rooster/data_stores/entities/firestore_entity.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_entity.dart';
 import 'package:rooster/data_stores/entities/issue_info.dart';
 import 'package:rooster/data_stores/entities/user_entity.dart';
 
@@ -13,7 +14,7 @@ class FirebaseManager {
   late CollectionReference<UserEntity> userDb = _userFireStoreCollection();
   late CollectionReference<FirestoreIssueInfo> issueDb =
       _issuesFireStoreCollection();
-  late CollectionReference<DeviceInfo> deviceInfoDb =
+  late CollectionReference<FirestoreDeviceInfo> deviceInfoDb =
       _deviceFireStoreCollection();
 
   static final FirebaseManager _singleton = FirebaseManager._();
@@ -66,15 +67,19 @@ class FirebaseManager {
           fromFirestore: (snapshot, _) => UserEntity.fromJson(snapshot.data()!),
           toFirestore: (userEntity, _) => userEntity.toJson());
 
-  // CollectionReference<IssueInfo> _issuesFireStoreCollection() =>
-  //     fireStore.collection(ISSUE_COLLECTION).withConverter<IssueInfo>(
-  //         fromFirestore: (snapshot, _) => IssueInfo.fromJson(snapshot.data()!),
-  //         toFirestore: (issueInfo, _) => issueInfo.toJson());
+  // CollectionReference<DeviceInfo> _deviceFireStoreCollection() =>
+  //     fireStore.collection(DEVICE_INFO_COLLECTION).withConverter(
+  //         fromFirestore: (snapshot, _) => DeviceInfo.fromJson(snapshot.data()!),
+  //         toFirestore: (deviceInfo, _) => deviceInfo.toJson());
 
-  CollectionReference<DeviceInfo> _deviceFireStoreCollection() =>
-      fireStore.collection(DEVICE_INFO_COLLECTION).withConverter(
-          fromFirestore: (snapshot, _) => DeviceInfo.fromJson(snapshot.data()!),
-          toFirestore: (deviceInfo, _) => deviceInfo.toJson());
+  CollectionReference<FirestoreDeviceInfo>
+      _deviceFireStoreCollection() => fireStore
+          .collection(DEVICE_INFO_COLLECTION)
+          .withConverter<FirestoreDeviceInfo>(
+              fromFirestore:
+                  (snapshot, _) => FirestoreDeviceInfo.fromDocument(snapshot),
+              toFirestore: (firestoreDeviceInfo, _) =>
+                  firestoreDeviceInfo.toDocument(firestoreDeviceInfo.entity));
 
   CollectionReference<FirestoreIssueInfo> _issuesFireStoreCollection() =>
       fireStore.collection(ISSUE_COLLECTION).withConverter<FirestoreIssueInfo>(

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:rooster/data_stores/entities/converters/server_timestamp_to_miliisecond_converter.dart';
@@ -93,6 +95,19 @@ class UserEntity extends Equatable {
       accTagName = 'Inactive Account';
     }
     return accTagName;
+  }
+
+  String getDeviceInfoDocId() {
+    var docId = '';
+    try {
+      final List<String> pathList = deviceInfoRef.split("/");
+      if (pathList.isNotEmpty && pathList.length >= 2) {
+        docId = pathList[1];
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return docId;
   }
 
   static UserEntity fromPreferenceJson(Map<String, dynamic> doc) {

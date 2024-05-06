@@ -1,9 +1,9 @@
-import 'package:rooster/data_stores/entities/device_info.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_device_info.dart';
+import 'package:rooster/data_stores/entities/user_entity.dart';
 
 abstract class DeviceInfoRepository {
-  Future<String> updateFirebaseDeviceInfo(DeviceInfo deviceInfo, String docRef);
+  Future<String> updateFirebaseDeviceInfo(
+      FirestoreDeviceInfo firestoreDeviceInfo);
 
-  Future<DeviceInfo> getFirebaseDeviceInfo(String docRef);
-
-  Future<String> getFirebaseDocId(String docRef);
+  Future<FirestoreDeviceInfo> getFirebaseDeviceInfo(UserEntity userEntity);
 }

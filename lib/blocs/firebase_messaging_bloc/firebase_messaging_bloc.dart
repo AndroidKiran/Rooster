@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rooster/data_stores/entities/device_info.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_device_info.dart';
 import 'package:rooster/data_stores/repositories/device_info_repo/device_info_repository.dart';
 import 'package:rooster/data_stores/repositories/fcm_repo/fcm_repository.dart';
 import 'package:rooster/data_stores/repositories/issue_repo/issue_repository.dart';
@@ -86,8 +87,10 @@ class FirebaseMessagingBloc
       final user = await _userRepository.getUserFromPreference();
       if (user.isEmptyInstance()) return;
       final deviceInfo = DeviceInfo.newTokenDeviceInfo(event.refreshToken);
+      final firestoreDeviceInfo = FirestoreDeviceInfo(
+          id: user.getDeviceInfoDocId(), deviceInfo: deviceInfo);
       final String deviceInfoDocPath = await _deviceInfoRepository
-          .updateFirebaseDeviceInfo(deviceInfo, user.deviceInfoRef);
+          .updateFirebaseDeviceInfo(firestoreDeviceInfo);
       if (user.deviceInfoRef != deviceInfoDocPath) {
         await _userRepository.updateUserDeviceInfoPath(user, deviceInfoDocPath);
       }

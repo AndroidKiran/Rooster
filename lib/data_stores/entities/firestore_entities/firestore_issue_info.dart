@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:rooster/data_stores/entities/converters/document_converter.dart';
-import 'package:rooster/data_stores/entities/firestore_entity.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_entity.dart';
 import 'package:rooster/data_stores/entities/issue_info.dart';
 
 part 'firestore_issue_info.g.dart';

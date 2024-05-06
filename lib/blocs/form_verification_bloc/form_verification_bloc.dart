@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:rooster/data_stores/entities/device_info.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_device_info.dart';
 import 'package:rooster/data_stores/repositories/device_info_repo/device_info_repository.dart';
 import 'package:rooster/data_stores/repositories/fcm_repo/fcm_repository.dart';
 import 'package:rooster/utils/string_extensions.dart';
@@ -74,14 +75,16 @@ class FormVerificationBloc
       }
 
       final token = await _fcmRepository.getFcmToken() ?? '';
-      final DeviceInfo deviceInfo =
-          await _deviceInfoRepository.getFirebaseDeviceInfo(user.deviceInfoRef);
-      if (token != deviceInfo.fcmToken) {
-        final deviceInfo = DeviceInfo.newTokenDeviceInfo(token);
+      final FirestoreDeviceInfo firestoreDeviceInfo =
+          await _deviceInfoRepository.getFirebaseDeviceInfo(user);
+      final deviceInfo = firestoreDeviceInfo.deviceInfo;
+      if (deviceInfo.fcmToken.isEmpty || token != deviceInfo.fcmToken) {
+        final newDeviceInfo = DeviceInfo.newTokenDeviceInfo(token);
+        final newFirestoreDeviceInfo = FirestoreDeviceInfo(
+            id: user.getDeviceInfoDocId(), deviceInfo: newDeviceInfo);
         final String docInfoRef =
             await _deviceInfoRepository.updateFirebaseDeviceInfo(
-          deviceInfo,
-          user.deviceInfoRef,
+          newFirestoreDeviceInfo,
         );
         await _userRepository.updateUserDeviceInfoPath(user, docInfoRef);
         user = await _userRepository.getUserFromPreference();
