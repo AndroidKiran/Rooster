@@ -54,6 +54,28 @@ class IssueInfo extends Equatable {
       platform: '',
       appId: '');
 
+  bool isEmptyInstance() {
+    return this == emptyInstance;
+  }
+
+  String getScreenTitle() {
+    var title = 'Alert';
+    if (type.contains(TYPE_STABILITY_DIGEST)) {
+      title = 'Stability Alert';
+    } else if (type.contains(TYPE_VELOCITY_ALERT)) {
+      title = 'Velocity Alert';
+    }
+    return title;
+  }
+
+  String getIssueMsg() {
+    return 'Crashes are spiking for an issue in version $appVersion in the last hour.';
+  }
+
+  String getFirstSeenMsg() {
+    return 'The issue was first seen in version $firstVersion.';
+  }
+
   @override
   List<Object?> get props => [
         type,
@@ -67,4 +89,7 @@ class IssueInfo extends Equatable {
         title,
         projectName
       ];
+
+  static String TYPE_STABILITY_DIGEST = 'CrashlyticsStabilityDigestPayload';
+  static String TYPE_VELOCITY_ALERT = 'CrashlyticsVelocityAlertPayload';
 }

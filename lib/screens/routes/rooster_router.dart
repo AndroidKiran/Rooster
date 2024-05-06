@@ -48,17 +48,18 @@ class RoosterRouter {
               child: const RouteNotFoundScreen(routeError: 'Route not found')),
         ),
         GoRoute(
-          path: RoosterScreenPath.allIssuesScreen.route,
-          name: RoosterScreenPath.allIssuesScreen.name,
-          pageBuilder: (context, state) =>
-              MaterialPage(key: state.pageKey, child: const AllIssuesScreen()),
-        ),
+            path: RoosterScreenPath.allIssuesScreen.route,
+            name: RoosterScreenPath.allIssuesScreen.name,
+            pageBuilder: (context, state) => MaterialPage(
+                key: state.pageKey, child: const AllIssuesScreen())),
         GoRoute(
-          path: RoosterScreenPath.issueInfoScreen.route,
-          name: RoosterScreenPath.issueInfoScreen.name,
-          pageBuilder: (context, state) =>
-              MaterialPage(key: state.pageKey, child: const IssueInfoScreen()),
-        ),
+            path: RoosterScreenPath.issueInfoScreen.route,
+            name: RoosterScreenPath.issueInfoScreen.name,
+            pageBuilder: (context, state) {
+              final String issueId = state.pathParameters['issueId'] ?? '';
+              return MaterialPage(
+                  key: state.pageKey, child: IssueInfoScreen(issueId: issueId));
+            }),
         GoRoute(
           path: RoosterScreenPath.allUsersScreen.route,
           name: RoosterScreenPath.allUsersScreen.name,

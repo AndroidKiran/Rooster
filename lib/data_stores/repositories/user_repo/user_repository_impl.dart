@@ -4,12 +4,12 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rooster/data_stores/entities/user_entity.dart';
 import 'package:rooster/data_stores/repositories/user_repo/user_repository.dart';
-import 'package:rooster/services/firebase_service.dart';
+import 'package:rooster/helpers/firebase_manager.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 class UserRepositoryImplementation implements UserRepository {
   final StreamingSharedPreferences _preferences;
-  final _userCollection = FirebaseService().userDb;
+  final _userCollection = FirebaseManager().userDb;
 
   UserRepositoryImplementation(
       {required StreamingSharedPreferences preferences})

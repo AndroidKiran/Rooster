@@ -25,7 +25,7 @@ class RoosterTagWidget extends StatelessWidget {
         shape: shape,
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 6.0),
+        padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
         child: Text(
           text,
           maxLines: 1,

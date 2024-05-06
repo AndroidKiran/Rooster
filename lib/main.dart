@@ -7,18 +7,18 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:rooster/data_stores/repositories/crash_velocity_repo/issue_repository.dart';
-import 'package:rooster/data_stores/repositories/crash_velocity_repo/issue_repository_impl.dart';
 import 'package:rooster/data_stores/repositories/device_info_repo/device_info_repository.dart';
 import 'package:rooster/data_stores/repositories/device_info_repo/device_info_repository_impl.dart';
 import 'package:rooster/data_stores/repositories/fcm_repo/fcm_repository.dart';
 import 'package:rooster/data_stores/repositories/fcm_repo/fcm_repository_impl.dart';
+import 'package:rooster/data_stores/repositories/issue_repo/issue_repository.dart';
+import 'package:rooster/data_stores/repositories/issue_repo/issue_repository_impl.dart';
 import 'package:rooster/data_stores/repositories/user_repo/user_repository.dart';
 import 'package:rooster/data_stores/repositories/user_repo/user_repository_impl.dart';
+import 'package:rooster/helpers/call_kit_manager.dart';
+import 'package:rooster/helpers/firebase_manager.dart';
 import 'package:rooster/rooster_bloc_observer.dart';
 import 'package:rooster/rooster_app.dart';
-import 'package:rooster/services/call_kit_service.dart';
-import 'package:rooster/services/firebase_service.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:uuid/uuid.dart';
@@ -29,9 +29,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    FirebaseService firebaseService = FirebaseService();
-    if (!firebaseService.isIssueNotification(message) ||
-        !firebaseService.hasValidIssueId(message)) return;
+    FirebaseManager firebaseManager = FirebaseManager();
+    if (!firebaseManager.isIssueNotification(message) ||
+        !firebaseManager.hasValidIssueId(message)) return;
 
     final preference = await StreamingSharedPreferences.instance;
     final userRepository = UserRepositoryImplementation(
@@ -40,7 +40,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     log('_firebaseMessagingBackgroundHandler passed create user repo');
     if (user.isEmptyInstance()) return;
 
-    final String? crashId = message.data[FirebaseService.KEY_ISSUE_ID];
+    final String? crashId = message.data[FirebaseManager.KEY_ISSUE_ID];
     log('_firebaseMessagingBackgroundHandler received crash id ==> ${crashId ?? ""}');
     if (crashId == null || crashId.isEmpty) return;
     final issueRepository =
@@ -48,7 +48,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     issueRepository.saveIssueId(crashId);
     log('_firebaseMessagingBackgroundHandler saved crash id ==> ${crashId ?? ""}');
 
-    CallKitService().showCallkitIncoming(const Uuid().v4());
+    CallKitManager().showCallkitIncoming(const Uuid().v4());
   } catch (e) {
     log(e.toString());
   }
@@ -94,5 +94,5 @@ Future<RoosterApp> _roosterApp() async {
 }
 
 Future<void> getDevicePushTokenVoIP() async {
-  await CallKitService().getDevicePushTokenVoIP();
+  await CallKitManager().getDevicePushTokenVoIP();
 }

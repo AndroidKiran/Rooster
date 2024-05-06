@@ -1,13 +1,15 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:bloc/bloc.dart';
-import 'package:rooster/blocs/user_verification_bloc/user_verification_event.dart';
-import 'package:rooster/blocs/user_verification_bloc/user_verification_state.dart';
+
 import 'package:rooster/data_stores/entities/device_info.dart';
 import 'package:rooster/data_stores/entities/user_entity.dart';
 import 'package:rooster/data_stores/repositories/device_info_repo/device_info_repository.dart';
 import 'package:rooster/data_stores/repositories/fcm_repo/fcm_repository.dart';
 import 'package:rooster/data_stores/repositories/user_repo/user_repository.dart';
+
+import 'user_verification_event.dart';
+import 'user_verification_state.dart';
 
 class UserVerificationBloc
     extends Bloc<UserVerificationEvent, UserVerificationState> {

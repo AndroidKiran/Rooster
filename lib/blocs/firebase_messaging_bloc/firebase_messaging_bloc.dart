@@ -6,11 +6,11 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rooster/data_stores/entities/device_info.dart';
-import 'package:rooster/data_stores/repositories/crash_velocity_repo/issue_repository.dart';
 import 'package:rooster/data_stores/repositories/device_info_repo/device_info_repository.dart';
 import 'package:rooster/data_stores/repositories/fcm_repo/fcm_repository.dart';
+import 'package:rooster/data_stores/repositories/issue_repo/issue_repository.dart';
 import 'package:rooster/data_stores/repositories/user_repo/user_repository.dart';
-import 'package:rooster/services/firebase_service.dart';
+import 'package:rooster/helpers/firebase_manager.dart';
 
 part 'firebase_messaging_event.dart';
 
@@ -60,14 +60,14 @@ class FirebaseMessagingBloc
       ForegroundFcmEvent event, Emitter<FirebaseMessagingState> emit) async {
     try {
       final message = event.message;
-      FirebaseService firebaseService = FirebaseService();
-      if (!firebaseService.isIssueNotification(message) ||
-          !firebaseService.hasValidIssueId(message)) return;
+      FirebaseManager firebaseManager = FirebaseManager();
+      if (!firebaseManager.isIssueNotification(message) ||
+          !firebaseManager.hasValidIssueId(message)) return;
 
       final user = await _userRepository.getUserFromPreference();
       if (user.isEmptyInstance()) return;
 
-      final String? issueId = message.data[FirebaseService.KEY_ISSUE_ID];
+      final String? issueId = message.data[FirebaseManager.KEY_ISSUE_ID];
       log('__onNotificationReceivedEvent received crash id ==> ${issueId ?? ""}');
       if (issueId == null || issueId.isEmpty) return;
 

@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rooster/data_stores/entities/user_entity.dart';
-import 'package:rooster/services/firebase_service.dart';
+import 'package:rooster/helpers/firebase_manager.dart';
+import 'package:rooster/screens/routes/rooster_screen_path.dart';
 import 'package:rooster/widgets/rooster_tag_widget.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
@@ -27,7 +28,7 @@ class AllUsersScreen extends StatelessWidget {
 
   Widget _userListView() => FirestoreListView<UserEntity>(
         shrinkWrap: true,
-        query: FirebaseService().userDb,
+        query: FirebaseManager().userDb,
         pageSize: 20,
         emptyBuilder: (context) => RoosterTextWidget(
             text: 'No data available',
@@ -47,7 +48,7 @@ class AllUsersScreen extends StatelessWidget {
 
   Widget _userTile(UserEntity userEntity, BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+      margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),

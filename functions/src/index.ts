@@ -4,7 +4,7 @@ import {setGlobalOptions} from "firebase-functions/v2";
 initializeApp();
 setGlobalOptions({maxInstances: 10});
 
-import { eventTriggers } from "./event_triggers";
+import {eventTriggers} from "./event_triggers";
 
 
 // import {sendVelocityNotification, writeToFatalCrashDb, writeToVelocityCrashDb} from "./velocity_alert/index";

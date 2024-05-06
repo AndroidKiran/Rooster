@@ -10,12 +10,12 @@ import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rooster/screens/routes/rooster_screen_path.dart';
 
-class CallKitService {
-  static final CallKitService _singleton = CallKitService._();
+class CallKitManager {
+  static final CallKitManager _singleton = CallKitManager._();
 
-  factory CallKitService() => _singleton;
+  factory CallKitManager() => _singleton;
 
-  CallKitService._();
+  CallKitManager._();
 
   Future<void> showCallkitIncoming(String uuid) async {
     final params = CallKitParams(

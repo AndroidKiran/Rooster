@@ -14,7 +14,7 @@ class AddNewUserScreen extends StatelessWidget {
               text: 'New User',
               textSize: 32,
               textColor: Colors.grey[800],
-              maxLines: 3),
+              maxLines: null),
         ));
   }
 }

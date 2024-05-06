@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:rooster/data_stores/entities/user_entity.dart';
+import 'package:meta/meta.dart';
 
 enum VerificationStatus {
   init,

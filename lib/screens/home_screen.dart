@@ -5,9 +5,9 @@ import 'package:flutter_callkit_incoming/entities/call_event.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rooster/blocs/home_bloc/home_bloc.dart';
 import 'package:rooster/data_stores/entities/user_entity.dart';
+import 'package:rooster/helpers/call_kit_manager.dart';
 import 'package:rooster/screens/models/home_item.dart';
 import 'package:rooster/screens/routes/rooster_screen_path.dart';
-import 'package:rooster/services/call_kit_service.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,19 +19,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreen extends State<HomeScreen> {
   String _currentUuid = '';
-  final _callKitService = CallKitService();
+  final _callKitManager = CallKitManager();
   final List<HomeItem> _homeItems = HomeItem.getHomeItems();
 
   @override
   void initState() {
     super.initState();
     _initApp();
-    _callKitService.listenerEvent(context, _onEvent);
+    _callKitManager.listenerEvent(context, _onEvent);
   }
 
   @override
   void dispose() {
-    _callKitService.endAllCalls();
+    _callKitManager.endAllCalls();
     super.dispose();
   }
 
@@ -69,16 +69,16 @@ class _HomeScreen extends State<HomeScreen> {
   }
 
   Future<void> _initApp() async {
-    await _callKitService.requestNotificationPermission();
-    final activeCall = await _callKitService.initCurrentCall();
+    await _callKitManager.requestNotificationPermission();
+    final activeCall = await _callKitManager.initCurrentCall();
     if (activeCall != null) {
       _currentUuid = activeCall['id'];
       if (_currentUuid.isNotEmpty) {
-        await _callKitService.endCurrentCall(_currentUuid);
+        await _callKitManager.endCurrentCall(_currentUuid);
       }
     }
     if (_currentUuid.isNotEmpty) {
-      await _callKitService.hideCallNotification(_currentUuid);
+      await _callKitManager.hideCallNotification(_currentUuid);
     }
   }
 

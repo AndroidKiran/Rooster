@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:rooster/data_stores/entities/device_info.dart';
 import 'package:rooster/data_stores/repositories/device_info_repo/device_info_repository.dart';
-import 'package:rooster/services/firebase_service.dart';
+import 'package:rooster/helpers/firebase_manager.dart';
 
 class DeviceInfoRepositoryImplementation extends DeviceInfoRepository {
-  final _deviceInfoDb = FirebaseService().deviceInfoDb;
+  final _deviceInfoDb = FirebaseManager().deviceInfoDb;
 
   @override
   Future<String> updateFirebaseDeviceInfo(
@@ -15,12 +15,12 @@ class DeviceInfoRepositoryImplementation extends DeviceInfoRepository {
       final String docId = await getFirebaseDocId(docRef);
       if (docId.isEmpty) {
         final result = await _deviceInfoDb.add(deviceInfo);
-        path = "${FirebaseService.DEVICE_INFO_COLLECTION}/${result.id}";
+        path = "${FirebaseManager.DEVICE_INFO_COLLECTION}/${result.id}";
       } else {
         await _deviceInfoDb
             .doc(docId)
             .update({"fcmToken": deviceInfo.fcmToken, "os": deviceInfo.os});
-        path = "${FirebaseService.DEVICE_INFO_COLLECTION}/$docId";
+        path = "${FirebaseManager.DEVICE_INFO_COLLECTION}/$docId";
       }
       return path;
     } catch (e) {

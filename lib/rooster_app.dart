@@ -2,19 +2,18 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:rooster/blocs/app_block_provider.dart';
 import 'package:rooster/blocs/firebase_messaging_bloc/firebase_messaging_bloc.dart';
-import 'package:rooster/blocs/form_verification_bloc/form_verification_bloc.dart';
-import 'package:rooster/blocs/home_bloc/home_bloc.dart';
 import 'package:rooster/blocs/user_verification_bloc/user_verification_state.dart';
 import 'package:rooster/blocs/user_verification_bloc/user_verification_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rooster/data_stores/repositories/crash_velocity_repo/issue_repository.dart';
 import 'package:rooster/data_stores/repositories/device_info_repo/device_info_repository.dart';
 import 'package:rooster/data_stores/repositories/fcm_repo/fcm_repository.dart';
+import 'package:rooster/data_stores/repositories/issue_repo/issue_repository.dart';
 import 'package:rooster/data_stores/repositories/user_repo/user_repository.dart';
+import 'package:rooster/helpers/call_kit_manager.dart';
+import 'package:rooster/helpers/firebase_manager.dart';
 import 'package:rooster/screens/routes/rooster_router.dart';
-import 'package:rooster/services/call_kit_service.dart';
-import 'package:rooster/services/firebase_service.dart';
 import 'package:uuid/uuid.dart';
 
 class RoosterApp extends StatefulWidget {
@@ -46,7 +45,7 @@ class _RoosterApp extends State<RoosterApp> with WidgetsBindingObserver {
     _deviceInfoRepository = widget.deviceInfoRepository;
     _issueRepository = widget.issueRepository;
 
-    FirebaseService().setupFirebase();
+    FirebaseManager().setupFirebase();
     // Register your State class as a binding observer
     WidgetsBinding.instance.addObserver(this);
   }
@@ -92,35 +91,15 @@ class _RoosterApp extends State<RoosterApp> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     FlutterNativeSplash.remove();
     return MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider<FirebaseMessagingBloc>(
-            create: (context) => FirebaseMessagingBloc(
-                fcmRepository: _fcmRepository,
-                deviceInfoRepository: _deviceInfoRepository,
-                userRepository: _userRepository,
-                issueRepository: _issueRepository)),
-        RepositoryProvider<UserVerificationBloc>(
-            create: (context) => UserVerificationBloc(
-                userRepository: _userRepository,
-                fcmRepository: _fcmRepository,
-                deviceInfoRepository: _deviceInfoRepository)),
-        RepositoryProvider<FormVerificationBloc>(
-          create: (context) => FormVerificationBloc(
-              userRepository: _userRepository,
-              deviceInfoRepository: _deviceInfoRepository,
-              fcmRepository: _fcmRepository),
-        ),
-        RepositoryProvider<HomeBloc>(
-          create: (context) => HomeBloc(userRepository: _userRepository),
-        ),
-      ],
+      providers: AppBlocProvider().getAllBlockProvider(_userRepository,
+          _fcmRepository, _deviceInfoRepository, _issueRepository),
       child: MultiBlocListener(
         listeners: [
           BlocListener<FirebaseMessagingBloc, FirebaseMessagingState>(
             listener: (context, state) {
               switch (state) {
                 case PerformVoipCallState():
-                  CallKitService().showCallkitIncoming(const Uuid().v4());
+                  CallKitManager().showCallkitIncoming(const Uuid().v4());
                   break;
 
                 case RefreshFcmTokenState():

@@ -2,22 +2,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rooster/data_stores/entities/device_info.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_issue_info.dart';
+import 'package:rooster/data_stores/entities/firestore_entity.dart';
 import 'package:rooster/data_stores/entities/issue_info.dart';
 import 'package:rooster/data_stores/entities/user_entity.dart';
 
-class FirebaseService {
+class FirebaseManager {
   late FirebaseFirestore fireStore = _roosterFireStore();
   late FirebaseMessaging firebaseMessaging = _roosterFirebaseMessaging();
   late CollectionReference<UserEntity> userDb = _userFireStoreCollection();
-  late CollectionReference<IssueInfo> issueDb = _issuesFireStoreCollection();
+  late CollectionReference<FirestoreIssueInfo> issueDb =
+      _issuesFireStoreCollection();
   late CollectionReference<DeviceInfo> deviceInfoDb =
       _deviceFireStoreCollection();
 
-  static final FirebaseService _singleton = FirebaseService._();
+  static final FirebaseManager _singleton = FirebaseManager._();
 
-  factory FirebaseService() => _singleton;
+  factory FirebaseManager() => _singleton;
 
-  FirebaseService._();
+  FirebaseManager._();
 
   Future<void> setupFirebase() async {
     await FirebaseMessaging.instance
@@ -63,15 +66,22 @@ class FirebaseService {
           fromFirestore: (snapshot, _) => UserEntity.fromJson(snapshot.data()!),
           toFirestore: (userEntity, _) => userEntity.toJson());
 
-  CollectionReference<IssueInfo> _issuesFireStoreCollection() =>
-      fireStore.collection(ISSUE_COLLECTION).withConverter(
-          fromFirestore: (snapshot, _) => IssueInfo.fromJson(snapshot.data()!),
-          toFirestore: (crashInfo, _) => crashInfo.toJson());
+  // CollectionReference<IssueInfo> _issuesFireStoreCollection() =>
+  //     fireStore.collection(ISSUE_COLLECTION).withConverter<IssueInfo>(
+  //         fromFirestore: (snapshot, _) => IssueInfo.fromJson(snapshot.data()!),
+  //         toFirestore: (issueInfo, _) => issueInfo.toJson());
 
   CollectionReference<DeviceInfo> _deviceFireStoreCollection() =>
       fireStore.collection(DEVICE_INFO_COLLECTION).withConverter(
           fromFirestore: (snapshot, _) => DeviceInfo.fromJson(snapshot.data()!),
           toFirestore: (deviceInfo, _) => deviceInfo.toJson());
+
+  CollectionReference<FirestoreIssueInfo> _issuesFireStoreCollection() =>
+      fireStore.collection(ISSUE_COLLECTION).withConverter<FirestoreIssueInfo>(
+          fromFirestore: (snapshot, _) =>
+              FirestoreIssueInfo.fromDocument(snapshot),
+          toFirestore: (firestoreIssueInfo, _) =>
+              firestoreIssueInfo.toDocument(firestoreIssueInfo.entity));
 
   static const String VALUE_NOTIFICATION_TYPE = "voipNotificationType";
   static const String KEY_NOTIFICATION_TYPE = "notificationType";
