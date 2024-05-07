@@ -30,6 +30,14 @@ final class FormVerificationState extends Equatable {
         formStatus: formStatus ?? this.formStatus);
   }
 
+  bool isFromValidationSuccess() {
+    bool isValidEmail =
+        (emailFormItem.error == null || emailFormItem.error!.isEmpty);
+    bool isValidPlatform =
+        (platformFormItem.error == null || platformFormItem.error!.isEmpty);
+    return isValidEmail && isValidPlatform;
+  }
+
   @override
   List<Object?> get props => [emailFormItem, platformFormItem, formStatus];
 }

@@ -28,24 +28,24 @@ class FormVerificationBloc
 
   Future<void> _onEmailChangedState(
       UserEmailChangedEvent event, Emitter<FormVerificationState> emit) async {
-    emit(state.copyWith(
-      emailFormItem: BlocFormItem(
-          value: event.emailFormItem.value,
-          error: event.emailFormItem.value!.isValidEmail
-              ? null
-              : 'Please enter valid email'),
-    ));
+    return emit(state.copyWith(
+        emailFormItem: BlocFormItem(
+            value: event.emailFormItem.value,
+            error: event.emailFormItem.value!.isValidEmail
+                ? null
+                : 'Please enter valid email'),
+        formStatus: FormStatus.init));
   }
 
   Future<void> _onPlatformChangeState(
       PlatformChangedEvent event, Emitter<FormVerificationState> emit) async {
-    emit(state.copyWith(
-      platformFormItem: BlocFormItem(
-          value: event.platformItem.value,
-          error: event.platformItem.value != null
-              ? null
-              : 'Please choose the platform'),
-    ));
+    return emit(state.copyWith(
+        platformFormItem: BlocFormItem(
+            value: event.platformItem.value,
+            error: event.platformItem.value != null
+                ? null
+                : 'Please choose the platform'),
+        formStatus: FormStatus.init));
   }
 
   Future<void> _onFormSubmitState(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rooster/blocs/user_verification_bloc/user_verification_bloc.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_info.dart';
 import 'package:rooster/screens/add_new_user_screen.dart';
 import 'package:rooster/screens/all_issues_screen.dart';
 import 'package:rooster/screens/all_users_screen.dart';
@@ -61,11 +62,15 @@ class RoosterRouter {
                   key: state.pageKey, child: IssueInfoScreen(issueId: issueId));
             }),
         GoRoute(
-          path: RoosterScreenPath.allUsersScreen.route,
-          name: RoosterScreenPath.allUsersScreen.name,
-          pageBuilder: (context, state) =>
-              MaterialPage(key: state.pageKey, child: const AllUsersScreen()),
-        ),
+            path: RoosterScreenPath.allUsersScreen.route,
+            name: RoosterScreenPath.allUsersScreen.name,
+            pageBuilder: (context, state) {
+              final FirestoreUserInfo userInfo =
+                  state.extra as FirestoreUserInfo;
+              return MaterialPage(
+                  key: state.pageKey,
+                  child: AllUsersScreen(firestoreUserInfo: userInfo));
+            }),
         GoRoute(
           path: RoosterScreenPath.onCallPolicyScreen.route,
           name: RoosterScreenPath.onCallPolicyScreen.name,

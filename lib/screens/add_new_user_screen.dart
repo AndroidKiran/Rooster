@@ -7,14 +7,13 @@ class AddNewUserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.deepPurple,
         appBar: AppBar(
-          centerTitle: true,
-          title: RoosterTextWidget(
-              text: 'New User',
-              textSize: 32,
-              textColor: Colors.grey[800],
-              maxLines: null),
-        ));
+      centerTitle: true,
+      title: RoosterTextWidget(
+          text: 'Add New User',
+          textSize: 32,
+          textColor: Colors.grey[800],
+          maxLines: null),
+    ));
   }
 }

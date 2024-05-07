@@ -159,28 +159,35 @@ class _HomeScreen extends State<HomeScreen> {
         },
       );
 
-  Widget _homeGrid(List<HomeItem> homeItems) => GridView.builder(
-      padding: const EdgeInsets.all(10),
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: homeItems.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-      ),
-      itemBuilder: (context, index) {
-        return _homeItem(homeItems[index]);
-      });
+  Widget _homeGrid(List<HomeItem> homeItems) =>
+      BlocBuilder<HomeBloc, HomeState>(
+        builder: (context, state) {
+          return GridView.builder(
+              padding: const EdgeInsets.all(10),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: homeItems.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemBuilder: (context, index) {
+                return _homeItem(homeItems[index], state.firestoreUserInfo);
+              });
+        },
+      );
 
-  Widget _homeItem(HomeItem homeItem) => Card(
+  Widget _homeItem(HomeItem homeItem, FirestoreUserInfo firestoreUserInfo) =>
+      Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
         child: InkWell(
           hoverColor: Colors.red[200],
           borderRadius: BorderRadius.circular(16.0),
-          onTap: () => context.pushNamed(homeItem.nextActionScreen),
+          onTap: () => context.pushNamed(homeItem.nextActionScreen,
+              extra: firestoreUserInfo),
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(

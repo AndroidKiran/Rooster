@@ -64,12 +64,13 @@ class UserVerificationScreen extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(12)),
                 ),
                 prefixIcon: Icon(
-                  CupertinoIcons.mail,
+                  CupertinoIcons.mail_solid,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 labelText: "Employee Email",
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.background),
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value) => state.emailFormItem.error,
             onChanged: (value) => context.read<FormVerificationBloc>().add(
                 UserEmailChangedEvent(
@@ -87,7 +88,7 @@ class UserVerificationScreen extends StatelessWidget {
               contentPadding:
                   EdgeInsets.symmetric(vertical: 20, horizontal: 10),
               prefixIcon: Icon(
-                CupertinoIcons.bag,
+                CupertinoIcons.device_phone_portrait,
                 color: Colors.deepPurple,
               ),
               border: OutlineInputBorder(
@@ -108,10 +109,6 @@ class UserVerificationScreen extends StatelessWidget {
                 value: 'ios',
                 child: Text('Ios'),
               ),
-              DropdownMenuItem(
-                value: 'web',
-                child: Text('Web'),
-              ),
             ],
           );
         },
@@ -125,11 +122,15 @@ class UserVerificationScreen extends StatelessWidget {
               disabledBackgroundColor: Theme.of(context).colorScheme.background,
               fixedSize: const Size(220.0, 50.0),
             ),
-            onPressed: () {
-              if (_verificationFormKey.currentState!.validate()) {
-                context.read<FormVerificationBloc>().add(FormSubmitEvent());
-              }
-            },
+            onPressed: state.isFromValidationSuccess()
+                ? () {
+                    if (_verificationFormKey.currentState!.validate()) {
+                      context
+                          .read<FormVerificationBloc>()
+                          .add(FormSubmitEvent());
+                    }
+                  }
+                : null,
             child: FormStatus.formSubmitting == state.formStatus
                 ? SizedBox(
                     width: 30,

@@ -4,12 +4,15 @@ import 'package:go_router/go_router.dart';
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_info.dart';
 import 'package:rooster/data_stores/entities/user_info.dart';
 import 'package:rooster/helpers/firebase_manager.dart';
+import 'package:rooster/screens/routes/rooster_screen_path.dart';
 import 'package:rooster/widgets/rooster_tag_widget.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
 class AllUsersScreen extends StatefulWidget {
-  const AllUsersScreen({super.key});
+  final FirestoreUserInfo firestoreUserInfo;
+
+  const AllUsersScreen({super.key, required this.firestoreUserInfo});
 
   @override
   State<AllUsersScreen> createState() => _AllUsersScreenState();
@@ -28,6 +31,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
             maxLines: 3),
       ),
       body: _userListView(),
+      floatingActionButton: _addUserFloatActionBtn(),
     );
   }
 
@@ -118,4 +122,16 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
       ),
     );
   }
+
+  Widget _addUserFloatActionBtn() => Visibility(
+      visible: widget.firestoreUserInfo.userEntity.isOnCall,
+      child: FloatingActionButton(
+        onPressed: () =>
+            context.pushNamed(RoosterScreenPath.addNewUserScreen.name),
+        backgroundColor: Colors.deepPurpleAccent,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ));
 }
