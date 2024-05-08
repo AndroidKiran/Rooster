@@ -5,10 +5,10 @@ import 'package:rooster/blocs/employee_verification_bloc/employee_verification_b
 import 'package:rooster/screens/models/block_form_item.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
-class UserVerificationScreen extends StatelessWidget {
+class EmployeeVerificationScreen extends StatelessWidget {
   final _verificationFormKey = GlobalKey<FormState>();
 
-  UserVerificationScreen({super.key});
+  EmployeeVerificationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -18,9 +18,7 @@ class EmployeeVerificationBloc
 
   EmployeeVerificationBloc({required UserRepository userRepository})
       : _userRepository = userRepository,
-        super(const EmployeeVerificationState._(
-          formStatus: FormStatus.init,
-        )) {
+        super(const EmployeeVerificationState._(formStatus: FormStatus.init)) {
     on<UserEmailChangedEvent>(_onEmailChangedState);
     on<PlatformChangedEvent>(_onPlatformChangeState);
     on<FormSubmitEvent>(_onFormSubmitState);
@@ -65,7 +63,7 @@ class EmployeeVerificationBloc
       if (firestoreUserInfo.isEmptyInstance()) {
         newState = state.copyWith(formStatus: FormStatus.submitFailure);
       } else {
-        await _userRepository.saveUserToPreference(firestoreUserInfo);
+        await _userRepository.updateUserModifiedAt(firestoreUserInfo);
         newState = state.copyWith(formStatus: FormStatus.submitSuccess);
       }
     } catch (e) {

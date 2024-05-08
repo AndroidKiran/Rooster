@@ -2,8 +2,8 @@ part of 'user_verification_bloc.dart';
 
 enum VerificationStatus {
   init,
-  success,
-  failure;
+  hasValidUser,
+  hasInvalidUser;
 }
 
 @immutable
@@ -17,14 +17,15 @@ final class UserVerificationState extends Equatable {
 
   const UserVerificationState.init() : this._();
 
-  const UserVerificationState.success(FirestoreUserInfo firestoreUserInfo)
+  const UserVerificationState.hasValidFirebaseUser(
+      FirestoreUserInfo firestoreUserInfo)
       : this._(
-            status: VerificationStatus.success,
+            status: VerificationStatus.hasValidUser,
             firestoreUserInfo: firestoreUserInfo);
 
-  const UserVerificationState.failure()
+  const UserVerificationState.hasInvalidUser()
       : this._(
-            status: VerificationStatus.failure,
+            status: VerificationStatus.hasInvalidUser,
             firestoreUserInfo: FirestoreUserInfo.emptyInstance);
 
   @override

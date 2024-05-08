@@ -186,8 +186,7 @@ class _HomeScreen extends State<HomeScreen> {
         child: InkWell(
           hoverColor: Colors.red[200],
           borderRadius: BorderRadius.circular(16.0),
-          onTap: () => context.pushNamed(homeItem.nextActionScreen,
-              extra: firestoreUserInfo),
+          onTap: () => context.pushNamed(homeItem.nextActionScreen),
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(

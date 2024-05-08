@@ -14,4 +14,6 @@ abstract class UserRepository {
   Future<FirestoreUserInfo> getCurrentFireStoreUser(String docId);
 
   Future<void> updateUserDeviceInfoPath(FirestoreUserInfo firestoreUserInfo);
+
+  Future<void> updateUserModifiedAt(FirestoreUserInfo firestoreUserInfo);
 }

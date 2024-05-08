@@ -17,26 +17,24 @@ class UserRepositoryImplementation implements UserRepository {
       : _preferences = preferences;
 
   @override
-  Stream<FirestoreUserInfo> get preferenceUser {
-    return _preferences
+  Stream<FirestoreUserInfo> get preferenceUser async* {
+    yield* _preferences
         .getString(PREFERENCE_USER, defaultValue: '')
         .map((value) {
-      var map = <String, dynamic>{};
+      FirestoreUserInfo firestoreUserInfo = FirestoreUserInfo.emptyInstance;
       if (value.isNotEmpty) {
-        map = jsonDecode(value);
+        final map = jsonDecode(value);
+        firestoreUserInfo = FirestoreUserInfo.fromPreferenceJson(map);
       }
-      if (map.isEmpty) {
-        return FirestoreUserInfo.emptyInstance;
-      } else {
-        return FirestoreUserInfo.fromPreferenceJson(map);
-      }
+      return firestoreUserInfo;
     });
   }
 
   @override
   Stream<FirestoreUserInfo> get firebaseUser async* {
-    final FirestoreUserInfo firestoreUserInfo = await getUserFromPreference();
-    final UserInfo userInfo = firestoreUserInfo.userEntity;
+    FirestoreUserInfo preferenceUserInfo = await getUserFromPreference();
+    final UserInfo userInfo = preferenceUserInfo.userEntity;
+    FirestoreUserInfo firestoreUserInfo = FirestoreUserInfo.emptyInstance;
     yield* _userCollection
         .where('email', isEqualTo: userInfo.email)
         .where('platform', isEqualTo: userInfo.platform)
@@ -45,10 +43,11 @@ class UserRepositoryImplementation implements UserRepository {
         .snapshots()
         .map((documentSnapshots) {
       if (documentSnapshots.size > 0) {
-        return documentSnapshots.docs[0].data();
+        firestoreUserInfo = documentSnapshots.docs[0].data();
       } else {
-        return firestoreUserInfo;
+        firestoreUserInfo = FirestoreUserInfo.emptyInstance;
       }
+      return firestoreUserInfo;
     });
   }
 
@@ -85,6 +84,19 @@ class UserRepositoryImplementation implements UserRepository {
     try {
       await _userCollection.doc(firestoreUserInfo.id).update(
           {"deviceInfoRef": firestoreUserInfo.userEntity.deviceInfoRef});
+      await saveUserToPreference(firestoreUserInfo);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateUserModifiedAt(FirestoreUserInfo firestoreUserInfo) async {
+    try {
+      await _userCollection
+          .doc(firestoreUserInfo.id)
+          .update({"modifiedAt": firestoreUserInfo.userEntity.modifiedAt});
       await saveUserToPreference(firestoreUserInfo);
     } catch (e) {
       log(e.toString());

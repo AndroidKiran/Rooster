@@ -23,10 +23,8 @@ class AppBlocProvider {
                 userRepository: userRepository,
                 issueRepository: issueRepository)),
         RepositoryProvider<UserVerificationBloc>(
-            create: (context) => UserVerificationBloc(
-                userRepository: userRepository,
-                fcmRepository: fcmRepository,
-                deviceInfoRepository: deviceInfoRepository)),
+            create: (context) =>
+                UserVerificationBloc(userRepository: userRepository)),
         RepositoryProvider<EmployeeVerificationBloc>(
           create: (context) =>
               EmployeeVerificationBloc(userRepository: userRepository),

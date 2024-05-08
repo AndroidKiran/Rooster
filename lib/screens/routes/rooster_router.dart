@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rooster/blocs/user_verification_bloc/user_verification_bloc.dart';
-import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_info.dart';
 import 'package:rooster/screens/add_new_user_screen.dart';
 import 'package:rooster/screens/all_issues_screen.dart';
 import 'package:rooster/screens/all_users_screen.dart';
+import 'package:rooster/screens/employee_verification_screen.dart';
 import 'package:rooster/screens/home_screen.dart';
 import 'package:rooster/screens/issue_info_screen.dart';
 import 'package:rooster/screens/on_call_policy_screen.dart';
 import 'package:rooster/screens/route_not_found_screen.dart';
 import 'package:rooster/screens/routes/rooster_screen_path.dart';
-import 'package:rooster/screens/user_verification_screen.dart';
 
 class RoosterRouter {
   static final RoosterRouter _singleton = RoosterRouter._();
@@ -36,8 +35,8 @@ class RoosterRouter {
         GoRoute(
           path: RoosterScreenPath.onboardingScreen.route,
           name: RoosterScreenPath.onboardingScreen.name,
-          pageBuilder: (context, state) =>
-              MaterialPage(key: state.pageKey, child: UserVerificationScreen()),
+          pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey, child: EmployeeVerificationScreen()),
         ),
         GoRoute(
           path: RoosterScreenPath.routeErrorScreen.route,
@@ -62,13 +61,8 @@ class RoosterRouter {
         GoRoute(
             path: RoosterScreenPath.allUsersScreen.route,
             name: RoosterScreenPath.allUsersScreen.name,
-            pageBuilder: (context, state) {
-              final FirestoreUserInfo userInfo =
-                  state.extra as FirestoreUserInfo;
-              return MaterialPage(
-                  key: state.pageKey,
-                  child: AllUsersScreen(firestoreUserInfo: userInfo));
-            }),
+            pageBuilder: (context, state) => MaterialPage(
+                key: state.pageKey, child: const AllUsersScreen())),
         GoRoute(
           path: RoosterScreenPath.onCallPolicyScreen.route,
           name: RoosterScreenPath.onCallPolicyScreen.name,
@@ -94,13 +88,13 @@ Future<String?> appRouteRedirect(
       state.matchedLocation == RoosterScreenPath.onboardingScreen.route;
 
   if ((isRoutingToHome &&
-          userVerificationStatus == VerificationStatus.failure) ||
-      userVerificationStatus == VerificationStatus.failure) {
+          userVerificationStatus == VerificationStatus.hasInvalidUser) ||
+      userVerificationStatus == VerificationStatus.hasInvalidUser) {
     return RoosterScreenPath.onboardingScreen.route;
   }
 
   if (isRoutingToOnBoarding &&
-      userVerificationStatus == VerificationStatus.success) {
+      userVerificationStatus == VerificationStatus.hasValidUser) {
     return RoosterScreenPath.homeScreen.route;
   }
 

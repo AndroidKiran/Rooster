@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rooster/blocs/home_bloc/home_bloc.dart';
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_info.dart';
 import 'package:rooster/data_stores/entities/user_info.dart';
 import 'package:rooster/helpers/firebase_manager.dart';
@@ -10,9 +12,7 @@ import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
 class AllUsersScreen extends StatefulWidget {
-  final FirestoreUserInfo firestoreUserInfo;
-
-  const AllUsersScreen({super.key, required this.firestoreUserInfo});
+  const AllUsersScreen({super.key});
 
   @override
   State<AllUsersScreen> createState() => _AllUsersScreenState();
@@ -123,15 +123,19 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
     );
   }
 
-  Widget _addUserFloatActionBtn() => Visibility(
-      visible: widget.firestoreUserInfo.userEntity.isOnCall,
-      child: FloatingActionButton(
-        onPressed: () =>
-            context.pushNamed(RoosterScreenPath.addNewUserScreen.name),
-        backgroundColor: Colors.deepPurpleAccent,
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-      ));
+  Widget _addUserFloatActionBtn() => BlocBuilder<HomeBloc, HomeState>(
+        builder: (context, state) {
+          return Visibility(
+              visible: state.firestoreUserInfo.userEntity.isOnCall,
+              child: FloatingActionButton(
+                onPressed: () =>
+                    context.pushNamed(RoosterScreenPath.addNewUserScreen.name),
+                backgroundColor: Colors.deepPurpleAccent,
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+              ));
+        },
+      );
 }
