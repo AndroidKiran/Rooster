@@ -9,11 +9,9 @@ import 'package:rooster/screens/all_users_screen.dart';
 import 'package:rooster/screens/home_screen.dart';
 import 'package:rooster/screens/issue_info_screen.dart';
 import 'package:rooster/screens/on_call_policy_screen.dart';
+import 'package:rooster/screens/route_not_found_screen.dart';
 import 'package:rooster/screens/routes/rooster_screen_path.dart';
 import 'package:rooster/screens/user_verification_screen.dart';
-
-import '../../blocs/user_verification_bloc/user_verification_state.dart';
-import '../route_not_found_screen.dart';
 
 class RoosterRouter {
   static final RoosterRouter _singleton = RoosterRouter._();

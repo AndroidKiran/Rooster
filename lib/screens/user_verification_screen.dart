@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rooster/blocs/form_verification_bloc/form_verification_bloc.dart';
+import 'package:rooster/blocs/employee_verification_bloc/employee_verification_bloc.dart';
 import 'package:rooster/screens/models/block_form_item.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
@@ -27,7 +27,7 @@ class UserVerificationScreen extends StatelessWidget {
   }
 
   Widget _verificationForm() {
-    return BlocListener<FormVerificationBloc, FormVerificationState>(
+    return BlocListener<EmployeeVerificationBloc, EmployeeVerificationState>(
       listener: (context, state) {
         if (state.formStatus == FormStatus.submitFailure) {
           _showSnackBar(context, "User verification Failed");
@@ -54,7 +54,7 @@ class UserVerificationScreen extends StatelessWidget {
   }
 
   Widget _emailField() =>
-      BlocBuilder<FormVerificationBloc, FormVerificationState>(
+      BlocBuilder<EmployeeVerificationBloc, EmployeeVerificationState>(
         builder: (context, state) {
           return TextFormField(
             decoration: InputDecoration(
@@ -72,7 +72,7 @@ class UserVerificationScreen extends StatelessWidget {
                 fillColor: Theme.of(context).colorScheme.background),
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value) => state.emailFormItem.error,
-            onChanged: (value) => context.read<FormVerificationBloc>().add(
+            onChanged: (value) => context.read<EmployeeVerificationBloc>().add(
                 UserEmailChangedEvent(
                     emailFormItem: BlocFormItem(value: value))),
           );
@@ -80,7 +80,7 @@ class UserVerificationScreen extends StatelessWidget {
       );
 
   Widget _platformDropdown() =>
-      BlocBuilder<FormVerificationBloc, FormVerificationState>(
+      BlocBuilder<EmployeeVerificationBloc, EmployeeVerificationState>(
         builder: (context, state) {
           return DropdownButtonFormField<String>(
             value: state.platformFormItem.value,
@@ -97,7 +97,7 @@ class UserVerificationScreen extends StatelessWidget {
               labelText: 'Platform',
             ),
             validator: (value) => state.platformFormItem.error,
-            onChanged: (value) => context.read<FormVerificationBloc>().add(
+            onChanged: (value) => context.read<EmployeeVerificationBloc>().add(
                 PlatformChangedEvent(
                     platformItem: BlocFormItem(value: value!))),
             items: const [
@@ -115,7 +115,7 @@ class UserVerificationScreen extends StatelessWidget {
       );
 
   Widget _submitButton() =>
-      BlocBuilder<FormVerificationBloc, FormVerificationState>(
+      BlocBuilder<EmployeeVerificationBloc, EmployeeVerificationState>(
         builder: (context, state) {
           return ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -126,7 +126,7 @@ class UserVerificationScreen extends StatelessWidget {
                 ? () {
                     if (_verificationFormKey.currentState!.validate()) {
                       context
-                          .read<FormVerificationBloc>()
+                          .read<EmployeeVerificationBloc>()
                           .add(FormSubmitEvent());
                     }
                   }

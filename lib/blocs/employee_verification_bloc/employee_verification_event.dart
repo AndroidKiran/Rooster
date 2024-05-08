@@ -1,15 +1,14 @@
-part of 'form_verification_bloc.dart';
+part of 'employee_verification_bloc.dart';
 
 @immutable
-sealed class FormVerificationEvent extends Equatable {}
+sealed class EmployeeVerificationEvent extends Equatable {}
 
-final class FormInitEvent extends FormVerificationEvent {
+final class EmployeeVerificationInitEvent extends EmployeeVerificationEvent {
   @override
   List<Object?> get props => [];
 }
 
-@immutable
-final class UserEmailChangedEvent extends FormVerificationEvent {
+final class UserEmailChangedEvent extends EmployeeVerificationEvent {
   final BlocFormItem emailFormItem;
 
   UserEmailChangedEvent({required this.emailFormItem});
@@ -18,8 +17,7 @@ final class UserEmailChangedEvent extends FormVerificationEvent {
   List<Object?> get props => [emailFormItem];
 }
 
-@immutable
-final class PlatformChangedEvent extends FormVerificationEvent {
+final class PlatformChangedEvent extends EmployeeVerificationInitEvent {
   final BlocFormItem platformItem;
 
   PlatformChangedEvent({required this.platformItem});
@@ -28,8 +26,7 @@ final class PlatformChangedEvent extends FormVerificationEvent {
   List<Object?> get props => [platformItem];
 }
 
-@immutable
-final class FormSubmitEvent extends FormVerificationEvent {
+final class FormSubmitEvent extends EmployeeVerificationInitEvent {
   @override
   List<Object?> get props => [];
 }

@@ -2,23 +2,23 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_info.dart';
 import 'package:rooster/data_stores/repositories/user_repo/user_repository.dart';
 import 'package:rooster/screens/models/block_form_item.dart';
 import 'package:rooster/utils/string_extensions.dart';
+import 'package:meta/meta.dart';
 
-part 'form_verification_event.dart';
+part 'employee_verification_event.dart';
 
-part 'form_verification_state.dart';
+part 'employee_verification_state.dart';
 
-class FormVerificationBloc
-    extends Bloc<FormVerificationEvent, FormVerificationState> {
+class EmployeeVerificationBloc
+    extends Bloc<EmployeeVerificationEvent, EmployeeVerificationState> {
   final UserRepository _userRepository;
 
-  FormVerificationBloc({required UserRepository userRepository})
+  EmployeeVerificationBloc({required UserRepository userRepository})
       : _userRepository = userRepository,
-        super(const FormVerificationState._(
+        super(const EmployeeVerificationState._(
           formStatus: FormStatus.init,
         )) {
     on<UserEmailChangedEvent>(_onEmailChangedState);
@@ -26,8 +26,8 @@ class FormVerificationBloc
     on<FormSubmitEvent>(_onFormSubmitState);
   }
 
-  Future<void> _onEmailChangedState(
-      UserEmailChangedEvent event, Emitter<FormVerificationState> emit) async {
+  Future<void> _onEmailChangedState(UserEmailChangedEvent event,
+      Emitter<EmployeeVerificationState> emit) async {
     return emit(state.copyWith(
         emailFormItem: BlocFormItem(
             value: event.emailFormItem.value,
@@ -37,8 +37,8 @@ class FormVerificationBloc
         formStatus: FormStatus.init));
   }
 
-  Future<void> _onPlatformChangeState(
-      PlatformChangedEvent event, Emitter<FormVerificationState> emit) async {
+  Future<void> _onPlatformChangeState(PlatformChangedEvent event,
+      Emitter<EmployeeVerificationState> emit) async {
     return emit(state.copyWith(
         platformFormItem: BlocFormItem(
             value: event.platformItem.value,
@@ -49,7 +49,7 @@ class FormVerificationBloc
   }
 
   Future<void> _onFormSubmitState(
-      FormSubmitEvent event, Emitter<FormVerificationState> emit) async {
+      FormSubmitEvent event, Emitter<EmployeeVerificationState> emit) async {
     var newState = state.copyWith(formStatus: FormStatus.formSubmitting);
     try {
       emit(newState);

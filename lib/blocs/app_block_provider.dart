@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rooster/blocs/employee_verification_bloc/employee_verification_bloc.dart';
 import 'package:rooster/blocs/firebase_messaging_bloc/firebase_messaging_bloc.dart';
-import 'package:rooster/blocs/form_verification_bloc/form_verification_bloc.dart';
 import 'package:rooster/blocs/home_bloc/home_bloc.dart';
 import 'package:rooster/blocs/issue_info_bloc/issue_bloc.dart';
 import 'package:rooster/blocs/user_verification_bloc/user_verification_bloc.dart';
@@ -27,9 +27,9 @@ class AppBlocProvider {
                 userRepository: userRepository,
                 fcmRepository: fcmRepository,
                 deviceInfoRepository: deviceInfoRepository)),
-        RepositoryProvider<FormVerificationBloc>(
+        RepositoryProvider<EmployeeVerificationBloc>(
           create: (context) =>
-              FormVerificationBloc(userRepository: userRepository),
+              EmployeeVerificationBloc(userRepository: userRepository),
         ),
         RepositoryProvider<HomeBloc>(
           create: (context) => HomeBloc(

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 
 import 'package:rooster/data_stores/entities/device_info.dart';
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_device_info.dart';
@@ -8,9 +9,11 @@ import 'package:rooster/data_stores/entities/user_info.dart';
 import 'package:rooster/data_stores/repositories/device_info_repo/device_info_repository.dart';
 import 'package:rooster/data_stores/repositories/fcm_repo/fcm_repository.dart';
 import 'package:rooster/data_stores/repositories/user_repo/user_repository.dart';
+import 'package:meta/meta.dart';
 
-import 'user_verification_event.dart';
-import 'user_verification_state.dart';
+part 'user_verification_event.dart';
+
+part 'user_verification_state.dart';
 
 class UserVerificationBloc
     extends Bloc<UserVerificationEvent, UserVerificationState> {

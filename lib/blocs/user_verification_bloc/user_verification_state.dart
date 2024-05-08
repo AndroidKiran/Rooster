@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_info.dart';
-import 'package:meta/meta.dart';
+part of 'user_verification_bloc.dart';
 
 enum VerificationStatus {
   init,

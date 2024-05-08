@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:rooster/blocs/app_block_provider.dart';
 import 'package:rooster/blocs/firebase_messaging_bloc/firebase_messaging_bloc.dart';
-import 'package:rooster/blocs/user_verification_bloc/user_verification_state.dart';
 import 'package:rooster/blocs/user_verification_bloc/user_verification_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rooster/data_stores/repositories/device_info_repo/device_info_repository.dart';
