@@ -12,6 +12,7 @@ UserInfo _$UserInfoFromJson(Map<String, dynamic> json) => UserInfo(
       platform: json['platform'] as String,
       deviceInfoRef: json['deviceInfoRef'] as String,
       isOnCall: json['isOnCall'] as bool,
+      isAdmin: json['isAdmin'] as bool,
       createdAt: const ServerTimestampToMilliSecondConverter()
           .fromJson(json['createdAt']),
       modifiedAt: const ServerTimestampToMilliSecondConverter()
@@ -24,6 +25,7 @@ Map<String, dynamic> _$UserInfoToJson(UserInfo instance) => <String, dynamic>{
       'platform': instance.platform,
       'deviceInfoRef': instance.deviceInfoRef,
       'isOnCall': instance.isOnCall,
+      'isAdmin': instance.isAdmin,
       'createdAt': const ServerTimestampToMilliSecondConverter()
           .toJson(instance.createdAt),
       'modifiedAt': const ServerTimestampToMilliSecondConverter()

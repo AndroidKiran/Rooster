@@ -36,17 +36,25 @@ class _AllIssuesScreenState extends State<AllIssuesScreen> {
         shrinkWrap: true,
         query: FirebaseManager().issueDb,
         pageSize: 20,
-        emptyBuilder: (context) => RoosterTextWidget(
-            text: 'No data available',
-            textSize: 16.0,
-            textColor: Colors.grey[800],
-            maxLines: 1),
-        errorBuilder: (context, error, stackTrace) => RoosterTextWidget(
-            text: 'Some thing went wrong',
-            textSize: 16.0,
-            textColor: Colors.grey[800],
-            maxLines: 1),
-        loadingBuilder: (context) => const CircularProgressIndicator(),
+        emptyBuilder: (context) => Container(
+          alignment: Alignment.center,
+          child: RoosterTextWidget(
+              text: 'No data available',
+              textSize: 16,
+              textColor: Colors.grey[800],
+              maxLines: 1),
+        ),
+        errorBuilder: (context, error, stackTrace) => Container(
+          alignment: Alignment.center,
+          child: RoosterTextWidget(
+              text: 'Some thing went wrong',
+              textSize: 16,
+              textColor: Colors.grey[800],
+              maxLines: 1),
+        ),
+        loadingBuilder: (context) => Container(
+            alignment: Alignment.center,
+            child: const CircularProgressIndicator()),
         itemBuilder: (context, doc) {
           return _crashInfoTile(doc.data(), context);
         },

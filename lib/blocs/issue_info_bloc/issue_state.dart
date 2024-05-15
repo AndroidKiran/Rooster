@@ -32,5 +32,5 @@ final class IssueState extends Equatable {
             firestoreIssueInfo: FirestoreIssueInfo.emptyInstance);
 
   @override
-  List<Object?> get props => [status, FirestoreIssueInfo];
+  List<Object?> get props => [status, firestoreIssueInfo];
 }

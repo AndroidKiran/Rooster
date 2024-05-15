@@ -5,12 +5,13 @@ import 'package:rooster/blocs/user_verification_bloc/user_verification_bloc.dart
 import 'package:rooster/screens/add_new_user_screen.dart';
 import 'package:rooster/screens/all_issues_screen.dart';
 import 'package:rooster/screens/all_users_screen.dart';
-import 'package:rooster/screens/employee_verification_screen.dart';
 import 'package:rooster/screens/home_screen.dart';
 import 'package:rooster/screens/issue_info_screen.dart';
 import 'package:rooster/screens/on_call_policy_screen.dart';
 import 'package:rooster/screens/route_not_found_screen.dart';
 import 'package:rooster/screens/routes/rooster_screen_path.dart';
+import 'package:rooster/screens/user_info_screen.dart';
+import 'package:rooster/screens/user_validation_form_screen.dart';
 
 class RoosterRouter {
   static final RoosterRouter _singleton = RoosterRouter._();
@@ -36,14 +37,7 @@ class RoosterRouter {
           path: RoosterScreenPath.onboardingScreen.route,
           name: RoosterScreenPath.onboardingScreen.name,
           pageBuilder: (context, state) => MaterialPage(
-              key: state.pageKey, child: EmployeeVerificationScreen()),
-        ),
-        GoRoute(
-          path: RoosterScreenPath.routeErrorScreen.route,
-          name: RoosterScreenPath.routeErrorScreen.name,
-          pageBuilder: (context, state) => MaterialPage(
-              key: state.pageKey,
-              child: const RouteNotFoundScreen(routeError: 'Route not found')),
+              key: state.pageKey, child: UserValidationFormScreen()),
         ),
         GoRoute(
             path: RoosterScreenPath.allIssuesScreen.route,
@@ -64,16 +58,31 @@ class RoosterRouter {
             pageBuilder: (context, state) => MaterialPage(
                 key: state.pageKey, child: const AllUsersScreen())),
         GoRoute(
+            path: RoosterScreenPath.userInfoScreen.route,
+            name: RoosterScreenPath.userInfoScreen.name,
+            pageBuilder: (context, state) {
+              final String userId = state.pathParameters['userId'] ?? '';
+              return MaterialPage(
+                  key: state.pageKey, child: UserInfoScreen(userId: userId));
+            }),
+        GoRoute(
+          path: RoosterScreenPath.addNewUserScreen.route,
+          name: RoosterScreenPath.addNewUserScreen.name,
+          pageBuilder: (context, state) =>
+              MaterialPage(key: state.pageKey, child: AddNewUserScreen()),
+        ),
+        GoRoute(
           path: RoosterScreenPath.onCallPolicyScreen.route,
           name: RoosterScreenPath.onCallPolicyScreen.name,
           pageBuilder: (context, state) => MaterialPage(
               key: state.pageKey, child: const OnCallPolicyScreen()),
         ),
         GoRoute(
-          path: RoosterScreenPath.addNewUserScreen.route,
-          name: RoosterScreenPath.addNewUserScreen.name,
-          pageBuilder: (context, state) =>
-              MaterialPage(key: state.pageKey, child: const AddNewUserScreen()),
+          path: RoosterScreenPath.routeErrorScreen.route,
+          name: RoosterScreenPath.routeErrorScreen.name,
+          pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              child: const RouteNotFoundScreen(routeError: 'Route not found')),
         ),
       ]);
 }

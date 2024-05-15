@@ -15,6 +15,7 @@ class UserInfo extends Equatable {
   final String platform;
   final String deviceInfoRef;
   final bool isOnCall;
+  final bool isAdmin;
   final int? createdAt;
   final int? modifiedAt;
 
@@ -24,6 +25,7 @@ class UserInfo extends Equatable {
       required this.platform,
       required this.deviceInfoRef,
       required this.isOnCall,
+      required this.isAdmin,
       required this.createdAt,
       required this.modifiedAt});
 
@@ -37,6 +39,7 @@ class UserInfo extends Equatable {
       String? platform,
       String? deviceInfoRef,
       bool? isOnCall,
+      bool? isAdmin,
       int? createdAt,
       int? modifiedAt}) {
     return UserInfo(
@@ -45,6 +48,7 @@ class UserInfo extends Equatable {
         platform: platform ?? this.platform,
         deviceInfoRef: deviceInfoRef ?? this.deviceInfoRef,
         isOnCall: isOnCall ?? this.isOnCall,
+        isAdmin: isAdmin ?? this.isAdmin,
         createdAt: createdAt ?? this.createdAt,
         modifiedAt: modifiedAt ?? this.modifiedAt);
   }
@@ -60,6 +64,7 @@ class UserInfo extends Equatable {
         'platform': platform,
         'deviceInfoRef': deviceInfoRef,
         'isOnCall': isOnCall,
+        'isAdmin': isAdmin,
         'createdAt': createdAt,
         'modifiedAt': modifiedAt
       };
@@ -110,6 +115,14 @@ class UserInfo extends Equatable {
     return docId;
   }
 
+  String getOnCallText() {
+    var enableOnCall = 'Enable on call';
+    if (isOnCall) {
+      enableOnCall = 'Disable on call';
+    }
+    return enableOnCall;
+  }
+
   static UserInfo fromPreferenceJson(Map<String, dynamic> doc) {
     if (doc.isEmpty) return emptyInstance;
     return UserInfo(
@@ -118,6 +131,7 @@ class UserInfo extends Equatable {
       platform: doc['platform'],
       deviceInfoRef: doc['deviceInfoRef'],
       isOnCall: doc['isOnCall'],
+      isAdmin: doc['isAdmin'],
       createdAt: doc['createdAt'],
       modifiedAt: doc['modifiedAt'],
     );
@@ -129,11 +143,20 @@ class UserInfo extends Equatable {
     platform: '',
     deviceInfoRef: '',
     isOnCall: false,
+    isAdmin: false,
     createdAt: null,
     modifiedAt: null,
   );
 
   @override
-  List<Object?> get props =>
-      [email, name, platform, deviceInfoRef, isOnCall, createdAt, modifiedAt];
+  List<Object?> get props => [
+        email,
+        name,
+        platform,
+        deviceInfoRef,
+        isOnCall,
+        isAdmin,
+        createdAt,
+        modifiedAt
+      ];
 }

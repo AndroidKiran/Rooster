@@ -8,24 +8,24 @@ import 'package:rooster/screens/models/block_form_item.dart';
 import 'package:rooster/utils/string_extensions.dart';
 import 'package:meta/meta.dart';
 
-part 'employee_verification_event.dart';
+part 'user_authentication_state.dart';
 
-part 'employee_verification_state.dart';
+part 'user_authentication_event.dart';
 
-class EmployeeVerificationBloc
-    extends Bloc<EmployeeVerificationEvent, EmployeeVerificationState> {
+class UserAuthenticationBloc
+    extends Bloc<UserAuthenticationEvent, UserAuthenticationState> {
   final UserRepository _userRepository;
 
-  EmployeeVerificationBloc({required UserRepository userRepository})
+  UserAuthenticationBloc({required UserRepository userRepository})
       : _userRepository = userRepository,
-        super(const EmployeeVerificationState._(formStatus: FormStatus.init)) {
+        super(const UserAuthenticationState._(formStatus: FormStatus.init)) {
     on<UserEmailChangedEvent>(_onEmailChangedState);
     on<PlatformChangedEvent>(_onPlatformChangeState);
     on<FormSubmitEvent>(_onFormSubmitState);
   }
 
   Future<void> _onEmailChangedState(UserEmailChangedEvent event,
-      Emitter<EmployeeVerificationState> emit) async {
+      Emitter<UserAuthenticationState> emit) async {
     return emit(state.copyWith(
         emailFormItem: BlocFormItem(
             value: event.emailFormItem.value,
@@ -35,8 +35,8 @@ class EmployeeVerificationBloc
         formStatus: FormStatus.init));
   }
 
-  Future<void> _onPlatformChangeState(PlatformChangedEvent event,
-      Emitter<EmployeeVerificationState> emit) async {
+  Future<void> _onPlatformChangeState(
+      PlatformChangedEvent event, Emitter<UserAuthenticationState> emit) async {
     return emit(state.copyWith(
         platformFormItem: BlocFormItem(
             value: event.platformItem.value,
@@ -47,7 +47,7 @@ class EmployeeVerificationBloc
   }
 
   Future<void> _onFormSubmitState(
-      FormSubmitEvent event, Emitter<EmployeeVerificationState> emit) async {
+      FormSubmitEvent event, Emitter<UserAuthenticationState> emit) async {
     var newState = state.copyWith(formStatus: FormStatus.formSubmitting);
     try {
       emit(newState);

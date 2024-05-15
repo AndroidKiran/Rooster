@@ -37,19 +37,27 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
 
   Widget _userListView() => FirestoreListView<FirestoreUserInfo>(
         shrinkWrap: true,
-        query: FirebaseManager().userDb,
+        query: FirebaseManager().userDb.orderBy('isOnCall', descending: true),
         pageSize: 20,
-        emptyBuilder: (context) => RoosterTextWidget(
-            text: 'No data available',
-            textSize: 16,
-            textColor: Colors.grey[800],
-            maxLines: 1),
-        errorBuilder: (context, error, stackTrace) => RoosterTextWidget(
-            text: 'Some thing went wrong',
-            textSize: 16,
-            textColor: Colors.grey[800],
-            maxLines: 1),
-        loadingBuilder: (context) => const CircularProgressIndicator(),
+        emptyBuilder: (context) => Container(
+          alignment: Alignment.center,
+          child: RoosterTextWidget(
+              text: 'No data available',
+              textSize: 16,
+              textColor: Colors.grey[800],
+              maxLines: 1),
+        ),
+        errorBuilder: (context, error, stackTrace) => Container(
+          alignment: Alignment.center,
+          child: RoosterTextWidget(
+              text: 'Some thing went wrong',
+              textSize: 16,
+              textColor: Colors.grey[800],
+              maxLines: 1),
+        ),
+        loadingBuilder: (context) => Container(
+            alignment: Alignment.center,
+            child: const CircularProgressIndicator()),
         itemBuilder: (context, doc) {
           return _userTile(doc.data());
         },
@@ -63,7 +71,8 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(16.0),
-        onTap: () => context.pushNamed(""),
+        onTap: () => context.pushNamed(RoosterScreenPath.userInfoScreen.name,
+            pathParameters: {'userId': firestoreUserInfo.id}),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 14),
           child: Row(
@@ -126,7 +135,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
   Widget _addUserFloatActionBtn() => BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           return Visibility(
-              visible: state.firestoreUserInfo.userEntity.isOnCall,
+              visible: state.firestoreUserInfo.userEntity.isAdmin,
               child: FloatingActionButton(
                 onPressed: () =>
                     context.pushNamed(RoosterScreenPath.addNewUserScreen.name),

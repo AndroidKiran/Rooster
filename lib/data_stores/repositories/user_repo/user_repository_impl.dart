@@ -121,7 +121,7 @@ class UserRepositoryImplementation implements UserRepository {
   }
 
   @override
-  Future<FirestoreUserInfo> getCurrentFireStoreUser(String docId) async {
+  Future<FirestoreUserInfo> getFireStoreUserBy(String docId) async {
     FirestoreUserInfo firestoreUserInfo = FirestoreUserInfo.emptyInstance;
     final DocumentSnapshot<FirestoreUserInfo> documentSnapshot =
         await _userCollection.doc(docId).get();
@@ -130,6 +130,37 @@ class UserRepositoryImplementation implements UserRepository {
           documentSnapshot.data() ?? FirestoreUserInfo.emptyInstance;
     }
     return firestoreUserInfo;
+  }
+
+  @override
+  Future<void> addUser(UserInfo user) async {
+    await _userCollection.add(FirestoreUserInfo(id: "", userEntity: user));
+  }
+
+  @override
+  Future<void> deleteUser(FirestoreUserInfo user) async {
+    await _userCollection.doc(user.id).delete();
+  }
+
+  @override
+  Future<void> updateUserOnCallState(
+      FirestoreUserInfo firestoreUserInfo) async {
+    await _userCollection.doc(firestoreUserInfo.id).update({
+      'isOnCall': firestoreUserInfo.userEntity.isOnCall,
+      'modifiedAt': firestoreUserInfo.userEntity.modifiedAt
+    });
+  }
+
+  @override
+  Stream<FirestoreUserInfo> fireStoreUserStream(String docId) {
+    return _userCollection.doc(docId).snapshots().map((documentSnapshot) {
+      var firestoreUserInfo = FirestoreUserInfo.emptyInstance;
+      if (documentSnapshot.exists) {
+        firestoreUserInfo =
+            documentSnapshot.data() ?? FirestoreUserInfo.emptyInstance;
+      }
+      return firestoreUserInfo;
+    });
   }
 
   static const String PREFERENCE_USER = "user";

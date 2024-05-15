@@ -50,7 +50,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
 
     firestoreUserInfo =
-        await _userRepository.getCurrentFireStoreUser(firestoreUserInfo.id);
+        await _userRepository.getFireStoreUserBy(firestoreUserInfo.id);
     final UserInfo userInfo = firestoreUserInfo.userEntity;
     final String token = await _fcmRepository.getFcmToken() ?? '';
     final FirestoreDeviceInfo firestoreDeviceInfo =

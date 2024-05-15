@@ -48,6 +48,11 @@ class FirestoreUserInfo extends FireStoreEntity<UserInfo>
     return this == emptyInstance;
   }
 
+  FirestoreUserInfo copyWith({String? id, UserInfo? userEntity}) {
+    return FirestoreUserInfo(
+        id: id ?? this.id, userEntity: userEntity ?? this.userEntity);
+  }
+
   @override
   List<Object?> get props => [id, userEntity];
 }

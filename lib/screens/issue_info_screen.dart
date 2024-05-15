@@ -117,7 +117,7 @@ class _IssueInfoScreenState extends State<IssueInfoScreen> {
         child: Column(
           children: [
             Icon(
-              size: 48,
+              size: 48.0,
               CupertinoIcons.timer,
               color: Colors.red[300],
             ),
@@ -169,6 +169,7 @@ class _IssueInfoScreenState extends State<IssueInfoScreen> {
             Text(
               firestoreIssueInfo.issueInfo.title,
               style: const TextStyle(
+                fontWeight: FontWeight.w700,
                 fontSize: 20.0,
                 color: Colors.black87,
               ),
@@ -182,6 +183,7 @@ class _IssueInfoScreenState extends State<IssueInfoScreen> {
             Text(
               firestoreIssueInfo.issueInfo.subtitle,
               style: const TextStyle(
+                fontWeight: FontWeight.w700,
                 fontSize: 16.0,
                 color: Colors.black45,
               ),

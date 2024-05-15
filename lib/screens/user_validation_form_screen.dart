@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rooster/blocs/employee_verification_bloc/employee_verification_bloc.dart';
+import 'package:rooster/blocs/user_authentication_bloc/user_authentication_bloc.dart';
 import 'package:rooster/screens/models/block_form_item.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
-class EmployeeVerificationScreen extends StatelessWidget {
+class UserValidationFormScreen extends StatelessWidget {
   final _verificationFormKey = GlobalKey<FormState>();
 
-  EmployeeVerificationScreen({super.key});
+  UserValidationFormScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class EmployeeVerificationScreen extends StatelessWidget {
   }
 
   Widget _verificationForm() {
-    return BlocListener<EmployeeVerificationBloc, EmployeeVerificationState>(
+    return BlocListener<UserAuthenticationBloc, UserAuthenticationState>(
       listener: (context, state) {
         if (state.formStatus == FormStatus.submitFailure) {
           _showSnackBar(context, "User verification Failed");
@@ -54,7 +54,7 @@ class EmployeeVerificationScreen extends StatelessWidget {
   }
 
   Widget _emailField() =>
-      BlocBuilder<EmployeeVerificationBloc, EmployeeVerificationState>(
+      BlocBuilder<UserAuthenticationBloc, UserAuthenticationState>(
         builder: (context, state) {
           return TextFormField(
             decoration: InputDecoration(
@@ -69,10 +69,10 @@ class EmployeeVerificationScreen extends StatelessWidget {
                 ),
                 labelText: "Employee Email",
                 filled: true,
-                fillColor: Theme.of(context).colorScheme.background),
+                fillColor: Theme.of(context).colorScheme.surface),
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value) => state.emailFormItem.error,
-            onChanged: (value) => context.read<EmployeeVerificationBloc>().add(
+            onChanged: (value) => context.read<UserAuthenticationBloc>().add(
                 UserEmailChangedEvent(
                     emailFormItem: BlocFormItem(value: value))),
           );
@@ -80,7 +80,7 @@ class EmployeeVerificationScreen extends StatelessWidget {
       );
 
   Widget _platformDropdown() =>
-      BlocBuilder<EmployeeVerificationBloc, EmployeeVerificationState>(
+      BlocBuilder<UserAuthenticationBloc, UserAuthenticationState>(
         builder: (context, state) {
           return DropdownButtonFormField<String>(
             value: state.platformFormItem.value,
@@ -97,7 +97,7 @@ class EmployeeVerificationScreen extends StatelessWidget {
               labelText: 'Platform',
             ),
             validator: (value) => state.platformFormItem.error,
-            onChanged: (value) => context.read<EmployeeVerificationBloc>().add(
+            onChanged: (value) => context.read<UserAuthenticationBloc>().add(
                 PlatformChangedEvent(
                     platformItem: BlocFormItem(value: value!))),
             items: const [
@@ -115,18 +115,18 @@ class EmployeeVerificationScreen extends StatelessWidget {
       );
 
   Widget _submitButton() =>
-      BlocBuilder<EmployeeVerificationBloc, EmployeeVerificationState>(
+      BlocBuilder<UserAuthenticationBloc, UserAuthenticationState>(
         builder: (context, state) {
           return ElevatedButton(
             style: ElevatedButton.styleFrom(
-              disabledBackgroundColor: Theme.of(context).colorScheme.background,
+              disabledBackgroundColor: Theme.of(context).colorScheme.surface,
               fixedSize: const Size(220.0, 50.0),
             ),
             onPressed: state.isFromValidationSuccess()
                 ? () {
                     if (_verificationFormKey.currentState!.validate()) {
                       context
-                          .read<EmployeeVerificationBloc>()
+                          .read<UserAuthenticationBloc>()
                           .add(FormSubmitEvent());
                     }
                   }

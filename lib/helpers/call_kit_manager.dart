@@ -8,7 +8,9 @@ import 'package:flutter_callkit_incoming/entities/ios_params.dart';
 import 'package:flutter_callkit_incoming/entities/notification_params.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rooster/data_stores/repositories/issue_repo/issue_repository_impl.dart';
 import 'package:rooster/screens/routes/rooster_screen_path.dart';
+import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 class CallKitManager {
   static final CallKitManager _singleton = CallKitManager._();
@@ -72,15 +74,20 @@ class CallKitManager {
 
   Future<void> listenerEvent(
       BuildContext context, void Function(CallEvent) callback) async {
+    final preferences = await StreamingSharedPreferences.instance;
+    final issueRepository =
+        IssueRepositoryImplementation(preferences: preferences);
     try {
       FlutterCallkitIncoming.onEvent.listen((event) async {
         log('CallKitService: $event');
         switch (event!.event) {
           case Event.actionCallAccept:
-            context.goNamed(RoosterScreenPath.issueInfoScreen.name);
+            final issueId = await issueRepository.getIssueId();
+            if (!context.mounted) return;
+            context.pushNamed(RoosterScreenPath.issueInfoScreen.name,
+                pathParameters: {'issueId': issueId});
             break;
           case Event.actionCallDecline:
-            context.goNamed(RoosterScreenPath.issueInfoScreen.name);
             break;
           default:
             break;

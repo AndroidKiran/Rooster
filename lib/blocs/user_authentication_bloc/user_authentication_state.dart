@@ -1,4 +1,4 @@
-part of 'employee_verification_bloc.dart';
+part of 'user_authentication_bloc.dart';
 
 enum FormStatus {
   init,
@@ -8,23 +8,23 @@ enum FormStatus {
 }
 
 @immutable
-final class EmployeeVerificationState extends Equatable {
+final class UserAuthenticationState extends Equatable {
   final BlocFormItem emailFormItem;
   final BlocFormItem platformFormItem;
   final FormStatus formStatus;
 
-  const EmployeeVerificationState._(
+  const UserAuthenticationState._(
       {this.emailFormItem =
           const BlocFormItem(error: 'Please enter valid email', value: null),
       this.platformFormItem =
           const BlocFormItem(error: 'Please choose the platform', value: null),
       this.formStatus = FormStatus.init});
 
-  EmployeeVerificationState copyWith(
+  UserAuthenticationState copyWith(
       {BlocFormItem? emailFormItem,
       BlocFormItem? platformFormItem,
       FormStatus? formStatus}) {
-    return EmployeeVerificationState._(
+    return UserAuthenticationState._(
         emailFormItem: emailFormItem ?? this.emailFormItem,
         platformFormItem: platformFormItem ?? this.platformFormItem,
         formStatus: formStatus ?? this.formStatus);
