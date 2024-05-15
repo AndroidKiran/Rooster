@@ -25,10 +25,12 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: RoosterTextWidget(
-            text: 'All Users',
-            textSize: 32,
-            textColor: Colors.grey[800],
-            maxLines: 3),
+          text: 'All Users',
+          textSize: 32,
+          textColor: Colors.grey[800],
+          maxLines: 1,
+          fontWeight: FontWeight.w700,
+        ),
       ),
       body: _userListView(),
       floatingActionButton: _addUserFloatActionBtn(),

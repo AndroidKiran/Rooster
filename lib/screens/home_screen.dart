@@ -45,10 +45,12 @@ class _HomeScreen extends State<HomeScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: RoosterTextWidget(
-            text: 'Home',
-            textSize: 32,
-            textColor: Colors.grey[800],
-            maxLines: 1),
+          text: 'Home',
+          textSize: 32,
+          textColor: Colors.grey[800],
+          maxLines: 1,
+          fontWeight: FontWeight.w700,
+        ),
       ),
       body: SingleChildScrollView(
           scrollDirection: Axis.vertical,

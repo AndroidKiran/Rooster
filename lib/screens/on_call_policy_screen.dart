@@ -11,10 +11,12 @@ class OnCallPolicyScreen extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           title: RoosterTextWidget(
-              text: 'OnCall Policies',
-              textSize: 32,
-              textColor: Colors.grey[800],
-              maxLines: 1),
+            text: 'OnCall Policies',
+            textSize: 32,
+            textColor: Colors.grey[800],
+            maxLines: 1,
+            fontWeight: FontWeight.w700,
+          ),
         ));
   }
 }

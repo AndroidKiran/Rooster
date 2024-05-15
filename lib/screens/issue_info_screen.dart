@@ -42,10 +42,12 @@ class _IssueInfoScreenState extends State<IssueInfoScreen> {
             appBar: AppBar(
               centerTitle: true,
               title: RoosterTextWidget(
-                  text: state.firestoreIssueInfo.issueInfo.getScreenTitle(),
-                  textSize: 32,
-                  textColor: Colors.grey[800],
-                  maxLines: 3),
+                text: state.firestoreIssueInfo.issueInfo.getScreenTitle(),
+                textSize: 32,
+                textColor: Colors.grey[800],
+                maxLines: 3,
+                fontWeight: FontWeight.w700,
+              ),
             ),
             body: _screenContent(state));
       },
@@ -166,30 +168,54 @@ class _IssueInfoScreenState extends State<IssueInfoScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text(
-              firestoreIssueInfo.issueInfo.title,
-              style: const TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 20.0,
-                color: Colors.black87,
-              ),
-              textAlign: TextAlign.start,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            Row(
+              children: [
+                const Icon(
+                  size: 24.0,
+                  CupertinoIcons.bolt_circle_fill,
+                  color: Colors.deepPurpleAccent,
+                ),
+                const SizedBox(
+                  width: 10.0,
+                ),
+                Text(
+                  firestoreIssueInfo.issueInfo.title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20.0,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.start,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                )
+              ],
             ),
             const SizedBox(
               height: 12.0,
             ),
-            Text(
-              firestoreIssueInfo.issueInfo.subtitle,
-              style: const TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 16.0,
-                color: Colors.black45,
-              ),
-              textAlign: TextAlign.start,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            Row(
+              children: [
+                const Icon(
+                  size: 24.0,
+                  CupertinoIcons.info_circle_fill,
+                  color: Colors.deepPurpleAccent,
+                ),
+                const SizedBox(
+                  width: 10.0,
+                ),
+                Text(
+                  firestoreIssueInfo.issueInfo.subtitle,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16.0,
+                    color: Colors.black45,
+                  ),
+                  textAlign: TextAlign.start,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                )
+              ],
             ),
             const SizedBox(
               height: 20.0,

@@ -45,10 +45,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         appBar: AppBar(
           centerTitle: true,
           title: RoosterTextWidget(
-              text: "User Info",
-              textSize: 32,
-              textColor: Colors.grey[800],
-              maxLines: 3),
+            text: "User Info",
+            textSize: 32,
+            textColor: Colors.grey[800],
+            maxLines: 3,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         body: _screenContent(),
         floatingActionButton: _onCallStatusUpdate(),
@@ -202,30 +204,80 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              firestoreUserInfo.userEntity.name,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 36.0,
-                color: Colors.black87,
-              ),
-              textAlign: TextAlign.start,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            Row(
+              children: [
+                const Icon(
+                  size: 24.0,
+                  CupertinoIcons.person_solid,
+                  color: Colors.deepPurpleAccent,
+                ),
+                const SizedBox(
+                  width: 10.0,
+                ),
+                Text(
+                  firestoreUserInfo.userEntity.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20.0,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.start,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
             const SizedBox(
               height: 12.0,
             ),
-            Text(
-              firestoreUserInfo.userEntity.email,
-              style: const TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 16.0,
-                color: Colors.black45,
-              ),
-              textAlign: TextAlign.start,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            Row(
+              children: [
+                const Icon(
+                  size: 24.0,
+                  CupertinoIcons.mail_solid,
+                  color: Colors.deepPurpleAccent,
+                ),
+                const SizedBox(
+                  width: 10.0,
+                ),
+                Text(
+                  firestoreUserInfo.userEntity.email,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18.0,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.start,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 12.0,
+            ),
+            Row(
+              children: [
+                const Icon(
+                  size: 24.0,
+                  CupertinoIcons.device_phone_portrait,
+                  color: Colors.deepPurpleAccent,
+                ),
+                const SizedBox(
+                  width: 10.0,
+                ),
+                Text(
+                  firestoreUserInfo.userEntity.platform,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18.0,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.start,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                )
+              ],
             ),
           ],
         ),

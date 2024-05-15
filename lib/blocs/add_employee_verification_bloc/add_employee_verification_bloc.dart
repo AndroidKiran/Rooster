@@ -31,8 +31,8 @@ class AddEmployeeVerificationBloc
     return emit(state.copyWith(
         nameFormItem: BlocFormItem(
             value: event.nameFormItem.value,
-            error: (event.nameFormItem.value != null ||
-                    event.nameFormItem.value!.isEmpty)
+            error: (event.nameFormItem.value != null &&
+                    event.nameFormItem.value!.isNotEmpty)
                 ? null
                 : 'Please enter valid name'),
         formStatus: FormStatus.init));
@@ -54,8 +54,8 @@ class AddEmployeeVerificationBloc
     return emit(state.copyWith(
         platformFormItem: BlocFormItem(
             value: event.platformItem.value,
-            error: (event.platformItem.value != null ||
-                    event.platformItem.value!.isEmpty)
+            error: (event.platformItem.value != null &&
+                    event.platformItem.value!.isNotEmpty)
                 ? null
                 : 'Please choose the platform'),
         formStatus: FormStatus.init));

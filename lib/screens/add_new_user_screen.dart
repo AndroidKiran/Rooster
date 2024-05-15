@@ -18,10 +18,12 @@ class AddNewUserScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: RoosterTextWidget(
-            text: 'Add New User',
-            textSize: 32,
-            textColor: Colors.grey[800],
-            maxLines: null),
+          text: 'Add New User',
+          textSize: 32,
+          textColor: Colors.grey[800],
+          maxLines: null,
+          fontWeight: FontWeight.w700,
+        ),
       ),
       body: SingleChildScrollView(
           scrollDirection: Axis.vertical, child: _verificationForm()),
@@ -33,7 +35,7 @@ class AddNewUserScreen extends StatelessWidget {
         AddEmployeeVerificationState>(
       listener: (context, state) {
         if (state.formStatus == FormStatus.submitFailure) {
-          _showSnackBar(context, "User verification Failed");
+          _showSnackBar(context, "Failed to add the user");
         }
 
         if (state.formStatus == FormStatus.submitSuccess) {

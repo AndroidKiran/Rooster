@@ -16,10 +16,12 @@ class UserValidationFormScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: RoosterTextWidget(
-            text: 'Verify Employee',
-            textSize: 32,
-            textColor: Colors.grey[800],
-            maxLines: 1),
+          text: 'Verify Employee',
+          textSize: 32,
+          textColor: Colors.grey[800],
+          maxLines: 1,
+          fontWeight: FontWeight.w700,
+        ),
       ),
       body: SingleChildScrollView(
           scrollDirection: Axis.vertical, child: _verificationForm()),

@@ -23,10 +23,12 @@ class _AllIssuesScreenState extends State<AllIssuesScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: RoosterTextWidget(
-            text: 'Velocity Crashes',
-            textSize: 32.0,
-            textColor: Colors.grey[800],
-            maxLines: 1),
+          text: 'Velocity Crashes',
+          textSize: 32.0,
+          textColor: Colors.grey[800],
+          maxLines: 1,
+          fontWeight: FontWeight.w700,
+        ),
       ),
       body: _crashListView(),
     );

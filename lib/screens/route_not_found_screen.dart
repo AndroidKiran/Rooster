@@ -12,10 +12,12 @@ class RouteNotFoundScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: RoosterTextWidget(
-            text: 'Route Error',
-            textSize: 32,
-            textColor: Colors.grey[800],
-            maxLines: 1),
+          text: 'Route Error',
+          textSize: 32,
+          textColor: Colors.grey[800],
+          maxLines: 1,
+          fontWeight: FontWeight.w700,
+        ),
       ),
       body: Center(
         child: RoosterTextWidget(
