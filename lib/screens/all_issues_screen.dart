@@ -64,7 +64,12 @@ class _AllIssuesScreenState extends State<AllIssuesScreen> {
 
   Widget _crashInfoTile(
       FirestoreIssueInfo firestoreIssueInfo, BuildContext context) {
+    Color cardColor = Colors.white70;
+    if (firestoreIssueInfo.entity.visitedUserId.isEmpty) {
+      cardColor = Colors.red[300] ?? Colors.white70;
+    }
     return Card(
+      color: cardColor,
       margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),

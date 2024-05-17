@@ -1,8 +1,14 @@
+import 'dart:developer';
+import 'dart:isolate';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rooster/blocs/home_bloc/home_bloc.dart';
 import 'package:rooster/blocs/issue_info_bloc/issue_bloc.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_entity.dart';
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_issue_info.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_info.dart';
 import 'package:rooster/widgets/rooster_tag_widget.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
@@ -28,40 +34,40 @@ class _IssueInfoScreenState extends State<IssueInfoScreen> {
     super.dispose();
   }
 
-  void _triggerFetchIssueInfoEvent(String issueId) {
-    if (context.mounted) {
-      context.read<IssueBloc>().add(FetchIssueInfoEvent(issueId: issueId));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<IssueBloc, IssueState>(
-      builder: (context, state) {
-        return Scaffold(
-            appBar: AppBar(
-              centerTitle: true,
-              title: RoosterTextWidget(
-                text: state.firestoreIssueInfo.issueInfo.getScreenTitle(),
-                textSize: 32,
-                textColor: Colors.grey[800],
-                maxLines: 3,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            body: _screenContent(state));
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, homeState) {
+        return BlocBuilder<IssueBloc, IssueState>(
+          builder: (context, issueState) {
+            return Scaffold(
+                appBar: AppBar(
+                  centerTitle: true,
+                  title: RoosterTextWidget(
+                    text: issueState.firestoreIssueInfo.issueInfo
+                        .getScreenTitle(),
+                    textSize: 32,
+                    textColor: Colors.grey[800],
+                    maxLines: 3,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                body: _screenContent(issueState, homeState));
+          },
+        );
       },
     );
   }
 
-  Widget _screenContent(IssueState state) => Container(
+  Widget _screenContent(IssueState state, HomeState homeState) => Container(
         alignment: Alignment.center,
-        child: _content(state),
+        child: _content(state, homeState),
       );
 
-  Widget _content(IssueState state) {
+  Widget _content(IssueState state, HomeState homeState) {
     switch (state.status) {
       case Status.success:
+        _updateUserVisit(state.firestoreIssueInfo, homeState.firestoreUserInfo);
         return Column(
           children: [
             _headerView(state.firestoreIssueInfo),
@@ -113,56 +119,58 @@ class _IssueInfoScreenState extends State<IssueInfoScreen> {
     }
   }
 
-  Widget _headerView(FirestoreIssueInfo firestoreIssueInfo) => Container(
-        color: Colors.red[50],
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 28.0),
-        child: Column(
-          children: [
-            Icon(
-              size: 48.0,
-              CupertinoIcons.timer,
-              color: Colors.red[300],
+  Widget _headerView(FirestoreIssueInfo firestoreIssueInfo) {
+    return Container(
+      color: Colors.red[50],
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 28.0),
+      child: Column(
+        children: [
+          Icon(
+            size: 48.0,
+            CupertinoIcons.timer,
+            color: Colors.red[300],
+          ),
+          RoosterTagWidget(
+              text: firestoreIssueInfo.issueInfo.appId,
+              borderRadius: 16.0,
+              shape: BoxShape.rectangle,
+              backgroundColor: Colors.amberAccent,
+              textColor: Colors.black87),
+          const SizedBox(
+            height: 18.0,
+          ),
+          Text(
+            firestoreIssueInfo.issueInfo.getIssueMsg(),
+            style: TextStyle(
+              fontSize: 24.0,
+              color: Colors.red[600],
             ),
-            RoosterTagWidget(
-                text: firestoreIssueInfo.issueInfo.appId,
-                borderRadius: 16.0,
-                shape: BoxShape.rectangle,
-                backgroundColor: Colors.amberAccent,
-                textColor: Colors.black87),
-            const SizedBox(
-              height: 18.0,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(
+            height: 18.0,
+          ),
+          ElevatedButton(
+            onPressed: () => {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red[600],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0), // <-- Radius
+              ),
             ),
-            Text(
-              firestoreIssueInfo.issueInfo.getIssueMsg(),
+            child: const Text(
+              'Investigate issue',
               style: TextStyle(
-                fontSize: 24.0,
-                color: Colors.red[600],
-              ),
-              textAlign: TextAlign.center,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: Colors.white),
+              maxLines: 1,
             ),
-            const SizedBox(
-              height: 18.0,
-            ),
-            ElevatedButton(
-              onPressed: () => {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red[600],
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0), // <-- Radius
-                ),
-              ),
-              child: const Text(
-                'Investigate issue',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.white),
-                maxLines: 1,
-              ),
-            )
-          ],
-        ),
-      );
+          )
+        ],
+      ),
+    );
+  }
 
   Widget _issueDetails(FirestoreIssueInfo firestoreIssueInfo) => Padding(
         padding: const EdgeInsets.all(16.0),
@@ -240,4 +248,23 @@ class _IssueInfoScreenState extends State<IssueInfoScreen> {
           ],
         ),
       );
+
+  void _triggerFetchIssueInfoEvent(String issueId) {
+    if (!context.mounted) return;
+    context.read<IssueBloc>().add(FetchIssueInfoEvent(issueId: issueId));
+  }
+
+  void _updateUserVisit(FirestoreIssueInfo firestoreIssueInfo,
+      FirestoreUserInfo firestoreUserInfo) {
+    try {
+      if (!context.mounted ||
+          firestoreIssueInfo.entity.visitedUserId.isNotEmpty ||
+          !firestoreUserInfo.entity.isOnCall) return;
+      context.read<IssueBloc>().add(UpdateIssueInfoEvent(
+          firestoreIssueInfo: firestoreIssueInfo,
+          firestoreUserInfo: firestoreUserInfo));
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 }

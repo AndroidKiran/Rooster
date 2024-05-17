@@ -2,7 +2,9 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_issue_info.dart';
+import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_info.dart';
 import 'package:rooster/data_stores/repositories/issue_repo/issue_repository.dart';
+import 'package:rooster/data_stores/repositories/user_repo/user_repository.dart';
 
 part 'issue_event.dart';
 
@@ -15,6 +17,7 @@ class IssueBloc extends Bloc<IssueEvent, IssueState> {
       : _issueRepository = issueRepository,
         super(const IssueState.init()) {
     on<FetchIssueInfoEvent>(_onFetchDetailsEvent);
+    on<UpdateIssueInfoEvent>(_onUpdateIssueEvent);
   }
 
   Future<void> _onFetchDetailsEvent(
@@ -30,5 +33,16 @@ class IssueBloc extends Bloc<IssueEvent, IssueState> {
       state = IssueState.success(firestoreIssueInfo);
     }
     emit(state);
+  }
+
+  Future<void> _onUpdateIssueEvent(
+      UpdateIssueInfoEvent event, Emitter<IssueState> emit) async {
+    final FirestoreUserInfo firestoreUserInfo = event.firestoreUserInfo;
+    final FirestoreIssueInfo firestoreIssueInfo = event.firestoreIssueInfo;
+    if (firestoreIssueInfo != FirestoreIssueInfo.emptyInstance &&
+        firestoreUserInfo != FirestoreUserInfo.emptyInstance) {
+      await _issueRepository.updateFireStoreIssueVisit(
+          firestoreIssueInfo, firestoreUserInfo);
+    }
   }
 }

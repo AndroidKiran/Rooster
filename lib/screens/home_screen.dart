@@ -182,6 +182,7 @@ class _HomeScreen extends State<HomeScreen> {
 
   Widget _homeItem(HomeItem homeItem, FirestoreUserInfo firestoreUserInfo) =>
       Card(
+        color: Colors.white70,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),

@@ -8,7 +8,6 @@ class IssueInfo extends Equatable {
   final String type;
   final int crashCount;
   final int crashPercentage;
-  final String createTime;
   final String firstVersion;
   final String appVersion;
   final String issueId;
@@ -17,20 +16,26 @@ class IssueInfo extends Equatable {
   final String projectName;
   final String platform;
   final String appId;
+  final String visitedUserId;
+  final int? createdAt;
+  final int? modifiedAt;
 
-  const IssueInfo(
-      {required this.type,
-      required this.crashCount,
-      required this.crashPercentage,
-      required this.createTime,
-      required this.firstVersion,
-      required this.appVersion,
-      required this.issueId,
-      required this.subtitle,
-      required this.title,
-      required this.projectName,
-      required this.platform,
-      required this.appId});
+  const IssueInfo({
+    required this.type,
+    required this.crashCount,
+    required this.crashPercentage,
+    required this.firstVersion,
+    required this.appVersion,
+    required this.issueId,
+    required this.subtitle,
+    required this.title,
+    required this.projectName,
+    required this.platform,
+    required this.appId,
+    required this.visitedUserId,
+    required this.createdAt,
+    required this.modifiedAt,
+  });
 
   factory IssueInfo.fromJson(Map<String, dynamic> json) =>
       _$IssueInfoFromJson(json);
@@ -41,18 +46,21 @@ class IssueInfo extends Equatable {
       'https://console.firebase.google.com/u/0/project/$projectName/crashlytics/app/$platform:$appId/issues/$issueId';
 
   static const emptyInstance = IssueInfo(
-      type: '',
-      crashCount: 0,
-      crashPercentage: 0,
-      createTime: '',
-      firstVersion: '',
-      appVersion: '',
-      issueId: '',
-      subtitle: '',
-      title: '',
-      projectName: '',
-      platform: '',
-      appId: '');
+    type: '',
+    crashCount: 0,
+    crashPercentage: 0,
+    firstVersion: '',
+    appVersion: '',
+    issueId: '',
+    subtitle: '',
+    title: '',
+    projectName: '',
+    platform: '',
+    appId: '',
+    visitedUserId: '',
+    createdAt: null,
+    modifiedAt: null,
+  );
 
   bool isEmptyInstance() {
     return this == emptyInstance;
@@ -81,13 +89,17 @@ class IssueInfo extends Equatable {
         type,
         crashCount,
         crashPercentage,
-        createTime,
         firstVersion,
         appVersion,
         issueId,
         subtitle,
         title,
-        projectName
+        projectName,
+        platform,
+        appId,
+        visitedUserId,
+        createdAt,
+        modifiedAt
       ];
 
   static String TYPE_STABILITY_DIGEST = 'CrashlyticsStabilityDigestPayload';

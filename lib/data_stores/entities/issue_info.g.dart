@@ -10,7 +10,6 @@ IssueInfo _$IssueInfoFromJson(Map<String, dynamic> json) => IssueInfo(
       type: json['type'] as String,
       crashCount: json['crashCount'] as int,
       crashPercentage: json['crashPercentage'] as int,
-      createTime: json['createTime'] as String,
       firstVersion: json['firstVersion'] as String,
       appVersion: json['appVersion'] as String,
       issueId: json['issueId'] as String,
@@ -19,13 +18,15 @@ IssueInfo _$IssueInfoFromJson(Map<String, dynamic> json) => IssueInfo(
       projectName: json['projectName'] as String,
       platform: json['platform'] as String,
       appId: json['appId'] as String,
+      visitedUserId: json['visitedUserId'] as String,
+      createdAt: json['createdAt'] as int?,
+      modifiedAt: json['modifiedAt'] as int?,
     );
 
 Map<String, dynamic> _$IssueInfoToJson(IssueInfo instance) => <String, dynamic>{
       'type': instance.type,
       'crashCount': instance.crashCount,
       'crashPercentage': instance.crashPercentage,
-      'createTime': instance.createTime,
       'firstVersion': instance.firstVersion,
       'appVersion': instance.appVersion,
       'issueId': instance.issueId,
@@ -34,4 +35,7 @@ Map<String, dynamic> _$IssueInfoToJson(IssueInfo instance) => <String, dynamic>{
       'projectName': instance.projectName,
       'platform': instance.platform,
       'appId': instance.appId,
+      'visitedUserId': instance.visitedUserId,
+      'createdAt': instance.createdAt,
+      'modifiedAt': instance.modifiedAt,
     };

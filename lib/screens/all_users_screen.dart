@@ -67,6 +67,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
 
   Widget _userTile(FirestoreUserInfo firestoreUserInfo) {
     return Card(
+      color: Colors.white70,
       margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
