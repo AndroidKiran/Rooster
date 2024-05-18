@@ -1,12 +1,10 @@
 import 'dart:developer';
-import 'dart:isolate';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rooster/blocs/home_bloc/home_bloc.dart';
 import 'package:rooster/blocs/issue_info_bloc/issue_bloc.dart';
-import 'package:rooster/data_stores/entities/firestore_entities/firestore_entity.dart';
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_issue_info.dart';
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_info.dart';
 import 'package:rooster/widgets/rooster_tag_widget.dart';

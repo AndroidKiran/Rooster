@@ -4,7 +4,6 @@ import 'package:meta/meta.dart';
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_issue_info.dart';
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_info.dart';
 import 'package:rooster/data_stores/repositories/issue_repo/issue_repository.dart';
-import 'package:rooster/data_stores/repositories/user_repo/user_repository.dart';
 
 part 'issue_event.dart';
 
