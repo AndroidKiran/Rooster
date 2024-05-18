@@ -16,7 +16,9 @@ export class DeviceInfo implements BaseEntity<DeviceInfo> {
     };
   }
 
-  static fromDocument(snapshot: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData, FirebaseFirestore.DocumentData>): DeviceInfo {
+  static fromDocument(
+    snapshot: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData, FirebaseFirestore.DocumentData>
+  ): DeviceInfo {
     const data = snapshot.data() as DeviceInfo;
     return new DeviceInfo(
       data.fcmToken,

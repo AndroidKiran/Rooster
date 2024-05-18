@@ -15,6 +15,7 @@ export class Issue implements BaseEntity<Issue> {
   projectName: string;
   platform: string;
   appId: string;
+  visitedUserId: string;
 
   constructor(
     type: string,
@@ -28,7 +29,8 @@ export class Issue implements BaseEntity<Issue> {
     title: string,
     projectName: string,
     platform: string,
-    appId: string
+    appId: string,
+    visitedUserId: string
   ) {
     this.type = type,
     this.crashCount = crashCount,
@@ -42,6 +44,7 @@ export class Issue implements BaseEntity<Issue> {
     this.projectName = projectName,
     this.platform = platform,
     this.appId = appId;
+    this.visitedUserId = visitedUserId;
   }
 
   toDocument(): FirebaseFirestore.DocumentData {
@@ -58,6 +61,7 @@ export class Issue implements BaseEntity<Issue> {
       projectName: this.projectName,
       platform: this.platform,
       appId: this.appId,
+      visitedUserId: this.visitedUserId,
     };
   }
 
@@ -91,7 +95,8 @@ export class Issue implements BaseEntity<Issue> {
       issue.title,
       "",
       platform,
-      event.appId
+      event.appId,
+      ""
     );
   }
 
@@ -121,7 +126,8 @@ export class Issue implements BaseEntity<Issue> {
       issue.title,
       "",
       platform,
-      event.appId
+      event.appId,
+      ""
     );
   }
 }
