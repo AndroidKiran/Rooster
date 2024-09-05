@@ -5,11 +5,18 @@ import {User} from "../entities/user";
 
 class FirestoreUserService {
   private collection(): CollectionReference<FirebaseEntity<User>> {
-    return getFirestore().collection(COLLECTION_USER).withConverter(dataConverter<User>());
+    return getFirestore()
+    .collection(COLLECTION_USER)
+    .withConverter(dataConverter<User>());
   }
 
-  async getOnCallUsers(platform: string): Promise<User[]> {
-    const querySnapShot = await this.collection().where("isOnCall", "==", true).where("platform", "==", platform).get();
+  async getOnCallUsers(
+    platform: string
+  ): Promise<User[]> {
+    const querySnapShot = await this.collection()
+    .where("isOnCall", "==", true)
+    .where("platform", "==", platform)
+    .get();
     return querySnapShot.docs.map((data) => data.data().entity);
   }
 }

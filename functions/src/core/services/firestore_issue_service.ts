@@ -8,7 +8,9 @@ class FirestoreIssueService {
     return getFirestore().collection(COLLECTION_ISSUE).withConverter(dataConverter<Issue>());
   }
 
-  async addIssue(crash: Issue): Promise<FirebaseFirestore.WriteResult> {
+  async addIssue(
+    crash: Issue
+  ): Promise<FirebaseFirestore.WriteResult> {
     const firebaseEntity: FirebaseEntity<Issue> = new FirebaseEntity<Issue>(
       crash.issueId,
       crash

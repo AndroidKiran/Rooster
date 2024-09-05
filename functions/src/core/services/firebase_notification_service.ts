@@ -20,7 +20,9 @@ class FirebaseNotificationService {
     return messages;
   }
 
-  async notifyAll(messages: Message[]): Promise<BatchResponse> {
+  async notifyAll(
+    messages: Message[]
+  ): Promise<BatchResponse> {
     return getMessaging().sendEach(messages);
   }
 }

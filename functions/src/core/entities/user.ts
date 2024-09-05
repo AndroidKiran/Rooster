@@ -31,7 +31,9 @@ export class User implements BaseEntity<User> {
     };
   }
 
-  static fromDocument(snapshot: FirebaseFirestore.QueryDocumentSnapshot): User {
+  static fromDocument(
+    snapshot: FirebaseFirestore.QueryDocumentSnapshot
+  ): User {
     const data = snapshot.data() as User;
     return new User(
       data.email,

@@ -13,12 +13,16 @@ export class FirebaseEntity<T> {
 
 export const dataConverter = <T>(): firestore.FirestoreDataConverter<FirebaseEntity<T>> => ({
 
-  toFirestore(data: FirebaseEntity<T>): firestore.DocumentData {
+  toFirestore(
+    data: FirebaseEntity<T>
+  ): firestore.DocumentData {
     const baseEntity = data.entity as BaseEntity<T>;
     return baseEntity.toDocument;
   },
 
-  fromFirestore(snapshot: firestore.QueryDocumentSnapshot): FirebaseEntity<T> {
+  fromFirestore(
+    snapshot: firestore.QueryDocumentSnapshot
+  ): FirebaseEntity<T> {
     const data = snapshot.data() as T;
     return {
       id: snapshot.id,

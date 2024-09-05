@@ -14,7 +14,9 @@ class FirestoreDeviceInfoService {
     return getFirestore().collection(COLLECTION_DEVICE_INFO).withConverter(dataConverter<DeviceInfo>());
   }
 
-  async getAllDeviceToken(docPath: string[]): Promise<FirebaseEntity<DeviceInfo>[]> {
+  async getAllDeviceToken(
+    docPath: string[]
+  ): Promise<FirebaseEntity<DeviceInfo>[]> {
     const deviceInfoDocumentSnapshots:Promise<DocumentSnapshot<FirebaseEntity<DeviceInfo>>>[] = [];
     docPath.forEach((path) => {
       const pathTokens = path.split("/");
@@ -26,7 +28,9 @@ class FirestoreDeviceInfoService {
     return values.map((doc) => doc.data()!);
   }
 
-  async deleteAllDeviceInfo(ids: string[]): Promise<WriteResult[]> {
+  async deleteAllDeviceInfo(
+    ids: string[]
+  ): Promise<WriteResult[]> {
     const deviceInfoDeleteResults:Promise<WriteResult>[] = [];
     ids.forEach((id) => {
       const deleteResult: Promise<WriteResult> = this.collection().doc(id).delete();
