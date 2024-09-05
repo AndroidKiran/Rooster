@@ -7,6 +7,12 @@ import 'package:rooster/screens/models/block_form_item.dart';
 import 'package:rooster/screens/routes/rooster_screen_path.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
+/// A screen that presents a form for adding new users to the application.
+///
+/// This screen provides input fields for the user's name, email, and platform.
+/// It uses [BlocListener] to handle form submission events and displays
+/// appropriate messages or navigation based on the form status.
+
 class AddNewUserScreen extends StatelessWidget {
   final _verificationFormKey = GlobalKey<FormState>();
 

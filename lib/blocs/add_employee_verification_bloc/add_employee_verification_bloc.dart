@@ -13,6 +13,12 @@ part 'add_employee_verification_event.dart';
 
 part 'add_employee_verification_state.dart';
 
+/// A BLoC (Business Logic Component) that manages the state and events
+/// related to adding and verifying employee information through a form.
+///
+/// This BLoC handles events like changes in form fields and form
+/// submission, emitting corresponding states to update the UI.
+
 class AddEmployeeVerificationBloc
     extends Bloc<AddEmployeeVerificationEvent, AddEmployeeVerificationState> {
   final UserRepository _userRepository;

@@ -8,6 +8,13 @@ import 'package:rooster/data_stores/repositories/user_repo/user_repository.dart'
 import 'package:rooster/helpers/firebase_manager.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
+/// Implementation of the [UserRepository] interface that interacts with
+/// user data stored in both shared preferences and Firestore.
+///
+/// This class provides methods for retrieving, updating, and deleting
+/// user information, persisting it in both local storage (shared
+/// preferences) and the cloud (Firestore).
+
 class UserRepositoryImplementation implements UserRepository {
   final StreamingSharedPreferences _preferences;
   final _userCollection = FirebaseManager().userDb;

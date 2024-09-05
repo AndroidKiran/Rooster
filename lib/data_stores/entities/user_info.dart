@@ -7,6 +7,11 @@ import 'package:rooster/utils/string_extensions.dart';
 
 part 'user_info.g.dart';
 
+/// Represents user information, including details like email, name,
+/// platform, device info reference, and on-call status.
+/// This class provides methods for JSON serialization, value comparison,
+/// and extracting relevant details from the user data.
+
 @JsonSerializable()
 @ServerTimestampToMilliSecondConverter()
 class UserInfo extends Equatable {

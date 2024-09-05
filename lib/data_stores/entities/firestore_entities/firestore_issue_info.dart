@@ -6,6 +6,12 @@ import 'package:rooster/data_stores/entities/issue_info.dart';
 
 part 'firestore_issue_info.g.dart';
 
+/// Represents issue information stored in Firestore, providing methods
+/// for converting between Firestore documents and [IssueInfo] objects.
+/// This class handles JSON serialization, document conversion, and
+/// value comparison, making it easier to manage issue data in your
+/// application.
+
 @JsonSerializable()
 class FirestoreIssueInfo extends FireStoreEntity<IssueInfo>
     implements DocumentConverter<FirestoreIssueInfo, IssueInfo> {

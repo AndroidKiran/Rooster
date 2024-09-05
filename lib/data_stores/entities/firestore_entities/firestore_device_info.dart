@@ -6,6 +6,13 @@ import 'package:rooster/data_stores/entities/firestore_entities/firestore_entity
 
 part 'firestore_device_info.g.dart';
 
+/// Represents device information stored in Firestore, providing methods
+/// for converting between Firestore documents and [DeviceInfo] objects.
+///
+///This class handles JSON serialization, document conversion, and
+/// value comparison, making it easier to manage device data in your
+/// application.
+
 @JsonSerializable()
 class FirestoreDeviceInfo extends FireStoreEntity<DeviceInfo>
     implements DocumentConverter<FirestoreDeviceInfo, DeviceInfo> {

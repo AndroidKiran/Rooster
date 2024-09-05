@@ -11,6 +11,14 @@ import 'package:rooster/data_stores/repositories/fcm_repo/fcm_repository.dart';
 import 'package:rooster/data_stores/repositories/issue_repo/issue_repository.dart';
 import 'package:rooster/data_stores/repositories/user_repo/user_repository.dart';
 
+/// A central provider for BLoC (Business Logic Component) instances
+/// in a Flutter application.
+///
+/// This class acts asa singleton, providing a list of
+/// [RepositoryProvider] widgets that create and manage the lifecycle
+/// of various BLoCs, ensuring they have access to necessary
+/// repositories.
+
 class AppBlocProvider {
   List<RepositoryProvider> getAllBlockProvider(
           UserRepository userRepository,

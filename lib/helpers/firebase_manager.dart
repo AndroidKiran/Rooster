@@ -5,6 +5,17 @@ import 'package:rooster/data_stores/entities/firestore_entities/firestore_device
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_issue_info.dart';
 import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_info.dart';
 
+/// A class that serves as a central point for managing interactions with
+/// Firebase services, specifically Firestore and Firebase Messaging.
+///
+///This class implements a singleton pattern to ensure that only one
+/// instance of the Firebase manager is created and used throughout the
+/// application.
+///
+/// It provides access to Firestore collections for users, issues, and
+/// device information, as well as methods for handling Firebase Messaging
+/// notifications.
+
 class FirebaseManager {
   late FirebaseFirestore fireStore = _roosterFireStore();
   late FirebaseMessaging firebaseMessaging = _roosterFirebaseMessaging();

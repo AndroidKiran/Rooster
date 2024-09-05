@@ -10,6 +10,15 @@ import 'package:rooster/data_stores/entities/firestore_entities/firestore_user_i
 import 'package:rooster/widgets/rooster_tag_widget.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
+/// A screen that displays detailed information about a specific issue.
+///
+/// This screen fetches issue data based on the provided [issueId] and
+/// displays it in a structured manner. It also allows users who are on call
+/// to mark the issue as visited.
+///
+/// The screen uses [BlocBuilder] to access the states of [HomeBloc] and
+/// [IssueBloc] to display the relevant information and handle user interactions.
+
 class IssueInfoScreen extends StatefulWidget {
   final String issueId;
 

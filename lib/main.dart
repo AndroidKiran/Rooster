@@ -24,6 +24,11 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:uuid/uuid.dart';
 import 'firebase_options.dart';
 
+/// Initializes Firebase services, including Analytics and Crashlytics.
+///
+/// Sets up an error handler to report Flutter errors to Crashlytics.
+/// Registers the [_firebaseMessagingBackgroundHandler] to handle background FCM messages.
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   try {
     await Firebase.initializeApp(

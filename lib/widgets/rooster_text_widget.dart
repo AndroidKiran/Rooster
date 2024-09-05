@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+/// A custom StatelessWidget that displays text with customizable styling.
+///
+/// This widget provides a convenient way to create and customize text elements
+/// in your Flutter application with consistent styling, including font size,
+/// color, alignment, and overflow behavior.
+
 class RoosterTextWidget extends StatelessWidget {
   final String text;
   final double textSize;

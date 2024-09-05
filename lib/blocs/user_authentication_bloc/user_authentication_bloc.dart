@@ -12,6 +12,11 @@ part 'user_authentication_state.dart';
 
 part 'user_authentication_event.dart';
 
+/// A BLoC (Business Logic Component) that manages the state of a user
+/// authentication form in a Flutter application.
+/// This BLoC handles email and platform changes, form submission,
+/// and emits corresponding states to update the UI accordingly.
+
 class UserAuthenticationBloc
     extends Bloc<UserAuthenticationEvent, UserAuthenticationState> {
   final UserRepository _userRepository;

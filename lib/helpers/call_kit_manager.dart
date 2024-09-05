@@ -12,6 +12,18 @@ import 'package:rooster/data_stores/repositories/issue_repo/issue_repository_imp
 import 'package:rooster/screens/routes/rooster_screen_path.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
+/// A class that handles interactions with the [flutter_callkit_incoming]
+/// plugin to display and manage incoming call-like notifications in the
+/// Flutter application.
+///
+/// This class implements a singleton pattern to ensure that only one
+/// instance of the CallKit manager is created and used throughout the
+/// application.
+///
+/// It provides methods for displaying incoming call notifications,
+/// responding to user actions (accept/decline), managing active calls,
+/// and requesting necessary permissions.
+
 class CallKitManager {
   static final CallKitManager _singleton = CallKitManager._();
 

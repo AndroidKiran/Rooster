@@ -5,6 +5,13 @@ import 'package:rooster/data_stores/entities/user_info.dart';
 import 'package:rooster/data_stores/repositories/device_info_repo/device_info_repository.dart';
 import 'package:rooster/helpers/firebase_manager.dart';
 
+/// Implementation of the [DeviceInfoRepository] class that interacts with
+/// device information stored in Firestore.
+///
+/// This class provides methods for updating or adding device information
+/// to Firestore and retrieving existing device information based on
+/// user details.
+
 class DeviceInfoRepositoryImplementation extends DeviceInfoRepository {
   final _deviceInfoDb = FirebaseManager().deviceInfoDb;
 

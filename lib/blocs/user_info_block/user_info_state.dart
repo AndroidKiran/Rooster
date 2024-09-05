@@ -1,5 +1,6 @@
 part of 'user_info_bloc.dart';
 
+/// Defines the possible states of user information operations.
 enum Status {
   init,
   loading,
@@ -9,6 +10,11 @@ enum Status {
   deleteFailure;
 }
 
+/// Represents the state of user information within the BLoC.
+///
+/// This immutable class encapsulates the current status of user
+/// information operations and the user information itself, providing
+/// a structured way to track user data within a BLoC.
 @immutable
 final class UserInfoState extends Equatable {
   final Status status;

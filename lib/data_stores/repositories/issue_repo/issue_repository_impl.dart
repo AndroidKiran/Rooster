@@ -6,6 +6,13 @@ import 'package:rooster/data_stores/repositories/issue_repo/issue_repository.dar
 import 'package:rooster/helpers/firebase_manager.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
+/// Implementation of the [IssueRepository] interface that interacts with
+/// issue data stored in both shared preferences and Firestore.
+///
+/// This class provides methods for retrieving and updating issue
+/// information, persisting the issue ID in shared preferences and
+/// interacting with issue data in Firestore.
+
 class IssueRepositoryImplementation implements IssueRepository {
   final StreamingSharedPreferences _preferences;
   final _issueDb = FirebaseManager().issueDb;

@@ -10,6 +10,12 @@ part 'user_verification_event.dart';
 
 part 'user_verification_state.dart';
 
+/// A BLoC (Business Logic Component) that manages the state of user
+/// verification in a Flutter application.
+///
+/// This BLoC listens for changes in user information from shared
+/// preferences and emits corresponding states to update the UI.
+
 class UserVerificationBloc
     extends Bloc<UserVerificationEvent, UserVerificationState> {
   final UserRepository _userRepository;

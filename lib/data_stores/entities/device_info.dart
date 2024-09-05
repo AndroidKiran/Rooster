@@ -5,6 +5,12 @@ import 'package:rooster/utils/rooster_platform.dart';
 
 part 'device_info.g.dart';
 
+/// Represents information about a device, including its FCM token,
+/// operating system, and timestamps.
+///
+/// This class provides methods for JSON serialization, value comparison,
+/// and creating new device information objects with updated FCM tokens.
+
 @JsonSerializable()
 @ServerTimestampToMilliSecondConverter()
 class DeviceInfo extends Equatable {

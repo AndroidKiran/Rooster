@@ -11,6 +11,13 @@ part 'user_info_event.dart';
 
 part 'user_info_state.dart';
 
+/// A BLoC (Business Logic Component) that manages the state of user
+/// information in a Flutter application.
+///
+/// This BLoC listens for changes in user information from Firestore,
+/// handles user updates and deletions, and emits corresponding states
+/// to update the UI accordingly.
+
 class UserInfoBloc extends Bloc<UserInfoEvent, UserInfoState> {
   final UserRepository _userRepository;
   late final StreamSubscription<FirestoreUserInfo> _firebaseUserSubscription;

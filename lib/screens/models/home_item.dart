@@ -2,6 +2,13 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:rooster/screens/routes/rooster_screen_path.dart';
 
+/// Represents an item to be displayed on the home screen of the application.
+///
+/// Each [HomeItem] contains an icon, a name, and the route name of the
+/// screen to navigate to when tapped.
+///
+/// This class is immutable and extends [Equatable] for easy comparison.
+
 @immutable
 class HomeItem extends Equatable {
   final IconData iconData;

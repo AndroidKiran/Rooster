@@ -1,5 +1,6 @@
 part of 'issue_bloc.dart';
 
+/// Defines the possible states of issue operations.
 enum Status {
   init,
   loading,
@@ -7,6 +8,11 @@ enum Status {
   failure;
 }
 
+/// Represents the state of an issue within the BLoC.
+///
+/// This immutable class encapsulates the current status of issue
+/// operations and the issue information itself, providing a structured
+/// way to track issue data within a BLoC.
 @immutable
 final class IssueState extends Equatable {
   final Status status;

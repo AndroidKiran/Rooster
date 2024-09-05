@@ -3,6 +3,13 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'issue_info.g.dart';
 
+/// Represents information about an issue, related to crashes or
+/// errors in an application.
+///
+/// This class provides methods for JSON serialization, value comparison,
+/// generating relevant URLs, and providing descriptive messages about
+/// the issue.
+
 @JsonSerializable()
 class IssueInfo extends Equatable {
   final String type;

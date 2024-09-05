@@ -1,10 +1,17 @@
 part of 'user_verification_bloc.dart';
 
+/// Defines the possible states of user verification.
 enum VerificationStatus {
   init,
   hasValidUser,
   hasInvalidUser;
 }
+
+/// Represents the state of the user verification process.
+///
+/// This immutable class encapsulates the current verification status
+/// and user information, providing a structured way to track the
+/// verification process within a BLoC.
 
 @immutable
 final class UserVerificationState extends Equatable {

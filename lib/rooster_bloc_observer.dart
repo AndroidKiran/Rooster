@@ -1,6 +1,9 @@
 import 'dart:developer';
 import 'package:bloc/bloc.dart';
 
+/// A custom [BlocObserver] that logs all BLoC events to the console.
+/// This observer provides visibility into the lifecycle of BLoCs, including
+/// creation, events, state changes, transitions, errors, and closing.
 class RoosterBlocObserver extends BlocObserver {
   @override
   void onCreate(BlocBase bloc) {

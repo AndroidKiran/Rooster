@@ -13,6 +13,14 @@ import 'package:rooster/screens/models/home_item.dart';
 import 'package:rooster/screens/routes/rooster_screen_path.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
+/// The main landing page for the application.
+///
+/// This screen displays the user's on-call status, provides access to/// various application features through a grid of home items, and manages
+/// call-related functionality using [CallKitManager].
+///
+/// It uses [BlocBuilder] to access the state of [HomeBloc] and update the UI
+/// accordingly.
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 

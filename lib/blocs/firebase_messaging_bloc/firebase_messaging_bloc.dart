@@ -19,6 +19,12 @@ part 'firebase_messaging_event.dart';
 
 part 'firebase_messaging_state.dart';
 
+/// A BLoC (Business Logic Component) that manages Firebase Cloud
+/// Messaging (FCM) events and states in a Flutter application.
+///
+/// This BLoC handles incoming FCM messages, token refresh events,
+/// and emits corresponding states to trigger actions like VoIP calls
+/// or UI updates.
 class FirebaseMessagingBloc
     extends Bloc<FirebaseMessagingEvent, FirebaseMessagingState> {
   final FcmRepository _fcmRepository;

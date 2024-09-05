@@ -15,6 +15,11 @@ part 'home_event.dart';
 
 part 'home_state.dart';
 
+/// A BLoC (Business Logic Component) that manages the state of the
+/// home screen in a Flutter application.
+///
+/// This BLoC handles events related to on-call user updates and
+/// token updates, emitting corresponding states to update the UI.
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final UserRepository _userRepository;
   final DeviceInfoRepository _deviceInfoRepository;

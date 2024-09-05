@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+/// A custom StatelessWidget that displays a tag or label with customizable appearance.
+///
+/// This widget allows you to easily create tags with rounded corners,
+/// different shapes, background colors, and text styling. It ensures that
+/// the text within the tag is limited to a single line and truncated with
+/// an ellipsis if it exceeds the available space.
 class RoosterTagWidget extends StatelessWidget {
   final String text;
   final double borderRadius;

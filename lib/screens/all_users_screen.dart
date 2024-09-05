@@ -11,6 +11,16 @@ import 'package:rooster/widgets/rooster_tag_widget.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
+/// A screen that displays a list of all users in the application.
+///
+/// This screen fetches user data from Firestore and displays each user in a tile.
+/// It allows users to navigate to individual user details and provides admins
+/// with the ability to add new users.
+///
+/// The screen uses [FirestoreListView] to efficiently display the list of users
+/// and [BlocBuilder] to manage the visibility of the add user button based on
+/// the current user's admin status.
+
 class AllUsersScreen extends StatefulWidget {
   const AllUsersScreen({super.key});
 

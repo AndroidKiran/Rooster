@@ -1,5 +1,6 @@
 part of 'add_employee_verification_bloc.dart';
 
+/// Defines the possible states of the form submission process.
 enum FormStatus {
   init,
   formSubmitting,
@@ -7,6 +8,11 @@ enum FormStatus {
   submitFailure;
 }
 
+/// Represents the state of the employee verification form within the BLoC.
+///
+/// This immutable class encapsulates the current state of the form,
+/// including the status of individual form items and the overall form
+/// submission process.
 @immutable
 final class AddEmployeeVerificationState extends Equatable {
   final BlocFormItem emailFormItem;

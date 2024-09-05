@@ -9,6 +9,15 @@ import 'package:rooster/screens/routes/rooster_screen_path.dart';
 import 'package:rooster/widgets/rooster_tag_widget.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
+/// A screen that displays a list of all reported issues (likely crashes)
+/// in the application.
+///
+/// This screen fetches issue data from Firestore and displays each issue in a tile.
+/// It allows users to navigate to individual issue details and visually
+/// distinguishes between visited and unvisited issues.
+///
+/// The screen uses [FirestoreListView] to efficiently display the list of issues.
+
 class AllIssuesScreen extends StatefulWidget {
   const AllIssuesScreen({super.key});
 

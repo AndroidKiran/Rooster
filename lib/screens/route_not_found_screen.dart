@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
+/// A screen that is displayed when the user navigates to a route that
+/// doesn't exist in the application.
+///
+/// This screen shows a simple error message indicating that the requested
+/// route was not found. It can also display a more specific error message
 class RouteNotFoundScreen extends StatelessWidget {
   final String? routeError;
 

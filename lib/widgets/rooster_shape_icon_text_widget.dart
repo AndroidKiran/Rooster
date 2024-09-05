@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+/// A custom StatelessWidget that displays text (alphabets) within a shaped container.
+///
+/// This widget allows you to create visually appealing UI elements with customizable
+/// background color, text color, container shape, border width, and border color.
+/// The font size of the text is dynamically adjusted based on the container's height.
 class RoosterShapeIconTextWidget extends StatelessWidget {
   final String alphabets;
   final Color backgroundColor;

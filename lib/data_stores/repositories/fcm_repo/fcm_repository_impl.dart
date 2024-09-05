@@ -3,6 +3,12 @@ import 'package:rooster/data_stores/repositories/fcm_repo/fcm_repository.dart';
 import 'package:rooster/helpers/firebase_manager.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
+/// Implementation of the [FcmRepository] interface that interacts with
+/// Firebase Cloud Messaging (FCM).
+///
+/// This class provides methods for listening to incoming FCM messages,
+/// monitoring token refreshes, and retrieving the current FCM token.
+
 class FcmRepositoryImplementation implements FcmRepository {
   final StreamingSharedPreferences _preferences;
   final _firebaseMessaging = FirebaseManager().firebaseMessaging;

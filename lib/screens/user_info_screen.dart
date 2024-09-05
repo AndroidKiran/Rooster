@@ -10,6 +10,14 @@ import 'package:rooster/data_stores/entities/user_info.dart';
 import 'package:rooster/widgets/rooster_tag_widget.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
+/// A screen that displays detailed information about a user.
+///
+/// This screen fetches user data from Firestore based on the provided [userId]
+/// and displays it in a structured manner. It also allows admins to delete
+/// users or update their on-call status.
+///
+/// The screen uses [BlocListener] to listen to state changes from [UserInfoBloc]
+/// and handles user deletion and on-call status updates accordingly
 class UserInfoScreen extends StatefulWidget {
   final String userId;
 

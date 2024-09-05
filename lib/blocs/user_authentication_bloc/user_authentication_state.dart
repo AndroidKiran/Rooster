@@ -1,5 +1,6 @@
 part of 'user_authentication_bloc.dart';
 
+/// Defines the possible states of the authentication form.
 enum FormStatus {
   init,
   formSubmitting,
@@ -7,6 +8,11 @@ enum FormStatus {
   submitFailure;
 }
 
+/// Represents the state of the user authentication form within the BLoC.
+///
+/// This immutable class encapsulates the state of individual form
+/// fields and the overall form status, providing a structured way to
+/// track the user authentication process.
 @immutable
 final class UserAuthenticationState extends Equatable {
   final BlocFormItem emailFormItem;

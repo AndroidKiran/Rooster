@@ -6,6 +6,13 @@ import 'package:rooster/data_stores/entities/user_info.dart';
 
 part 'firestore_user_info.g.dart';
 
+/// Represents user information stored in Firestore, providing methods
+/// for converting between Firestore documents and [UserInfo] objects.
+///
+/// This class handles JSON serialization, document conversion, and
+/// value comparison, making it easier to manage user data in your
+/// application.
+
 @JsonSerializable()
 class FirestoreUserInfo extends FireStoreEntity<UserInfo>
     implements DocumentConverter<FirestoreUserInfo, UserInfo> {

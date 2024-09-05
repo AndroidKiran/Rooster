@@ -13,6 +13,16 @@ import 'package:rooster/screens/routes/rooster_screen_path.dart';
 import 'package:rooster/screens/user_info_screen.dart';
 import 'package:rooster/screens/user_validation_form_screen.dart';
 
+/// A class that manages the routing configuration for the Flutter application
+/// using the [GoRouter] package.
+///
+/// This class implements a singleton pattern to ensure that only one instance
+/// of the router is created and used throughout the application.
+///
+/// It defines routes for various screens, handles conditional redirects based
+/// on user verification, and provides a custom error screen for handling
+/// navigation errors.
+
 class RoosterRouter {
   static final RoosterRouter _singleton = RoosterRouter._();
 

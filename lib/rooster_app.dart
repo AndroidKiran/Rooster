@@ -15,6 +15,15 @@ import 'package:rooster/helpers/firebase_manager.dart';
 import 'package:rooster/screens/routes/rooster_router.dart';
 import 'package:uuid/uuid.dart';
 
+/// The root widget of the Rooster application.
+///
+/// This widget initializes the necessary repositories, sets up Firebase,
+/// handles app lifecycle events, and provides BLoCs and repositories to the
+/// widget tree using [MultiRepositoryProvider] and [AppBlocProvider].
+///
+/// It also listens to state changes from [FirebaseMessagingBloc] and
+/// [UserVerificationBloc] to handle VoIP calls and user verification events.
+
 class RoosterApp extends StatefulWidget {
   final UserRepository userRepository;
   final FcmRepository fcmRepository;

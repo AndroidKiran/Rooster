@@ -5,6 +5,15 @@ import 'package:rooster/blocs/user_authentication_bloc/user_authentication_bloc.
 import 'package:rooster/screens/models/block_form_item.dart';
 import 'package:rooster/widgets/rooster_text_widget.dart';
 
+/// A screen that presents a form for verifying employee information.
+///
+/// This screen uses [BlocListener] to listen to state changes from
+/// [UserAuthenticationBloc] and displays a snackbar if the form submission fails.
+///
+/// The form includes fields for entering the employee's email and selecting
+/// their platform (Android or iOS). It also has a submit button that triggers
+/// a form submission event
+
 class UserValidationFormScreen extends StatelessWidget {
   final _verificationFormKey = GlobalKey<FormState>();
 

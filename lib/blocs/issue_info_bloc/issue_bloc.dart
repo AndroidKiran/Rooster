@@ -9,6 +9,12 @@ part 'issue_event.dart';
 
 part 'issue_state.dart';
 
+/// A BLoC (Business Logic Component) that manages the state of issues
+/// in a Flutter application.
+///
+/// This BLoC fetches issue information, handles issue updates, and
+/// emits corresponding states to update the UI accordingly.
+
 class IssueBloc extends Bloc<IssueEvent, IssueState> {
   final IssueRepository _issueRepository;
 
