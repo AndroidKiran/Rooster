@@ -7,6 +7,7 @@ typings/
 
 # Node.js dependency directory
 node_modules/
+jspm_packages/
 
 # Logs
 logs
@@ -41,13 +42,6 @@ bower_components
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
-
-# Dependency directories
-node_modules/
-jspm_packages/
-
-# Typescript v1 declaration files
-typings/
 
 # Optional npm cache directory
 .npm
@@ -104,3 +98,5 @@ lib
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
+
+serviceAccountKey.json
