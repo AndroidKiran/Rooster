@@ -32,3 +32,26 @@ Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+
+## User-specific files
+
+*.xcuserdatad
+*.xcworkspace/
+xcuserdata/
+
+## Build products
+
+DerivedData/
+Build/
+Products/
+
+# Firebase
+Runner/GoogleService-Info.plist
+Pods/
+*.xcconfig
+firebase_app_id_file.json
+
