@@ -100,3 +100,7 @@ yarn.lock
 pnpm-lock.yaml
 
 serviceAccountKey.json
+
+# Emulators backup data
+emulators_data
+
