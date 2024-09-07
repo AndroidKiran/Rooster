@@ -41,3 +41,31 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Flutter specific
+.packages
+build/
+.fvm/
+
+# Android specific
+android/app/google-services.json
+android/key.properties
+android/.gradle
+
+# iOS specific
+ios/Flutter/AppFrameworkInfo.plist
+ios/Flutter/Flutter.podspec
+ios/Runner/GeneratedPluginRegistrant.hios/Runner/GeneratedPluginRegistrant.m
+ios/Runner.xcodeproj/project.pbxproj
+ios/Runner.xcworkspace/contents.xcworkspacedata
+ios/.generated/
+ios/Podfile*
+ios/Flutter/Debug.xcconfig
+ios/Flutter/Release.xcconfig
+
+# macOS specific
+macos/Flutter/Flutter.podspec
+macos/Runner/GeneratedPluginRegistrant.h
+macos/Runner/GeneratedPluginRegistrant.m
+macos/Runner.xcodeproj/project.pbxproj
+macos/Runner.xcworkspace/contents.xc
