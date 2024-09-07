@@ -4,7 +4,9 @@
 
 <p id="description">Rooster is the ultimate solution for developers seeking complete control over their crash monitoring and response infrastructure. Built on the power of Firebase Crashlytics Firebase Cloud Functions and FCM Rooster empowers you to proactively address critical crashes and minimize user impact.</p>
 
-<p align="center"><img src="https://img.shields.io/badge/platform-androidIos-yellow" alt="shields"></p>
+<p align="center"><img src="https://img.shields.io/badge/platform-androidIos-yellow" al="shields">
+<img src="https://img.shields.io/badge/Contributor-1-red" alt="shields">
+<img src="https://img.shields.io/badge/License-Apache%20License-blue" alt="shields"></p>
 
 
 <h2>🧐 Features</h2>
