@@ -62,6 +62,9 @@ ios/.generated/
 ios/Podfile*
 ios/Flutter/Debug.xcconfig
 ios/Flutter/Release.xcconfig
+ios/Runner/GeneratedPluginRegistrant.h
+ios/Runner/GeneratedPluginRegistrant.m
+ios/GoogleService-Info.plist
 
 # macOS specific
 macos/Flutter/Flutter.podspec
@@ -69,5 +72,13 @@ macos/Runner/GeneratedPluginRegistrant.h
 macos/Runner/GeneratedPluginRegistrant.m
 macos/Runner.xcodeproj/project.pbxproj
 macos/Runner.xcworkspace/contents.xc
+macos/Runner.xcworkspace/contents.xcworkspacedata
 
+# Firebase specific
+firebase_options.dart
+.firebaserc
+
+# Emulator cache data
 emulators_data
+
+
