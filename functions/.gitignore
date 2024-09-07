@@ -66,10 +66,16 @@ typings/
 
 # dot environment variables file
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # IDEs
 .idea
 .idea/*
+.vscode
+*.iml
 
 # Misc
 .DS_Store
@@ -78,3 +84,23 @@ typings/
 .runtimeconfig.json
 .firebaserc
 functions/lib
+
+# Firebase Functions
+.firebase
+firebase-debug.log
+firebase-debug.*.log
+
+# Node Modules
+node_modules
+**/node_modules
+
+# Build Files
+.dist
+dist
+build
+lib
+
+# Package Manager Files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
