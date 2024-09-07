@@ -4,9 +4,11 @@
 
 <p id="description">Rooster is the ultimate solution for developers seeking complete control over their crash monitoring and response infrastructure. Built on the power of Firebase Crashlytics Firebase Cloud Functions and FCM Rooster empowers you to proactively address critical crashes and minimize user impact.</p>
 
-<p align="center"><img src="https://img.shields.io/badge/platform-androidIos-yellow" al="shields">
+<p align="center">
+<img src="https://img.shields.io/badge/platform-androidIos-yellow" alt="shields">
 <img src="https://img.shields.io/badge/Contributor-1-red" alt="shields">
-<img src="https://img.shields.io/badge/License-Apache%20License-blue" alt="shields"></p>
+<img src="https://img.shields.io/badge/License-Apache%20License-blue" alt="shields">
+</p>
 
 
 <h2>🧐 Features</h2>
@@ -222,6 +224,38 @@
     </li>
     <li style="list-style-type: disc;color: rgb(0, 0, 0);font-size: 11pt;">
         <p><span style="color: rgb(0, 0, 0);font-size: 11pt;">Observe the logs in the emulator suite to verify that your Cloud Functions are triggered and working as expected.</span></p>
+    </li>
+</ul>
+
+<p><strong><span style="color: rgb(0, 0, 0);font-size: 11pt;">Additional Steps</span></strong></p>
+<ul>
+    <li style="list-style-type: disc;color: rgb(0, 0, 0);font-size: 11pt;">
+        <p><strong><span style="color: rgb(0, 0, 0);font-size: 11pt;">VoIP and UI Implementation:</span></strong><span style="color: rgb(0, 0, 0);font-size: 11pt;">&nbsp;Open the flutter_callkit_incoming,&nbsp;</span><a href="https://pub.dev/packages/flutter_callkit_incoming"><u><span style="color: rgb(17, 85, 204);font-size: 11pt;">https://pub.dev/packages/flutter_callkit_incoming</span></u></a><span style="color: rgb(0, 0, 0);font-size: 11pt;">&nbsp;and follow the steps.</span></p>
+    </li>
+</ul>
+<p><span style="color: rgb(0, 0, 0);font-size: 11pt;">By following these steps, you can set up Rooster project, leveraging Firebase Cloud Functions, Crashlytics, and FCM for crash monitoring and response.</span></p>
+<h3><strong><span style="color: rgb(0, 0, 0);font-size: 13pt;">🔗 References</span></strong></h3>
+<ul>
+    <li style="list-style-type: disc;color: rgb(0, 0, 0);font-size: 11pt;">
+        <p><a href="https://firebase.google.com/docs/flutter/setup"><u><span style="color: rgb(17, 85, 204);font-size: 11pt;">https://firebase.google.com/docs/flutter/setup</span></u></a><span style="color: rgb(0, 0, 0);font-size: 11pt;">&nbsp;</span></p>
+    </li>
+    <li style="list-style-type: disc;color: rgb(0, 0, 0);font-size: 11pt;">
+        <p><a href="https://firebase.google.com/docs/functions/get-started"><u><span style="color: rgb(17, 85, 204);font-size: 11pt;">https://firebase.google.com/docs/functions/get-started</span></u></a><span style="color: rgb(0, 0, 0);font-size: 11pt;">&nbsp;</span></p>
+    </li>
+    <li style="list-style-type: disc;color: rgb(0, 0, 0);font-size: 11pt;">
+        <p><a href="https://stackoverflow.com/questions/70410843/firebasecommandexception-an-error-occured-on-the-firebase-cli-when-attempting-t"><u><span style="color: rgb(17, 85, 204);font-size: 11pt;">https://stackoverflow.com/questions/70410843/firebasecommandexception-an-error-occured-on-the-firebase-cli-when-attempting-t</span></u></a><span style="color: rgb(0, 0, 0);font-size: 11pt;">&nbsp;</span></p>
+    </li>
+    <li style="list-style-type: disc;color: rgb(0, 0, 0);font-size: 11pt;">
+        <p><a href="https://firebase.flutter.dev/docs/functions/overview/"><u><span style="color: rgb(17, 85, 204);font-size: 11pt;">https://firebase.flutter.dev/docs/functions/overview/</span></u></a><span style="color: rgb(0, 0, 0);font-size: 11pt;">&nbsp;</span></p>
+    </li>
+    <li style="list-style-type: disc;color: rgb(0, 0, 0);font-size: 11pt;">
+        <p><a href="https://docs.flutterflow.io/integrations/firebase/connect-to-firebase"><u><span style="color: rgb(17, 85, 204);font-size: 11pt;">https://docs.flutterflow.io/integrations/firebase/connect-to-firebase</span></u></a><span style="color: rgb(0, 0, 0);font-size: 11pt;">&nbsp;</span></p>
+    </li>
+    <li style="list-style-type: disc;color: rgb(0, 0, 0);font-size: 11pt;">
+        <p><a href="https://codewithandrea.com/articles/flutter-firebase-flutterfire-cli/"><u><span style="color: rgb(17, 85, 204);font-size: 11pt;">https://codewithandrea.com/articles/flutter-firebase-flutterfire-cli/</span></u></a></p>
+    </li>
+    <li style="list-style-type: disc;color: rgb(0, 0, 0);font-size: 11pt;">
+        <p><a href="https://pub.dev/packages/flutter_callkit_incoming"><u><span style="color: rgb(17, 85, 204);font-size: 11pt;">https://pub.dev/packages/flutter_callkit_incoming</span></u></a></p>
     </li>
 </ul>
 
