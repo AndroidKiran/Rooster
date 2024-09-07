@@ -69,3 +69,5 @@ macos/Runner/GeneratedPluginRegistrant.h
 macos/Runner/GeneratedPluginRegistrant.m
 macos/Runner.xcodeproj/project.pbxproj
 macos/Runner.xcworkspace/contents.xc
+
+emulators_data
