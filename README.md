@@ -1,6 +1,6 @@
 <h1 align="center" id="title">Rooster</h1>
 
-<p align="center"><img src="https://socialify.git.ci/AndroidKiran/PetPot/image?language=1&amp;name=1&amp;stargazers=1&amp;theme=Light" alt="project-image"></p>
+<p align="center"><img src="https://socialify.git.ci/AndroidKiran/Rooster/image?font=Rokkitt&language=1&name=1&owner=1&pattern=Circuit%20Board&theme=Dark" alt="project-image"></p>
 
 <p id="description">Rooster is the ultimate solution for developers seeking complete control over their crash monitoring and response infrastructure. Built on the power of Firebase Crashlytics Firebase Cloud Functions and FCM Rooster empowers you to proactively address critical crashes and minimize user impact.</p>
 
